@@ -40,13 +40,58 @@ try
 
     builder.Services.AddControllers();
 
+    // identity
+    builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+        .AddClaimsPrincipalFactory<ApplicationClaimsPrincipalFactory>()
+        .AddEntityFrameworkStores<ApplicationDatabaseContext>() 
+        .AddDefaultTokenProviders();
+    
+    builder.Services.Configure<IdentityOptions>(options =>
+    {
+        options.Stores.MaxLengthForKeys = 128;
+        options.Stores.ProtectPersonalData = false;
 
-app.UseHttpsRedirection();
+        if (builder.Environment.IsProduction())
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 8;
+            options.Password.RequiredUniqueChars = 3;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = true;
+        }
+        else
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 3;
+            options.Password.RequiredUniqueChars = 3;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+        }
 
-app.UseAuthorization();
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
 
-app.MapControllers();
+        options.SignIn.RequireConfirmedAccount = false;
+        options.SignIn.RequireConfirmedEmail = false;
+        options.SignIn.RequireConfirmedPhoneNumber = false;
 
+        options.Tokens.AuthenticatorIssuer =
+            builder.Configuration.GetValue<string>("Security:Token:Issuer") ??
+                throw new InvalidOperationException("Settings Security:Token:Issuer cannot be empty");
+
+        // cSpell: disable-next-line
+        options.User.AllowedUserNameCharacters = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźżAĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ0123456789-._@+ ";
+        options.User.RequireUniqueEmail = false;
+
+        options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+        options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Name;
+        options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
+    });
+    
+    builder.Services.AddScoped<AuthService>();
 
     builder.Services.AddEndpointsApiExplorer();
 
