@@ -19,6 +19,11 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 try
 {
+    bool seed = SeedData.HasCalled(args);
+    if (seed)
+    {
+        args = SeedData.ClearArguments(args);
+    }
     
     var builder = WebApplication.CreateBuilder(args);
 
@@ -99,6 +104,11 @@ try
     
     var app = builder.Build();
     
+    if (seed)
+    {
+        await SeedData.EnsureSeedDataAsync(app.Services);
+        return;
+    }
     
     if (app.Environment.IsDevelopment())
     {
