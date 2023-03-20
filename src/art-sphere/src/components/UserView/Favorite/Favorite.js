@@ -1,0 +1,12 @@
+import React from "react";
+
+const Favorite = () => {
+  return (
+    <div className="user-favorite-wrap">
+        <h2>Ulubione</h2>
+        <p>Bedzie jakaś tabela razem z API się zrobi</p>
+    </div>
+  );
+}
+
+export default Favorite;

@@ -1,0 +1,35 @@
+.user-account-settings-wrap h2 {
+  font-size: 2rem;
+}
+.user-account-settings-wrap h3 {
+  font-size: 1.5rem;
+}
+.user-account-settings-wrap input {
+  display: block;
+  margin: 10px auto;
+  width: 40%;
+}
+.user-account-settings-wrap input[type=password], .user-account-settings-wrap input[type=text] {
+  border: black solid 2px;
+  border-radius: 5px;
+  padding: 7px;
+  font-size: 0.9rem;
+}
+.user-account-settings-wrap input[type=password]:focus, .user-account-settings-wrap input[type=text]:focus {
+  border-color: #108df3;
+  outline: none;
+}
+.user-account-settings-wrap input[type=submit], .user-account-settings-wrap input[type=button] {
+  width: 30%;
+  font-size: 0.9rem;
+  padding: 7px;
+  border: black solid 2px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.user-account-settings-wrap input[type=submit]:hover, .user-account-settings-wrap input[type=submit]:focus, .user-account-settings-wrap input[type=button]:hover, .user-account-settings-wrap input[type=button]:focus {
+  background-color: #108df3;
+  color: white;
+  outline: unset;
+  border-color: #108df3;
+}
