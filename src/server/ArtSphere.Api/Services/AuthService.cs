@@ -1,8 +1,9 @@
 using ArtSphere.Api.Database;
 using ArtSphere.Api.Models;
 using ArtSphere.Api.Models.Dto.Payloads;
+using ArtSphere.Api.Models.Dto.Responses;
+using ArtSphere.Api.Repositories;
 using ArtSphere.Models.Auth;
-using ArtSphere.Models.Dto.Responses;
 using Microsoft.AspNetCore.Identity;
 
 namespace ArtSphere.Api.Services;
@@ -12,21 +13,26 @@ public class AuthService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly ApplicationDatabaseContext _db;
+    private readonly UsersRepository _userRepository;
     private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         SignInManager<ApplicationUser> signManager,
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
-        ApplicationDatabaseContext db,
+        UsersRepository userRepository,
         ILogger<AuthService> logger)
     {
         _signInManager = signManager;
         _userManager = userManager;
         _roleManager = roleManager;
-        _db = db;
+        _userRepository = userRepository;
         _logger = logger;
+    }
+
+    public async Task SignOutAsync()
+    {
+        await _signInManager.SignOutAsync();
     }
 
     public async Task<UserResponse> SignInAsync(LoginCredentialsPayload credentials)
@@ -72,21 +78,18 @@ public class AuthService
             }
         }
 
-        User? account = null;
+        User? appUser = null;
         if (user.AccountId != 0)
         {
-            account = await _db.ASUsers.FindAsync(user.AccountId);
-            if (account != null)
-            {
-                throw new Exception("Nie odnaleziono użytkownika.");
-            }
+            appUser = await _userRepository.GetUserAsync(user.AccountId);
         }
 
         return new UserResponse(
             Id: user.Id,
-            Email: account?.Email ?? "",
-            FirstName: account?.FirstName ?? "",
-            SecondName: account?.LastName ?? "",
+            AccountId: user.AccountId,
+            Email: appUser?.Email ?? "",
+            FirstName: appUser?.FirstName ?? "",
+            SecondName: appUser?.LastName ?? "",
             Role: userRole?.Name ?? "",
             IsActive: user.LockoutEnd == null || user.LockoutEnd < DateTimeOffset.UtcNow);
     }
@@ -132,14 +135,12 @@ public class AuthService
 
         _logger.LogInformation("Konto o mailu {email} został zarejestrowany.", user.Email);
 
-        User account = new User() 
-        { 
-            Email = payload.Email
-        };
-        _db.Add(account);
-        await _db.SaveChangesAsync();
+        var appUser = await _userRepository.CreateBlankUserAsync(payload);
+        
+        user.AccountId = appUser.Id;
+        await _userManager.UpdateAsync(user);
 
-        return new SignUpResponse("Sukcesywnie zarejestrowano konto.", account.Id);
+        return new SignUpResponse("Sukcesywnie zarejestrowano konto.", appUser.Id);
     }
   
 }

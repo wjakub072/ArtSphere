@@ -4,9 +4,11 @@ using System.Globalization;
 using System.Security.Claims;
 using ArtSphere.Api;
 using ArtSphere.Api.Database;
+using ArtSphere.Api.Repositories;
 using ArtSphere.Api.Services;
 using ArtSphere.Models.Auth;
 using ArtSphere.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -96,6 +98,68 @@ try
         options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
     });
     
+    // cookies
+    builder.Services.ConfigureApplicationCookie(options =>
+    {
+        options.Cookie.Name = "X-Access-Token";
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(1);
+        options.SlidingExpiration = true;
+
+        options.LoginPath = "/sign-in";
+        options.LogoutPath = null;
+
+        options.Events.OnValidatePrincipal = ctx =>
+        {
+            ctx.HttpContext.Items.Add("ExpiresUTC", ctx.Properties.ExpiresUtc);
+            return Task.CompletedTask;
+        };
+
+        options.Events.OnRedirectToLogin = cxt =>
+        {
+            cxt.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        };
+        options.Events.OnRedirectToAccessDenied = cxt =>
+        {
+            cxt.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return Task.CompletedTask;
+        };
+        options.Events.OnRedirectToLogout = cxt =>
+        {
+            cxt.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        };
+    });
+
+    // authorization
+    string scopeVersion = builder.Configuration.GetValue<string>("Security:ScopeVersion") ?? "";
+    builder.Services.Configure<AuthorizationOptions>(options =>
+    {
+        options.AddPolicy("IsClient", policy =>
+            policy.RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(IdentityConstants.ApplicationScheme)
+                .RequireClaim("scope", scopeVersion)
+                .RequireRole(ApplicationRoles.ClientRoles));
+
+        options.AddPolicy("IsArtist", policy =>
+            policy.RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(IdentityConstants.ApplicationScheme)
+                .RequireClaim("scope", scopeVersion)
+                .RequireRole(ApplicationRoles.ArtistRoles));
+
+        options.AddPolicy("IsAdmin", policy =>
+            policy.RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(IdentityConstants.ApplicationScheme)
+                .RequireClaim("scope", scopeVersion)
+                .RequireRole(ApplicationRoles.AdminRoles));
+    });
+
+    builder.Services.AddMemoryCache();
+
+    builder.Services.AddScoped<UsersRepository>();
     builder.Services.AddScoped<AuthService>();
 
     builder.Services.AddEndpointsApiExplorer();

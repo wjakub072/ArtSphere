@@ -13,5 +13,12 @@ class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(c => c.Email).HasMaxLength(50).IsRequired();
         builder.Property(c => c.FirstName).HasMaxLength(100);
         builder.Property(c => c.LastName).HasMaxLength(200);
+        builder.Property(c => c.PhoneNumber).HasMaxLength(16);
+        builder.Property(c => c.AddressCountry).HasMaxLength(50);
+        builder.Property(c => c.AddressCity).HasMaxLength(200);
+        builder.Property(c => c.AddressStreet).HasMaxLength(200);
+        builder.Property(c => c.AddressAppartment).HasMaxLength(200);
+        builder.Property(c => c.AddressBuilding);
+
     }
 }
