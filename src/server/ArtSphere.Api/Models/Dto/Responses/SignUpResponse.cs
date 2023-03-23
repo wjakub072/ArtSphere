@@ -1,4 +1,4 @@
-namespace ArtSphere.Models.Dto.Responses;
+namespace ArtSphere.Api.Models.Dto.Responses;
 
 public record class SignUpResponse
 (

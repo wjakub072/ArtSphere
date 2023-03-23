@@ -1,6 +1,6 @@
 using ArtSphere.Api.Models.Dto.Payloads;
+using ArtSphere.Api.Models.Dto.Responses;
 using ArtSphere.Api.Services;
-using ArtSphere.Models.Dto.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +25,13 @@ public class AuthController : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
         UserResponse userResult = await _authService.SignInAsync(credentials);
         return Ok(userResult);
+    }
+
+    [HttpPost("logout")]
+    public async Task<ActionResult> SignOutAsync()
+    {
+        await _authService.SignOutAsync();
+        return Ok();
     }
 
     [HttpPost("signup")]
