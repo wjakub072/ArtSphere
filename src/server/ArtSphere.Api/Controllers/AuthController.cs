@@ -31,7 +31,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult> SignOutAsync()
     {
         await _authService.SignOutAsync();
-        return Ok();
+        return Ok(new { message = "Wylogowano."});
     }
 
     [HttpPost("signup")]

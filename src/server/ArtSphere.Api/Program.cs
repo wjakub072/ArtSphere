@@ -164,6 +164,14 @@ try
 
     builder.Services.AddEndpointsApiExplorer();
 
+    builder.Services.AddCors(options => {
+        options.AddPolicy("allowFrontEndOrigin", builder => {
+            builder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+    });
+
     builder.Services.AddSwaggerGen();
     
     var app = builder.Build();
@@ -178,6 +186,10 @@ try
     {
         app.UseSwagger();
         app.UseSwaggerUI();
+        app.UseExceptionHandler("/api/error-dev");
+    } else 
+    {
+        app.UseExceptionHandler("/api/error");
     }
     
     app.UseHttpsRedirection();
@@ -186,6 +198,7 @@ try
     
     app.MapControllers();
 
+    app.UseCors("allowFrontEndOrigin");
     app.Run();
     
 }
