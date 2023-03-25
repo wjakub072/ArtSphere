@@ -45,6 +45,8 @@ public class AccountController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
+        if(User.Identity?.Name != payload.EmailOrUsername) return BadRequest(new { message = "Podano błędny email użytkownika"});
+
         var user = await _userManager.FindByEmailAsync(payload.EmailOrUsername) 
                    ?? await _userManager.FindByNameAsync(payload.EmailOrUsername);
 
