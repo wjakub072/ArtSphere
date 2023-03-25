@@ -1,10 +1,13 @@
 //import './App.css';
-//import UserView from './components/UserView/UserViewMain';
-import RegisterView from './components/RegisterView/register-view';
+import UserView from './components/UserView/UserViewMain'; //Widok użytkownika/administratora
+//import RegisterView from './components/RegisterView/register-view'; //widok rejestracji
 
 function App() {
   return (
-    <RegisterView />
+    //Widok Rejestracji
+    //<RegisterView />
+    //Widok Użytkownika/Administratora
+    <UserView />
   );
 }
 

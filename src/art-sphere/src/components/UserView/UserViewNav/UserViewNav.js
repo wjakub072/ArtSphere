@@ -35,7 +35,7 @@ const UserViewNav = ({active}) => {
             <a href="#0" onClick = { e => changeContent(e, "UserArts")}>Twoje dzieła</a>
           </li>
           <li>
-            <a href="#0" onClick={ e => e.preventDefault() }>Panel Administratora</a>
+            <a href="#0" onClick = { e => changeContent(e, "AdminPanel") }>Panel Administratora</a>
           </li>
           <li>
             <a href="#0">Wyloguj się</a>
