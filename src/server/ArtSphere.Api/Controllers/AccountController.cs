@@ -35,7 +35,7 @@ public class AccountController : ControllerBase
             await _usersRepository.DeleteUserAsync(user.AccountId);
         }
 
-        await _userManager.DeleteAsync(user);
+        await _userManager.DeleteAsync(user!);
         return Ok();
     }
 
@@ -50,7 +50,14 @@ public class AccountController : ControllerBase
         var user = await _userManager.FindByEmailAsync(payload.EmailOrUsername) 
                    ?? await _userManager.FindByNameAsync(payload.EmailOrUsername);
 
+
         if (user == null) return BadRequest(new { message = "Nie odnaleziono użytkownika o podanym emailu." });
+
+        if(!(await _userManager.CheckPasswordAsync(user, payload.CurrentPassword)))
+        {
+            return BadRequest(new { message = "Podano błędne aktualne hasło użytkownika." });
+        }
+
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         var result = await _userManager.ResetPasswordAsync(user, resetToken, payload.NewPassword);
