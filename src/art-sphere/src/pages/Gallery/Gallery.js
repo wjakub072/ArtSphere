@@ -1,9 +1,12 @@
 import useWebsiteTitle from "../../hooks/useWebsiteTitle"
+import Filters from "../../components/Filters/Filters";
 
 function Gallery(props) {
   useWebsiteTitle('Galeria');
   return (
-    <h2 >Tu będą się wyświetlać wszystkie obrazy</h2>
+    <div className="filters">
+      <Filters/>
+    </div>
   );
 }
 
