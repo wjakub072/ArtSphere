@@ -102,8 +102,10 @@ try
     builder.Services.ConfigureApplicationCookie(options =>
     {
         options.Cookie.Name = "X-Access-Token";
-        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-        options.Cookie.SameSite = SameSiteMode.Strict;
+        // options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        // options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.None;
         options.Cookie.HttpOnly = true;
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
         options.SlidingExpiration = true;
@@ -168,7 +170,9 @@ try
         options.AddPolicy("allowFrontEndOrigin", builder => {
             builder.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
+            //.SetIsOriginAllowed(_ => true);
         });
     });
 

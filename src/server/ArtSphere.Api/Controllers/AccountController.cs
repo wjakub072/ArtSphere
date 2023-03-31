@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtSphere.Api.Controllers;
 
+
 [Authorize]
 [ApiController]
 [Route("api/account")]
