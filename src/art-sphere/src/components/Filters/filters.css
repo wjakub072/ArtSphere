@@ -1,3 +1,29 @@
-.test {
-    width: 23rem;
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.col {
+    min-width: 25rem;
+    padding: 1%;
+}
+
+.row {
+    margin-bottom: 1rem;
+}
+
+.two-part{
+    display: flex;
+    float: left;
+}
+
+.GenericComboImput{
+    margin-bottom: 1rem;
+}
+
+.col-sub{
+    min-width: 40%;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
