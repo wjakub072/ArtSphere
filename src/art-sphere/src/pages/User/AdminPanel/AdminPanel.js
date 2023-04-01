@@ -1,3 +1,4 @@
+import React from "react";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 
 function AdminPanel(props) {

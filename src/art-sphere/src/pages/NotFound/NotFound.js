@@ -1,3 +1,4 @@
+import React from "react";
 import useWebsiteTitle from "../../hooks/useWebsiteTitle";
 
 export default function NotFound(props) {

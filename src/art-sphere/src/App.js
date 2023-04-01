@@ -18,6 +18,7 @@ import UserArts from './pages/User/UserArts/UserArts';
 import AdminPanel from './pages/User/AdminPanel/AdminPanel';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './hoc/ProtectedRoute';
+import React from 'react';
 
 
 function App() {

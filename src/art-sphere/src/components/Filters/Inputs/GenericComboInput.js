@@ -1,6 +1,6 @@
-import { Fragment, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { CheckIcon, ArrowDownIcon } from '@heroicons/react/solid'
 import classNames from 'classnames';    
 
 export default function GenericComboImput({title, list}){
@@ -18,7 +18,7 @@ export default function GenericComboImput({title, list}){
                     <span className="ml-3 block truncate">{selected.name}</span>
                   </span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                    <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    <ArrowDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                   </span>
                 </Listbox.Button>
     

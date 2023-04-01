@@ -1,6 +1,7 @@
 import {Outlet} from "react-router-dom";
 import UserNav from "./UserNav/UserNav";
 import './User.css';
+import React from "react";
 
 function User() {
   return(

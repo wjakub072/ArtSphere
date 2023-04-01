@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 
-//import { SearchIcon as MagnifyingGlassIcon , UserIcon } from '@heroicons/react/solid';
+import { SearchIcon as MagnifyingGlassIcon , UserIcon } from '@heroicons/react/solid';
 
 function ArtistSearchBox({ value, onChange }) {
   const [focused, setFocused] = useState(false);

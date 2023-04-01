@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './filters.css';
 import GenericComboImput from './Inputs/GenericComboInput';
 import PriceInput from './Inputs/PriceInput';
