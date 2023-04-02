@@ -8,10 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtSphere.Api.Controllers;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> a5e3f3cb8c28a88e0a3397f58f6b05d61e1ddc1a
 [Authorize]
 [ApiController]
 [Route("api/account")]
@@ -39,11 +36,7 @@ public class AccountController : ControllerBase
             await _usersRepository.DeleteUserAsync(user.AccountId);
         }
 
-<<<<<<< HEAD
-        await _userManager.DeleteAsync(user!);
-=======
         await _userManager.DeleteAsync(user);
->>>>>>> a5e3f3cb8c28a88e0a3397f58f6b05d61e1ddc1a
         return Ok();
     }
 
@@ -58,18 +51,7 @@ public class AccountController : ControllerBase
         var user = await _userManager.FindByEmailAsync(payload.EmailOrUsername) 
                    ?? await _userManager.FindByNameAsync(payload.EmailOrUsername);
 
-<<<<<<< HEAD
-
         if (user == null) return BadRequest(new { message = "Nie odnaleziono użytkownika o podanym emailu." });
-
-        if(!(await _userManager.CheckPasswordAsync(user, payload.CurrentPassword)))
-        {
-            return BadRequest(new { message = "Podano błędne aktualne hasło użytkownika." });
-        }
-
-=======
-        if (user == null) return BadRequest(new { message = "Nie odnaleziono użytkownika o podanym emailu." });
->>>>>>> a5e3f3cb8c28a88e0a3397f58f6b05d61e1ddc1a
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         var result = await _userManager.ResetPasswordAsync(user, resetToken, payload.NewPassword);

@@ -103,13 +103,9 @@ try
     {
         options.Cookie.Name = "X-Access-Token";
         options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-<<<<<<< HEAD
-        options.Cookie.SameSite = SameSiteMode.Strict;
-=======
         // options.Cookie.SameSite = SameSiteMode.Strict;
         // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.None;
->>>>>>> a5e3f3cb8c28a88e0a3397f58f6b05d61e1ddc1a
         options.Cookie.HttpOnly = true;
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
         options.SlidingExpiration = true;
@@ -174,13 +170,9 @@ try
         options.AddPolicy("allowFrontEndOrigin", builder => {
             builder.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
-<<<<<<< HEAD
-            .AllowAnyMethod();
-=======
             .AllowAnyMethod()
             .AllowCredentials();
             // .SetIsOriginAllowed(_ => true);
->>>>>>> a5e3f3cb8c28a88e0a3397f58f6b05d61e1ddc1a
         });
     });
 
