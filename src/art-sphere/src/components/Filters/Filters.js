@@ -5,6 +5,8 @@ import PriceInput from './Inputs/PriceInput';
 import DimensionsInput from './Inputs/DimentionsInput';
 import ArtistSearchBox from './Inputs/ArtistSearchbox';
 import TitleSearchbox from './Inputs/TitleSearchbox';
+import SearchButton from './SearchButton';
+import ClearButton from './ClearButton';
 
 function Filters(props) {
     const [filters, setFilters] = useState({
@@ -162,7 +164,7 @@ function Filters(props) {
               </div>
             </div>
             <div className='row'>
-              <ArtistSearchBox></ArtistSearchBox>
+              <ArtistSearchBox/>
             </div>
             <div className='row'>
               <TitleSearchbox/>
@@ -188,6 +190,16 @@ function Filters(props) {
                 </div>
                 <div className='col-sub'>
                   <DimensionsInput title='Maximum' value={filters.height_max} onChange={handleFilterChange}/>
+                </div>
+              </div>
+            </div>           
+            <div className='row button-row'>
+              <div className='two-part'>
+                <div className='col-sub'>
+                  <ClearButton title='Wyczyść filtry'/>
+                </div>
+                <div className='col-sub'>
+                  <SearchButton title='Filtruj'/>
                 </div>
               </div>
             </div>

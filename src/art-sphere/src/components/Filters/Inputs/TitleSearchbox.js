@@ -19,9 +19,9 @@ function TitleSearchbox({ value, onChange }) {
   };
 
   return (
-    <div className="relative">
+    <div className="TitleSearchbox relative">
       <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">
-        Search by Title
+        Wyszukaj tytuł
       </label>
       <div className="mt-1 relative rounded-md shadow-sm">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
