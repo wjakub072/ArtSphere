@@ -4,6 +4,7 @@ import GenericComboImput from './Inputs/GenericComboInput';
 import PriceInput from './Inputs/PriceInput';
 import DimensionsInput from './Inputs/DimentionsInput';
 import ArtistSearchBox from './Inputs/ArtistSearchbox';
+import TitleSearchbox from './Inputs/TitleSearchbox';
 
 function Filters(props) {
     const [filters, setFilters] = useState({
@@ -143,9 +144,6 @@ function Filters(props) {
 
     return (
         <div className="container">
-          <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
           <div className='col'>
             <GenericComboImput title='Kategorie' list={possible_categories}/>
             <GenericComboImput title='Tematy' list={possible_topics}/>
@@ -164,7 +162,10 @@ function Filters(props) {
               </div>
             </div>
             <div className='row'>
-           
+              <ArtistSearchBox></ArtistSearchBox>
+            </div>
+            <div className='row'>
+              <TitleSearchbox/>
             </div>
           </div>
           <div className='col'>
