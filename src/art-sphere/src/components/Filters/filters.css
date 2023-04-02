@@ -2,10 +2,11 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    background-color: brown;
 }
 
 .col {
-    min-width: 25rem;
+    min-width: 10rem;
     padding: 1%;
 }
 
@@ -16,14 +17,20 @@
 .two-part{
     display: flex;
     float: left;
-}
-
-.GenericComboImput{
-    margin-bottom: 1rem;
+    background-color: aqua;
 }
 
 .col-sub{
-    min-width: 40%;
+    min-width: 4rem;
     margin-left: 1rem;
     margin-right: 1rem;
+    background-color: bisque;
+}
+
+.PriceInput{
+    max-width: 40%;
+}
+
+.GenericComboInput{
+    margin-bottom: 1rem;
 }

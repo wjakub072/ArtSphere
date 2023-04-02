@@ -7,7 +7,7 @@ export default function GenericComboImput({title, list}){
     const [selected, setSelected] = useState(list[0]);
 
     return (
-      <div className='GenericComboImput'>
+      <div className='GenericComboInput'>
         <Listbox value={selected} onChange={setSelected}>
           {({ open }) => (
             <>

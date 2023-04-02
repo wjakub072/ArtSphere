@@ -143,6 +143,9 @@ function Filters(props) {
 
     return (
         <div className="container">
+          <h1 class="text-3xl font-bold underline">
+    Hello world!
+  </h1>
           <div className='col'>
             <GenericComboImput title='Kategorie' list={possible_categories}/>
             <GenericComboImput title='Tematy' list={possible_topics}/>
