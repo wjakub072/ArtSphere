@@ -1,0 +1,49 @@
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.col {
+    min-width: 25rem;
+    padding: 1%;
+}
+
+.row {
+    margin-bottom: 1rem;
+}
+
+.button-row {
+    margin-top: 3rem;
+}
+
+.two-part{
+    display: flex;
+    float: left;
+}
+
+.col-sub{
+    min-width: 4rem;
+    width: 50%;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.width-100{
+    width: 100%;
+}
+
+.ArtistSearchBox {
+    padding: 2%;
+    padding-right: 5%;
+}
+
+.TitleSearchbox{
+    padding: 2%;
+    padding-right: 5%;
+}
+
+.GenericComboInput{
+    margin-bottom: 2rem;
+}
+  

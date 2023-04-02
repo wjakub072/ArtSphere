@@ -102,9 +102,15 @@ try
     builder.Services.ConfigureApplicationCookie(options =>
     {
         options.Cookie.Name = "X-Access-Token";
+<<<<<<< HEAD
         // options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         // options.Cookie.SameSite = SameSiteMode.Strict;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+=======
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        // options.Cookie.SameSite = SameSiteMode.Strict;
+        // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+>>>>>>> FilterView
         options.Cookie.SameSite = SameSiteMode.None;
         options.Cookie.HttpOnly = true;
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
@@ -172,7 +178,11 @@ try
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
+<<<<<<< HEAD
             //.SetIsOriginAllowed(_ => true);
+=======
+            // .SetIsOriginAllowed(_ => true);
+>>>>>>> FilterView
         });
     });
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import axios from "axios";
 
 const instance = axios.create({
@@ -6,3 +7,13 @@ const instance = axios.create({
 });
 
 export default instance;
+=======
+import axios from 'axios';
+
+const instance = axios.create({
+    baseURL: 'http://127.0.0.1:5006/api/auth',
+    withCredentials: true,
+});
+
+export default instance;
+>>>>>>> FilterView

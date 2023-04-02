@@ -1,7 +1,7 @@
 import useWebsiteTitle from "../../hooks/useWebsiteTitle";
 
 export default function NotFound(props) {
-  useWebsiteTitle('404');
+  useWebsiteTitle("404");
   return (
     <div>
       <h2>404</h2>
