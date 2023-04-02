@@ -1,0 +1,50 @@
+.loginForm {
+  font-size: medium;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+input.loginForm {
+  padding: 10px;
+  margin-top: 30px;
+  text-align: left;
+  border-color: #929084;
+  border-style: solid;
+  border-radius: 4px;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 10px;
+}
+
+input.loginForm:focus {
+  background-color: #fff;
+  padding: 12px;
+}
+
+button.loginForm {
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #2660a4;
+  color: #fff;
+  border-color: #2660a4;
+  border-style: solid;
+  border-radius: 4px;
+}
+
+button.loginForm:hover {
+  background-color: #3772ff;
+  border-color: #3772ff;
+  cursor: pointer;
+}
+
+h2.loginForm {
+  font-size: 24px;
+  letter-spacing: 3px;
+  color: #1c1c1c;
+}
+
+.login-form-container {
+  width: 400px;
+  margin: 0 auto;
+}

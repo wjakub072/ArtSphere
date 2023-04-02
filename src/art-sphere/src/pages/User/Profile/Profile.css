@@ -1,0 +1,53 @@
+/* 
+#555555
+#108df3 
+*/
+
+.user-profile-wrap h2 {
+  font-size: 2rem;
+}
+.user-profile-wrap .user-profile-form {
+  color: white;
+}
+.user-profile-wrap .user-profile-form label{
+  display: block;
+}
+.user-profile-wrap .user-profile-form label input {
+  display: block;
+  border: black solid 2px;
+  border-radius: 5px;
+  padding: 7px;
+  font-size: 0.9rem;
+  margin: 0.5rem auto;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 10px;
+  
+}
+.user-profile-wrap .user-profile-form textarea {
+  border: black solid 2px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  min-width: 10%;
+  max-height: 200px;
+  margin: 0.5rem auto;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 10px;
+  display: block;
+}
+.user-profile-wrap .user-profile-form label input:focus, .user-profile-wrap .user-profile-form textarea:focus {
+  border-color: #108df3;
+  outline: none;
+}
+.user-profile-wrap .user-profile-form input[type=submit] {
+  font-size: 0.9rem;
+  padding: 7px;
+  border-radius: 5px;
+  cursor: pointer;
+  
+}
+
+.user-profile-form .form-control {
+  width: 250px;
+}
