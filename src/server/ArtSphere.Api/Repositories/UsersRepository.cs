@@ -31,9 +31,9 @@ public class UsersRepository
         return appUser;
     }
 
-    public async Task<User> UpdateUserAsync(UserPersonalDataPayload payload)
+    public async Task<User> UpdateUserAddressAsync(int accountId, ProfileAddressInfoPayload payload)
     {
-        var user = _db.ASUsers.Where(u => u.Id == payload.Id!).FirstOrDefault();
+        var user = _db.ASUsers.Where(u => u.Id == accountId).FirstOrDefault();
         if(user == null) throw new Exception("Użytkownik o podanym Id nie został odnaleziony.");
 
         user.FirstName = payload.FirstName;
@@ -42,11 +42,43 @@ public class UsersRepository
         user.AddressCountry = payload.AddressCountry;
         user.AddressCity = payload.AddressCity;
         user.AddressBuilding = payload.AddressBuilding;
-        user.AddressAppartment = payload.AddressAppartment??string.Empty;
+        user.AddressApartment = payload.AddressApartment;
+        user.AddressPostalCode = payload.AddressPostalCode;
 
         await _db.SaveChangesAsync();
         return user;
     }
+
+    public async Task<User> UpdateUserCompanyAsync(int accountId, ProfileCompanyInfoPayload payload)
+    {
+        var user = _db.ASUsers.Where(u => u.Id == accountId).FirstOrDefault();
+        if(user == null) throw new Exception("Użytkownik o podanym Id nie został odnaleziony.");
+
+        user.CompanyName = payload.CompanyName;
+        user.CompanyVatId = payload.CompanyVatId;
+        user.CompanyAddressStreet = payload.CompanyAddressStreet;
+        user.CompanyAddressCountry = payload.CompanyAddressCountry;
+        user.CompanyAddressCity = payload.CompanyAddressCity;
+        user.CompanyAddressBuilding = payload.CompanyAddressBuilding;
+        user.CompanyAddressApartment = payload.CompanyAddressApartment;
+
+        await _db.SaveChangesAsync();
+        return user;
+    }
+
+    public async Task<User> UpdateUserProfileAsync(int accountId, ProfileInfoPayload payload)
+    {
+        var user = _db.ASUsers.Where(u => u.Id == accountId).FirstOrDefault();
+        if(user == null) throw new Exception("Użytkownik o podanym Id nie został odnaleziony.");
+
+        user.FirstName = payload.FirstName;
+        user.LastName = payload.LastName;
+        user.Description = payload.Description??string.Empty;
+
+        await _db.SaveChangesAsync();
+        return user;
+    }
+
 
     public async Task DeleteUserAsync(int id)
     {
