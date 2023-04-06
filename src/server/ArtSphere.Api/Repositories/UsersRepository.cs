@@ -38,7 +38,8 @@ public class UsersRepository
 
         user.FirstName = payload.FirstName;
         user.LastName = payload.LastName;
-        user.PhoneNumber = payload.LastName;
+        user.PhoneNumber = payload.PhoneNumber;
+        user.AddressStreet = payload.AddressStreet;
         user.AddressCountry = payload.AddressCountry;
         user.AddressCity = payload.AddressCity;
         user.AddressBuilding = payload.AddressBuilding;
@@ -59,6 +60,7 @@ public class UsersRepository
         user.CompanyAddressStreet = payload.CompanyAddressStreet;
         user.CompanyAddressCountry = payload.CompanyAddressCountry;
         user.CompanyAddressCity = payload.CompanyAddressCity;
+        user.CompanyAddressPostalCode = payload.CompanyAddressPostalCode;
         user.CompanyAddressBuilding = payload.CompanyAddressBuilding;
         user.CompanyAddressApartment = payload.CompanyAddressApartment;
 
