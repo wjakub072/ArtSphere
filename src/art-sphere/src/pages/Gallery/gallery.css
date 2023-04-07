@@ -1,25 +1,24 @@
-.gallery{
-    position: relative;
+.gallery {
+  position: relative;
 }
 
 .filters-container {
-    position: relative;
-    height: fit-content;
-    width: fit-content;
-  }
-  
+  position: relative;
+  height: fit-content;
+  width: fit-content;
+}
 
 .filters {
-    position: fixed;
-    top: -1700px; 
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    background-color: white;
-    transition: top 0.5s ease-in-out;
-    height: fit-content;
-  }
-  
+  position: fixed;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  background-color: white;
+  transform: translateY(-110%);
+  transition: transform 0.5s ease-in-out;
+  height: fit-content;
+}
+
 .filters.show {
-   top: 110px;
+  transform: translateY(0%);
 }
