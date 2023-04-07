@@ -52,6 +52,11 @@ public class AccountController : ControllerBase
                    ?? await _userManager.FindByNameAsync(payload.EmailOrUsername);
 
         if (user == null) return BadRequest(new { message = "Nie odnaleziono użytkownika o podanym emailu." });
+
+        if(!(await _userManager.CheckPasswordAsync(user, payload.CurrentPassword))){
+            return BadRequest(new { message = "Podano błędne hasło! Aktualizacja hasła została przerwana."});
+        }
+
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         var result = await _userManager.ResetPasswordAsync(user, resetToken, payload.NewPassword);
