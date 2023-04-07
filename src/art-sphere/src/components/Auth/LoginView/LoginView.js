@@ -36,18 +36,23 @@ function LoginView() {
   useEffect(() => {
     if (password.length < 1) {
       setPasswordErrors("Hasło Pole nie może być puste");
-    } else if (password.length > 4) {
+    }
+    else if (password.search(/[a-z]/) < 0 || password.search(/[A-Z]/) < 0 || password.search(/[0-9]/) < 0) {
+      setPasswordErrors("Muszą być duże i małe litery oraz liczby");
+    }
+    else if (password.length > 7) {
       setPasswordErrors("");
-    } else {
-      setPasswordErrors("Wymagane 5 znaków");
+    } 
+    else {
+      setPasswordErrors("Wymagane 8 znaków");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password]);
-
+  
   useEffect(() => {
     setEmailErrors("");
     setPasswordErrors("");
-  }, []);
+  }, [])
 
   useEffect(() => {
     return () => setResponseError("");
@@ -65,7 +70,10 @@ function LoginView() {
 
   return (
     <div className="login-form-container mt-5">
-      <form onSubmit={submitHandler} className="bg-dark-subtle rounded-3 p-3">
+      <form
+        onSubmit={submitHandler}
+        className="bg-dark-subtle rounded-3 p-3"
+      >
         <h2 className="loginForm text-primary">Logowanie</h2>
 
         <div className="form-group">

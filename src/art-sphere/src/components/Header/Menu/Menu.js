@@ -7,7 +7,7 @@ function Menu() {
   const { user, logout } = useContext(AuthContext);
 
   return (
-    <nav className="bg-dark">
+    <nav className={`bg-dark ${style.menuNav}`}>
       <ul className={`nav p-3 justify-content-center`}>
         <li className="nav-item">
           <NavLink
