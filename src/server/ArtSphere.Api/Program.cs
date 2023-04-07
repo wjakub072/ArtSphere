@@ -102,9 +102,9 @@ try
     builder.Services.ConfigureApplicationCookie(options =>
     {
         options.Cookie.Name = "X-Access-Token";
-        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        // options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         // options.Cookie.SameSite = SameSiteMode.Strict;
-        // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.None;
         options.Cookie.HttpOnly = true;
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
