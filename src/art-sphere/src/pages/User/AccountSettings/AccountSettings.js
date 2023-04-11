@@ -6,12 +6,27 @@ import "./AccountSettings.css";
 
 const AccountSettings = () => {
   useWebsiteTitle("Ustawienia konta");
-  const { deleteAccount, setResponseError } = useContext(AuthContext);
+  const {
+    deleteAccount,
+    changeEmail,
+    changePassword,
+    passChangeResponseError,
+    setPassChangeResponseError,
+    emailChangeResponseError,
+    setEmailChangeResponseError,
+    emailChangeSuccess,
+    setEmailChangeSuccess,
+    passChangeSuccess,
+    setPassChangeSuccess,
+  } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
+  const [email2, setEmail2] = useState("");
+  const [oldPass, setOldPass] = useState("");
   const [pass, setPass] = useState("");
   const [pass2, setPass2] = useState("");
   const [emailErrors, setEmailErrors] = useState("");
+  const [emailErrors2, setEmailErrors2] = useState("");
   const [passwordErrors, setPasswordErrors] = useState("");
   const [passwordErrors2, setPasswordErrors2] = useState("");
 
@@ -33,7 +48,7 @@ const AccountSettings = () => {
 
   useEffect(() => {
     if (email.length < 1) {
-      setEmailErrors("Email - Pole nie może być puste");
+      setEmailErrors("Pole nie może być puste");
     } else if (validateEmail(email)) {
       setEmailErrors("");
     } else {
@@ -43,8 +58,19 @@ const AccountSettings = () => {
   }, [email]);
 
   useEffect(() => {
+    if (email2.length < 1) {
+      setEmailErrors2("Pole nie może być puste");
+    } else if (validateEmail(email2)) {
+      setEmailErrors2("");
+    } else {
+      setEmailErrors2("Niepoprawny email");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email2]);
+
+  useEffect(() => {
     if (pass.length < 1) {
-      setPasswordErrors("Hasło - Pole nie może być puste");
+      setPasswordErrors("Pole nie może być puste");
     } else if (
       pass.search(/[a-z]/) < 0 ||
       pass.search(/[A-Z]/) < 0 ||
@@ -61,7 +87,7 @@ const AccountSettings = () => {
 
   useEffect(() => {
     if (pass2.length < 1) {
-      setPasswordErrors2("Hasło - Pole nie może być puste");
+      setPasswordErrors2("Pole nie może być puste");
     } else if (pass2.length === pass.length) {
       setPasswordErrors2("");
     } else {
@@ -72,15 +98,40 @@ const AccountSettings = () => {
 
   useEffect(() => {
     setEmailErrors("");
+    setEmailErrors2("");
     setPasswordErrors("");
+    setPasswordErrors2("");
   }, []);
 
   useEffect(() => {
-    return () => setResponseError("");
+    return () => {
+      setPassChangeResponseError("");
+      setEmailChangeResponseError("");
+      setPassChangeSuccess("");
+      setEmailChangeSuccess("");
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const clickHandler = async () => {
+  const passwordClickHandler = async (e) => {
+    e.preventDefault();
+    const data = {
+      EmailOrUserName: email,
+      CurrentPassword: oldPass,
+      NewPassword: pass,
+    };
+    await changePassword(data);
+  };
+
+  const emailClickHandler = async (e) => {
+    e.preventDefault();
+    const data = {
+      Email: email2,
+    };
+    await changeEmail(data);
+  };
+
+  const deleteClickHandler = async () => {
     await deleteAccount();
   };
 
@@ -90,13 +141,27 @@ const AccountSettings = () => {
       <h3>Zmień hasło</h3>
       <form className="password-change-form m-3">
         <input
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          className={`form-control loginForm ${
+            emailErrors ? "is-invalid" : ""
+          }`}
+          type="email"
+          id="email"
+          placeholder="Adres email"
+        ></input>
+        <div className="invalid-feedback">{emailErrors}</div>
+
+        <input
           className={`form-control loginForm ${
             passwordErrors ? "is-invalid" : ""
           }`}
-          value={pass}
+          value={oldPass}
+          onChange={(e) => setOldPass(e.target.value)}
           type="password"
           placeholder="Aktualne hasło"
         />
+
         <input
           className={`form-control loginForm ${
             passwordErrors ? "is-invalid" : ""
@@ -107,6 +172,7 @@ const AccountSettings = () => {
           placeholder="Nowe hasło"
         />
         <div className="invalid-feedback">{passwordErrors}</div>
+
         <input
           className={`form-control loginForm ${
             passwordErrors2 ? "is-invalid" : ""
@@ -117,11 +183,23 @@ const AccountSettings = () => {
           placeholder="Potwierdź hasło"
         />
         <div className="invalid-feedback">{passwordErrors2}</div>
+
+        {passChangeResponseError && (
+          <p className="text-danger text-center mt-3 mb-0">
+            {passChangeResponseError}
+          </p>
+        )}
+        {passChangeSuccess && (
+          <p className="text-success text-center mt-3 mb-0">
+            {passChangeSuccess}
+          </p>
+        )}
         <input
-          className="btn btn-primary"
+          className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
           disabled={buttonDisabledPassword()}
           type="submit"
           value="Zmień hasło"
+          onClick={passwordClickHandler}
         />
       </form>
 
@@ -129,25 +207,38 @@ const AccountSettings = () => {
       <form className="email-change-form m-3">
         <input
           className={`form-control loginForm ${
-            emailErrors ? "is-invalid" : ""
+            emailErrors2 ? "is-invalid" : ""
           }`}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={email2}
+          onChange={(e) => setEmail2(e.target.value)}
           type="text"
           placeholder="e-mail"
         />
-        <div className="invalid-feedback">{emailErrors}</div>
+        <div className="invalid-feedback">{emailErrors2}</div>
+
+        {emailChangeResponseError && (
+          <p className="text-danger text-center mt-3 mb-0">
+            {emailChangeResponseError}
+          </p>
+        )}
+        {emailChangeSuccess && (
+          <p className="text-success text-center mt-3 mb-0">
+            {emailChangeSuccess}
+          </p>
+        )}
         <input
-          className="btn btn-primary"
+          className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
           disabled={buttonDisabledEmail()}
           type="submit"
           value="Zmień e-mail"
+          onClick={emailClickHandler}
         />
       </form>
+
       <h3>Usuwanie konta</h3>
       <input
-        className="btn btn-primary"
-        onClick={clickHandler}
+        className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
+        onClick={deleteClickHandler}
         type="button"
         value="Usuń konto"
       />

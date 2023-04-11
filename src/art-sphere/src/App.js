@@ -17,8 +17,8 @@ import InvoiceData from "./pages/User/InvoiceData/InvoiceData";
 import AccountSettings from "./pages/User/AccountSettings/AccountSettings";
 import UserArts from "./pages/User/UserArts/UserArts";
 import AdminPanel from "./pages/User/AdminPanel/AdminPanel";
-import { AuthContextProvider } from "./context/AuthContext";
 import ProtectedRoute from "./hoc/ProtectedRoute";
+import { AuthContextProvider } from "./context/AuthContext";
 
 function App() {
   const content = (
@@ -47,7 +47,7 @@ function App() {
         <Route
           path="/profil"
           element={
-            <ProtectedRoute accesBy="authenticated">
+            <ProtectedRoute accesBy="authenticated" role="klient">
               <User />
             </ProtectedRoute>
           }
@@ -59,8 +59,22 @@ function App() {
           <Route path="adresDostawy" element={<DeliveryAddress />} />
           <Route path="daneDoFaktury" element={<InvoiceData />} />
           <Route path="ustawieniaKonta" element={<AccountSettings />} />
-          <Route path="twojeDziela" element={<UserArts />} />
-          <Route path="panelAdministratora" element={<AdminPanel />} />
+          <Route
+            path="twojeDziela"
+            element={
+              <ProtectedRoute accesBy="authenticated" role="artysta">
+                <UserArts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="panelAdministratora"
+            element={
+              <ProtectedRoute accesBy="authenticated" role="administrator">
+                <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

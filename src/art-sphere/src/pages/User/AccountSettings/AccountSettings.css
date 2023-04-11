@@ -9,16 +9,21 @@
   margin: 10px auto;
   width: 40%;
 }
-.user-account-settings-wrap input[type=password], .user-account-settings-wrap input[type=text] {
+.user-account-settings-wrap input[type="password"],
+.user-account-settings-wrap input[type="text"],
+.user-account-settings-wrap input[type="email"] {
   border-radius: 5px;
   padding: 7px;
   font-size: 0.9rem;
 }
-.user-account-settings-wrap input[type=password]:focus, .user-account-settings-wrap input[type=text]:focus {
+.user-account-settings-wrap input[type="password"]:focus,
+.user-account-settings-wrap input[type="text"]:focus,
+.user-account-settings-wrap input[type="email"]:focus {
   border-color: #108df3;
   outline: none;
 }
-.user-account-settings-wrap input[type=submit], .user-account-settings-wrap input[type=button] {
+.user-account-settings-wrap input[type="submit"],
+.user-account-settings-wrap input[type="button"] {
   font-size: 0.9rem;
   padding: 7px;
   border-radius: 5px;

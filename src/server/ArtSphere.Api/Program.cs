@@ -108,6 +108,7 @@ try
         options.Cookie.SameSite = SameSiteMode.None;
         options.Cookie.HttpOnly = true;
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
+        // options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
         options.SlidingExpiration = true;
 
         options.LoginPath = "/sign-in";

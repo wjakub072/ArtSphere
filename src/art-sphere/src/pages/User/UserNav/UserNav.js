@@ -4,7 +4,7 @@ import AuthContext from "../../../context/AuthContext";
 import "./UserNav.css";
 
 const UserViewNav = (props) => {
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
   const url = "/profil";
   return (
     <div className="user-menu-wrap">
@@ -72,24 +72,30 @@ const UserViewNav = (props) => {
             Ustawienia konta
           </NavLink>
         </li>
-        <li className="nav-item">
-          <NavLink
-            to={`${url}/twojeDziela`}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className="nav-link"
-          >
-            Twoje dzieła
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink
-            to={`${url}/panelAdministratora`}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className="nav-link"
-          >
-            Panel Administratora
-          </NavLink>
-        </li>
+        {(user === "artysta" || user === "administrator") && (
+          <li className="nav-item">
+            <NavLink
+              to={`${url}/twojeDziela`}
+              style={({ isActive }) => (isActive ? { color: "red" } : {})}
+              className="nav-link"
+            >
+              Twoje dzieła
+            </NavLink>
+          </li>
+        )}
+
+        {user === "administrator" && (
+          <li className="nav-item">
+            <NavLink
+              to={`${url}/panelAdministratora`}
+              style={({ isActive }) => (isActive ? { color: "red" } : {})}
+              className="nav-link"
+            >
+              Panel Administratora
+            </NavLink>
+          </li>
+        )}
+
         <li className="nav-item">
           <button onClick={() => logout()} className="nav-link">
             Wyloguj

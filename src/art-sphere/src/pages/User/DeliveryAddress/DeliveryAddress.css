@@ -8,25 +8,17 @@
   border-radius: 5px;
   padding: 7px;
   font-size: 0.9rem;
-  
 }
 .user-delivery-address-wrap .delivery-address-form label input:focus {
   border-color: #108df3;
   outline: none;
 }
-.user-delivery-address-wrap .delivery-address-form input[type=submit] {
-
+.user-delivery-address-wrap .delivery-address-form input[type="submit"] {
   margin: 0 auto;
   font-size: 0.9rem;
   padding: 7px;
   border-radius: 5px;
   cursor: pointer;
-}
-.user-delivery-address-wrap .delivery-address-form input[type=submit]:hover, .user-delivery-address-wrap .delivery-address-form input[type=submit]:focus {
-  background-color: #108df3;
-  color: white;
-  outline: unset;
-  border-color: #108df3;
 }
 
 .form-select:hover {

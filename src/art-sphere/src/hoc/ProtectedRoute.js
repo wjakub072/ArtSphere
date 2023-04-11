@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
-const ProtectedRoute = ({ children, accesBy }) => {
+const ProtectedRoute = ({ children, accesBy, role }) => {
   const { user } = useContext(AuthContext);
 
   if (accesBy === "non-authenticated") {
@@ -11,7 +11,29 @@ const ProtectedRoute = ({ children, accesBy }) => {
     }
   } else if (accesBy === "authenticated") {
     if (user) {
-      return children;
+      if (role === "klient") {
+        if (
+          user === "klient" ||
+          user === "artysta" ||
+          user === "administrator"
+        ) {
+          return children;
+        }
+      } else if (role === "artysta") {
+        if (
+          (user === "artysta" || user === "administrator") &&
+          user !== "klient"
+        ) {
+          return children;
+        }
+      } else if (role === "administrator") {
+        if (
+          user === "administrator" &&
+          (user !== "klient" || user !== "artysta")
+        ) {
+          return children;
+        }
+      }
     }
   }
   return <Navigate to={"/"} replace></Navigate>;

@@ -115,7 +115,7 @@ const DeliveryAddress = () => {
         </label>
 
         <input
-          className="btn btn-primary "
+          className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
           type="submit"
           value="Zapisz dane adresowe"
         />
