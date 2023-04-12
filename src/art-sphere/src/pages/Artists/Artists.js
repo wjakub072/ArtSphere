@@ -1,11 +1,9 @@
-import useWebsiteTitle from "../../hooks/useWebsiteTitle"
+import useWebsiteTitle from "../../hooks/useWebsiteTitle";
 
 function Artists(props) {
-  useWebsiteTitle('Artyści');
+  useWebsiteTitle("Artyści");
 
-  return (
-    <h2 >Tu będą się wyświetlali artyści</h2>
-  );
+  return <h2>Tu będą się wyświetlali artyści</h2>;
 }
 
 export default Artists;

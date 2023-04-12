@@ -1,0 +1,61 @@
+.gallery {
+  position: relative;
+}
+
+.filters-container, .offers-container {
+  position: relative;
+  height: fit-content;
+  width: fit-content;
+}
+
+.filters {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  background-color: white;
+  transform: translateY(-110%);
+  transition: transform 0.5s ease-in-out;
+  height: fit-content;
+}
+
+.filters.show {
+  transform: translateY(0%);
+}
+
+.offers {
+  width: 100%;
+  height: fit-content;
+  margin-top: 25px;
+}
+
+.offer_card {
+  background-color: #2b2f32;
+  border-radius: 5px;
+  width: 300px;
+  height: 350px;
+  margin: 15px;
+  float: left;
+  padding: 10px;
+  color: #fff;
+}
+
+.offer_card:hover {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: 0.3s;
+}
+
+.offer_card_image {
+  width: auto;
+  height: 75%;
+}
+
+.offer_card_name h3 {
+  font-size: large;
+  font-weight: bold;
+}
+
+.offer_card_name_author {
+  font-style: italic;
+}

@@ -15,10 +15,3 @@
   border-color: #108df3;
   outline: none;
 }
-
-.user-invoice-data-wrap .invoice-data-form input[type=submit]:hover, .user-invoice-data-wrap .invoice-data-form input[type=submit]:focus {
-  background-color: #108df3;
-  color: white;
-  outline: unset;
-  border-color: #108df3;
-}

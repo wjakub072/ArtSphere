@@ -4,7 +4,7 @@ export function validateEmail(text) {
   return re.test(text);
 }
 
-export function validatePostcode() {
+export function validatePostcode(text) {
   const re =
     /^[0-9]{1,2}-[0-9]{1,3}$/
   return re.test(text)

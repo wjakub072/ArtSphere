@@ -7,7 +7,13 @@ import "./LoginView.css";
 
 function LoginView() {
   useWebsiteTitle("Logowanie");
-  const { login, responseError, setResponseError } = useContext(AuthContext);
+  const {
+    login,
+    responseError,
+    setResponseError,
+    sesionError,
+    setSesionError,
+  } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,16 +26,14 @@ function LoginView() {
     } else {
       return true;
     }
-  }
+  };
 
   useEffect(() => {
     if (email.length < 1) {
-      setEmailErrors(" Email Pole nie może być puste");
-    }
-    else if (validateEmail(email)) {
+      setEmailErrors("Pole nie może być puste");
+    } else if (validateEmail(email)) {
       setEmailErrors("");
-    } 
-    else {
+    } else {
       setEmailErrors("Niepoprawny email");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -37,27 +41,31 @@ function LoginView() {
 
   useEffect(() => {
     if (password.length < 1) {
-      setPasswordErrors("Hasło Pole nie może być puste");
-    }
-    else if (password.search(/[a-z]/) < 0 || password.search(/[A-Z]/) < 0 || password.search(/[0-9]/) < 0) {
+      setPasswordErrors("Pole nie może być puste");
+    } else if (
+      password.search(/[a-z]/) < 0 ||
+      password.search(/[A-Z]/) < 0 ||
+      password.search(/[0-9]/) < 0
+    ) {
       setPasswordErrors("Muszą być duże i małe litery oraz liczby");
-    }
-    else if (password.length > 7) {
+    } else if (password.length > 7) {
       setPasswordErrors("");
-    } 
-    else {
+    } else {
       setPasswordErrors("Wymagane 8 znaków");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password]);
-  
+
   useEffect(() => {
     setEmailErrors("");
     setPasswordErrors("");
-  }, [])
+  }, []);
 
   useEffect(() => {
-    return () => setResponseError("");
+    return () => {
+      setResponseError("");
+      setSesionError("");
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,11 +80,11 @@ function LoginView() {
 
   return (
     <div className="login-form-container mt-5">
-      <form
-        onSubmit={submitHandler}
-        className="bg-dark-subtle rounded-3 p-3"
-      >
+      <form onSubmit={submitHandler} className="bg-dark-subtle rounded-3 p-3">
         <h2 className="loginForm text-primary">Logowanie</h2>
+        {sesionError && (
+          <p className="text-danger text-center mt-3 mb-0">{sesionError}</p>
+        )}
 
         <div className="form-group">
           <input
@@ -110,7 +118,10 @@ function LoginView() {
           <p className="text-danger text-center mt-3 mb-0">{responseError}</p>
         )}
         <div className="loginForm">
-          <button className="m-3 btn btn-primary" disabled={buttonDisabled()}>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50"
+            disabled={buttonDisabled()}
+          >
             Zaloguj się
           </button>
         </div>

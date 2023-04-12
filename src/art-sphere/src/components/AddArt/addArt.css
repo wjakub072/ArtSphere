@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.col {
+  min-width: 30rem;
+  padding: 1%;
+}
+
+.row {
+  margin-bottom: 1rem;
+}
+
+.button-row {
+  margin-top: 3rem;
+}
+
+.two-part {
+  display: flex;
+  float: left;
+}
+
+.col-sub {
+  min-width: 4rem;
+  width: 50%;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.add-art {
+  transition: max-height 0.5s ease-in-out;
+  max-height: 0;
+  overflow: hidden;
+}
+.add-art.show {
+  max-height: 100%;
+}
