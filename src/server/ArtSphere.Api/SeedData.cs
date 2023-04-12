@@ -1,3 +1,4 @@
+using ArtSphere.Api.Repositories;
 using ArtSphere.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
@@ -47,6 +48,9 @@ public class SeedData
         RoleManager<ApplicationRole> roleManager =
             scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
+        UsersRepository userRepo = 
+            scope.ServiceProvider.GetRequiredService<UsersRepository>();
+
         // roles
         foreach (string roleName in ApplicationRoles.All)
         {
@@ -73,9 +77,12 @@ public class SeedData
 
         if (user == null)
         {
+            var account = await userRepo.CreateBlankUserAsync(adminName);
+
             user = new ApplicationUser()
             {
-                UserName = adminName
+                UserName = adminName,
+                AccountId = account.Id
             };
 
             IdentityResult result = await userManager.CreateAsync(user, adminPassword);

@@ -20,11 +20,11 @@ public class UsersRepository
         return user;
     }
 
-    public async Task<User> CreateBlankUserAsync(SignUpCredentialsPayload payload)
+    public async Task<User> CreateBlankUserAsync(string email)
     {
         User appUser = new User() 
         { 
-            Email = payload.Email
+            Email = email
         };
         _db.Add(appUser);
         await _db.SaveChangesAsync();
