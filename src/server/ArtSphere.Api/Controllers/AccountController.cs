@@ -70,4 +70,40 @@ public class AccountController : ControllerBase
             return BadRequest(new PasswordChangeResult (false, "Nie udało się zaktualizować hasła."));
         }
     }
+
+    [Authorize]
+    [HttpPost("change-email")]
+    public async Task<ActionResult<PasswordChangeResult>> ChangeEmailAsync([FromBody] ChangeEmailPayload payload)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var user = await _userManager.FindByEmailAsync(User.Identity?.Name) 
+                   ?? await _userManager.FindByNameAsync(User.Identity?.Name);
+
+        if (user == null) return BadRequest(new { message = "Błąd autoryzacji użytkownika." });
+
+        if(!(await _userManager.CheckPasswordAsync(user, payload.CurrentPassword))){
+            return BadRequest(new { message = "Podano błędne hasło!"});
+        }
+
+        //var token = await _userManager.GenerateChangeEmailTokenAsync(user, payload.NewEmail);
+        var result = await _userManager.SetUserNameAsync(user, payload.NewEmail);
+        if(result.Succeeded)
+        {
+            result = await _userManager.SetEmailAsync(user, payload.NewEmail);
+            await _usersRepository.UpdateUserEmailAsync(user.AccountId, payload.NewEmail);
+            if (result.Succeeded)
+            {
+                return Ok(new PasswordChangeResult (true, "Email został zaktualizowany."));
+            }
+            else
+            {
+                return BadRequest(new PasswordChangeResult (false, "Nie udało się zaktualizować emaila."));
+            }
+        } else 
+        {
+            return BadRequest(new { message = "Błąd podczas zmiany loginu użytkownika!"});
+        }
+    }
+
 }

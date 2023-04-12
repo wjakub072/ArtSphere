@@ -31,6 +31,17 @@ public class UsersRepository
         return appUser;
     }
 
+    public async Task<User> UpdateUserEmailAsync(int accountId, string newEmail)
+    {
+        var user = _db.ASUsers.Where(u => u.Id == accountId).FirstOrDefault();
+        if(user == null) throw new Exception("Użytkownik o podanym Id nie został odnaleziony.");
+
+        user.Email = newEmail;
+
+        await _db.SaveChangesAsync();
+        return user;
+    }
+
     public async Task<User> UpdateUserAddressAsync(int accountId, ProfileAddressInfoPayload payload)
     {
         var user = _db.ASUsers.Where(u => u.Id == accountId).FirstOrDefault();
