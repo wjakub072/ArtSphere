@@ -38,7 +38,7 @@ function ArtistInput({ value, onChange }) {
                 focused,
             }
           )}
-          placeholder="Imie 'Pseudonim' Nazwisko"
+          placeholder="Imie Nazwisko"
           value={value}
           onChange={handleChange}
           onFocus={handleFocus}

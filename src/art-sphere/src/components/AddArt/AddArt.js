@@ -7,6 +7,7 @@ import TitleInput from "./Inputs/TitleInput";
 import "./addArt.css";
 import AddArtButton from "./Inputs/AddArtButton";
 import AddImage from "./Inputs/AddImage";
+import TagInput from "./Inputs/TagInput";
 
 function AddArt() {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -177,6 +178,9 @@ function AddArt() {
               value={filters.width}
               onChange={handleFilterChange}
             />
+          </div>
+          <div className="row">
+            <TagInput />
           </div>
         </div>
         <div className="col-sub">
