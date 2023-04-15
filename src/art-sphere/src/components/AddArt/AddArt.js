@@ -2,7 +2,6 @@ import { useState } from "react";
 import GenericComboImput from "./Inputs/GenericComboInput";
 import PriceInput from "./Inputs/PriceInput";
 import DimensionsInput from "./Inputs/DimentionsInput";
-import ArtistInput from "./Inputs/ArtistInput";
 import TitleInput from "./Inputs/TitleInput";
 import "./addArt.css";
 import AddArtButton from "./Inputs/AddArtButton";
@@ -15,12 +14,12 @@ function AddArt() {
     setShowAddForm(!showAddForm);
   };
 
-  const [filters, setFilters] = useState({
+  const [artData, setArtData] = useState({
+    img: "",
     category: "",
     topic: "",
     technic: "",
     title: "",
-    author: "",
     price: 0,
     height: 0,
     width: 0,
@@ -125,11 +124,27 @@ function AddArt() {
     },
   ];
 
-  function handleFilterChange(newFilterValus) {
-    console.log(newFilterValus);
-    setFilters({ ...filters, price: newFilterValus });
-    //props.onFilterChange(newFilters);
-  }
+  const clickHandle = () => {
+    if (
+      !(artData.img === "") &&
+      !(artData.img === null) &&
+      !(artData.img === undefined) &&
+      !(artData.category === "") &&
+      !(artData.topic === "") &&
+      !(artData.technic === "") &&
+      !(artData.category === "-") &&
+      !(artData.topic === "-") &&
+      !(artData.technic === "-") &&
+      !(artData.title === "") &&
+      !(artData.price === 0) &&
+      !(artData.height === 0) &&
+      !(artData.width === 0)
+    ) {
+      console.log(artData);
+    } else {
+      alert("Wypełnij wszystkie pola");
+    }
+  };
 
   return (
     <>
@@ -138,53 +153,68 @@ function AddArt() {
       </div>
       <div className={`container add-art ${showAddForm ? "show" : ""}`}>
         <div className="col-sub">
-          <AddImage />
+          <AddImage
+            value={artData.img}
+            onChange={(val) => setArtData({ ...artData, img: val })}
+          />
         </div>
         <div className="col">
           <div className="row">
-            <GenericComboImput title="Kategorie" list={possible_categories} />
+            <GenericComboImput
+              title="Kategoria"
+              list={possible_categories}
+              onChange={(val) => setArtData({ ...artData, category: val.name })}
+            />
           </div>
           <div className="row">
-            <GenericComboImput title="Tematy" list={possible_topics} />
+            <GenericComboImput
+              title="Tematyka"
+              list={possible_topics}
+              onChange={(val) => setArtData({ ...artData, topic: val.name })}
+            />
           </div>
           <div className="row">
-            <GenericComboImput title="Techniki" list={possible_technics} />
+            <GenericComboImput
+              title="Technika"
+              list={possible_technics}
+              onChange={(val) => setArtData({ ...artData, technic: val.name })}
+            />
           </div>
           <div className="row">
             <DimensionsInput
               title="Wysokość"
-              value={filters.height}
-              onChange={handleFilterChange}
+              value={artData.height}
+              onChange={(val) => setArtData({ ...artData, height: val })}
             />
           </div>
         </div>
         <div className="col">
           <div className="row">
-            <PriceInput
-              title="Cena"
-              value={filters.price}
-              onChange={handleFilterChange}
+            <TitleInput
+              value={artData.title}
+              onChange={(val) => setArtData({ ...artData, title: val })}
             />
           </div>
           <div className="row">
-            <ArtistInput />
-          </div>
-          <div className="row">
-            <TitleInput />
+            <PriceInput
+              title="Cena"
+              value={artData.price}
+              onChange={(val) => setArtData({ ...artData, price: val })}
+            />
           </div>
           <div className="row">
             <DimensionsInput
               title="Szerokość"
-              value={filters.width}
-              onChange={handleFilterChange}
+              value={artData.width}
+              onChange={(val) => setArtData({ ...artData, width: val })}
             />
           </div>
-          <div className="row">
-            <TagInput />
-          </div>
         </div>
-        <div className="col-sub">
-          <AddArtButton title="Dodaj dzieło" />
+        <div className="col">
+          <TagInput />
+        </div>
+        <div className="col-sub mt-3">
+          <AddArtButton title="Dodaj dzieło" onClick={clickHandle} />
         </div>
         <div className="col"></div>
       </div>

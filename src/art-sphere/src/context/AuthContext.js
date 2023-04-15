@@ -144,7 +144,7 @@ export const AuthContextProvider = ({ children }) => {
   const changeEmail = async (data) => {
     try {
       let response = await axios.post(
-        "http://127.0.0.1:5006/api/account/reset-password",
+        "http://127.0.0.1:5006/api/account/change-email",
         data,
         {
           withCredentials: true,

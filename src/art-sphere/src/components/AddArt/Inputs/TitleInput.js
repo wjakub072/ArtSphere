@@ -3,6 +3,7 @@ import classNames from "classnames";
 
 function TitleInput({ value, onChange }) {
   const [focused, setFocused] = useState(false);
+  const [val, setVal] = useState(value);
 
   const handleFocus = () => {
     setFocused(true);
@@ -13,7 +14,8 @@ function TitleInput({ value, onChange }) {
   };
 
   const handleChange = (event) => {
-    return event.target.value;
+    setVal(event.target.value);
+    onChange(val);
   };
 
   return (
@@ -39,7 +41,7 @@ function TitleInput({ value, onChange }) {
             }
           )}
           placeholder="Tytuł"
-          value={value}
+          value={val}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

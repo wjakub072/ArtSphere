@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 function DimensionInput({ title, value, onChange }) {
   const [focused, setFocused] = useState(false);
-  const [val, setVal] = useState(0);
+  const [val, setVal] = useState(value);
 
   const handleFocus = () => {
     setFocused(true);
@@ -28,15 +28,15 @@ function DimensionInput({ title, value, onChange }) {
   return (
     <div className="relative">
       <label
-        htmlFor="dimension"
+        htmlFor={title}
         className="block text-sm font-medium leading-6 text-gray-900"
       >
         {title}
       </label>
       <div className="mt-2 relative rounded-md shadow-sm">
         <input
-          id="dimension"
-          name="dimension"
+          id={title}
+          name={title}
           type="number"
           className={classNames(
             "form-input rounded-md block w-full py-2 pl-4 pr-12 sm:text-sm sm:leading-5",

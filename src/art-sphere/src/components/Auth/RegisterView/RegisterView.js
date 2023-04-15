@@ -17,14 +17,6 @@ const RegisterView = () => {
   const [passwordErrors, setPasswordErrors] = useState("");
   const [passwordErrors2, setPasswordErrors2] = useState("");
 
-  const buttonDisabled = () => {
-    if (passwordErrors === "" && emailErrors === "" && passwordErrors2 === "") {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
   useEffect(() => {
     if (email.length < 1) {
       setEmailErrors("Pole nie może być puste");
@@ -33,7 +25,6 @@ const RegisterView = () => {
     } else {
       setEmailErrors("Niepoprawny email");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email]);
 
   useEffect(() => {
@@ -50,7 +41,6 @@ const RegisterView = () => {
     } else {
       setPasswordErrors("Wymagane 8 znaków");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pass]);
 
   useEffect(() => {
@@ -59,7 +49,7 @@ const RegisterView = () => {
     } else if (pass2 === pass) {
       setPasswordErrors2("");
     } else {
-      setPasswordErrors2("Należy wpisać hasło ponownie");
+      setPasswordErrors2("Hasła nie są identyczne");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pass2]);
@@ -88,7 +78,19 @@ const RegisterView = () => {
       email: email,
       password: pass,
     };
-    await register(data, loginData);
+    if (!email.length < 1 && !pass.length < 1 && pass2.length < 1) {
+      await register(data, loginData);
+    } else {
+      if (email.length < 1) {
+        setEmailErrors("Pole nie może być puste");
+      }
+      if (pass.length < 1) {
+        setPasswordErrors("Pole nie może być puste");
+      }
+      if (pass.length < 1) {
+        setPasswordErrors2("Pole nie może być puste");
+      }
+    }
   };
 
   return (
@@ -151,8 +153,7 @@ const RegisterView = () => {
           <p className="text-danger text-center mt-3 mb-0">{responseError}</p>
         )}
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50"
-          disabled={buttonDisabled()}
+          className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
           type="submit"
         >
           Rejestruj

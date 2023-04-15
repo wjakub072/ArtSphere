@@ -3,12 +3,16 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ArrowSmDownIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 
-export default function GenericComboImput({ title, list }) {
+export default function GenericComboImput({ title, list, onChange }) {
   const [selected, setSelected] = useState(list[0]);
 
+  const handleChange = (event) => {
+    setSelected(event);
+    onChange(event);
+  };
   return (
     <div className="">
-      <Listbox value={selected} onChange={setSelected}>
+      <Listbox value={selected} onChange={handleChange}>
         {({ open }) => (
           <>
             <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">

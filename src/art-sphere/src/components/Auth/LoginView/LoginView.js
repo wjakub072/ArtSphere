@@ -20,14 +20,6 @@ function LoginView() {
   const [emailErrors, setEmailErrors] = useState("");
   const [passwordErrors, setPasswordErrors] = useState("");
 
-  const buttonDisabled = () => {
-    if (passwordErrors === "" && emailErrors === "") {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
   useEffect(() => {
     if (email.length < 1) {
       setEmailErrors("Pole nie może być puste");
@@ -42,16 +34,8 @@ function LoginView() {
   useEffect(() => {
     if (password.length < 1) {
       setPasswordErrors("Pole nie może być puste");
-    } else if (
-      password.search(/[a-z]/) < 0 ||
-      password.search(/[A-Z]/) < 0 ||
-      password.search(/[0-9]/) < 0
-    ) {
-      setPasswordErrors("Muszą być duże i małe litery oraz liczby");
-    } else if (password.length > 7) {
-      setPasswordErrors("");
     } else {
-      setPasswordErrors("Wymagane 8 znaków");
+      setPasswordErrors("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password]);
@@ -75,7 +59,16 @@ function LoginView() {
       email: email,
       password: password,
     };
-    await login(data);
+    if (!email.length < 1 && !password.length < 1) {
+      await login(data);
+    } else {
+      if (email.length < 1) {
+        setEmailErrors("Pole nie może być puste");
+      }
+      if (password.length < 1) {
+        setPasswordErrors("Pole nie może być puste");
+      }
+    }
   };
 
   return (
@@ -118,10 +111,7 @@ function LoginView() {
           <p className="text-danger text-center mt-3 mb-0">{responseError}</p>
         )}
         <div className="loginForm">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50"
-            disabled={buttonDisabled()}
-          >
+          <button className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50">
             Zaloguj się
           </button>
         </div>

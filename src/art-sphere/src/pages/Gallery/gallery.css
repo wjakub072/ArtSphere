@@ -2,23 +2,69 @@
   position: relative;
 }
 
-.filters-container {
+.filters-container .offers-container {
   position: relative;
   height: fit-content;
   width: fit-content;
 }
 
 .filters {
-  position: fixed;
+  position: relative;
   left: 0;
+  /* top: -1000px; */
   width: 100%;
   z-index: 2;
   background-color: white;
-  transform: translateY(-110%);
-  transition: transform 0.5s ease-in-out;
-  height: fit-content;
+  transition: max-height 0.5s ease-in-out;
+  max-height: 0;
+  overflow: hidden;
+  /* transform: translateY(-110%); */
+  /* transition: transform 0.5s ease-in-out; */
+  /* transition: top 0.5s ease-in-out; */
 }
 
 .filters.show {
-  transform: translateY(0%);
+  max-height: 100%;
+  /* transform: translateY(0%); */
+  /* top: 0; */
+}
+
+.offers {
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: fit-content;
+  margin: 0 auto;
+  margin-top: 25px;
+}
+
+.offer_card {
+  background-color: #2b2f32;
+  border-radius: 5px;
+  width: 300px;
+  height: 350px;
+  margin: 15px;
+  padding: 10px;
+  color: #fff;
+}
+
+.offer_card:hover {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: 0.3s;
+}
+
+.offer_card_image {
+  width: auto;
+  height: 70%;
+}
+
+.offer_card_name h3 {
+  font-size: large;
+  font-weight: bold;
+}
+
+.offer_card_name_author {
+  font-style: italic;
 }

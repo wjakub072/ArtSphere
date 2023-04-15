@@ -1,10 +1,11 @@
 import { useState } from "react";
 
-function AddImage() {
-  const [selectedImage, setSelectedImage] = useState(null);
+function AddImage({ value, onChange }) {
+  const [selectedImage, setSelectedImage] = useState(value);
 
   function handleImageChange(event) {
     setSelectedImage(event.target.files[0]);
+    onChange(event.target.files[0]);
   }
 
   return (
