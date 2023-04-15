@@ -60,7 +60,9 @@ public class AccountController : ControllerBase
             return BadRequest(new { message = "Podano błędne hasło! Aktualizacja hasła została przerwana."});
         }
 
-        var result = await _userManager.ResetPasswordAsync(user, payload.ResetToken, payload.NewPassword);
+        var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        var result = await _userManager.ResetPasswordAsync(user, resetToken, payload.NewPassword);
 
         if (result.Succeeded)
         {
