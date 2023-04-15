@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ArtSphere.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,7 +70,23 @@ namespace ArtSphere.Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+                    LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
+                    AddressCountry = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    AddressCity = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    AddressStreet = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    AddressBuilding = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true),
+                    AddressApartment = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    AddressPostalCode = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true),
+                    CompanyName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    CompanyVatId = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
+                    CompanyAddressStreet = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    CompanyAddressBuilding = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true),
+                    CompanyAddressApartment = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    CompanyAddressPostalCode = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true),
+                    CompanyAddressCity = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    CompanyAddressCountry = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
