@@ -21,6 +21,22 @@ export const AuthContextProvider = ({ children }) => {
     return {};
   });
 
+  const [deliveryAddressData, setDeliveryAddressData] = useState(() => {
+    let deliveryAddressData = localStorage.getItem("deliveryAddressData");
+    if (deliveryAddressData) {
+      return JSON.parse(deliveryAddressData);
+    }
+    return {};
+  });
+
+  const [invoiceData, setInvoiceData] = useState(() => {
+    let invoiceData = localStorage.getItem("invoiceData");
+    if (invoiceData) {
+      return JSON.parse(invoiceData);
+    }
+    return {};
+  });
+
   const [responseError, setResponseError] = useState("");
   const [passChangeResponseError, setPassChangeResponseError] = useState("");
   const [passChangeSuccess, setPassChangeSuccess] = useState("");
@@ -44,6 +60,8 @@ export const AuthContextProvider = ({ children }) => {
       setUser(response.data.role);
       setResponseError("");
       await getProfileData();
+      await getDeliveryAddressData();
+      await getInvoiceData();
       navigate("/profil");
     } catch (err) {
       console.log("error logowania");
@@ -206,6 +224,71 @@ export const AuthContextProvider = ({ children }) => {
       console.log(err);
     }
   };
+
+  const getDeliveryAddressData = async () => {
+    try {
+      let response = await axios.get("http://127.0.0.1:5006/api/profile/address", {
+        withCredentials: true,
+      });
+      console.log("respons danych adresu dostawy");
+      console.log(response);
+      localStorage.setItem("deliveryAddressData", JSON.stringify(response.data));
+      setDeliveryAddressData(response.data);
+      //setResponseSuccess("Dane zostały zaaktualizowane");
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
+
+  const updateDeliveryAddressData = async (data) => {
+    try {
+      let response = await axios.put(
+        "http://127.0.0.1:5006/api/profile/address",
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("respons update'u adresu dostawy");
+      console.log(response);
+      await getDeliveryAddressData();
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
+
+  const getInvoiceData = async () => {
+    try {
+      let response = await axios.get("http://127.0.0.1:5006/api/profile/company", {
+        withCredentials: true,
+      });
+      console.log("respons danych do faktury");
+      console.log(response);
+      localStorage.setItem("invoiceData", JSON.stringify(response.data));
+      setUserData(response.data);
+      //setResponseSuccess("Dane zostały zaaktualizowane");
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
+
+  const updateInvoiceData = async (data) => {
+    try {
+      let response = await axios.put(
+        "http://127.0.0.1:5006/api/profile/company",
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("respons update'u danych do faktury");
+      console.log(response);
+      await getInvoiceData();
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
+
   return (
     <>
       <AuthContext.Provider
@@ -218,6 +301,8 @@ export const AuthContextProvider = ({ children }) => {
           passChangeSuccess,
           sesionError,
           userData,
+          deliveryAddressData,
+          invoiceData,
           setEmailChangeResponseError,
           setEmailChangeSuccess,
           setPassChangeResponseError,
@@ -231,6 +316,8 @@ export const AuthContextProvider = ({ children }) => {
           changeEmail,
           changePassword,
           deleteAccount,
+          updateDeliveryAddressData,
+          updateInvoiceData,
         }}
       >
         {children}
