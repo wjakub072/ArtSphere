@@ -19,6 +19,7 @@ import UserArts from "./pages/User/UserArts/UserArts";
 import AdminPanel from "./pages/User/AdminPanel/AdminPanel";
 import ProtectedRoute from "./hoc/ProtectedRoute";
 import { AuthContextProvider } from "./context/AuthContext";
+import ArtistsDetails from "./pages/Artists/ArtistsDetails/ArtistsDetails";
 
 function App() {
   const content = (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/galeria" element={<Gallery />} />
         <Route path="/artysci" element={<Artists />} />
+        <Route path="/artysci/artysciszczegoly" element={<ArtistsDetails />} />
         <Route
           path="/logowanie"
           element={
