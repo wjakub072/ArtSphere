@@ -4,6 +4,7 @@ using ArtSphere.Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArtSphere.Api.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    partial class ApplicationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230419164916_Offer migration")]
+    partial class Offermigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,51 +73,6 @@ namespace ArtSphere.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Offers", "Sph");
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.Tag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("DefinedByUser")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TagId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tags", "Sph");
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.TagDictionary", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TagDictionary", "Sph");
                 });
 
             modelBuilder.Entity("ArtSphere.Api.Models.User", b =>
