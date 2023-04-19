@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DisplayFiltersButton from "../../components/Filters/DisplayFiltersButton";
 import Filters from "../../components/Filters/Filters";
 import useWebsiteTitle from "../../hooks/useWebsiteTitle";
 import offer_card from "../../data/offerData";
 import "./gallery.css";
+import OfferDetails from "../../components/OfferDetails/OfferDetails";
+import EditArt from "../../components/EditArt/EditArt";
+import AuthContext from "../../context/AuthContext";
 
 function Gallery(props) {
   useWebsiteTitle("Galeria");
+  const { setSesionError } = useContext(AuthContext);
+
+  useEffect(() => {
+    setSesionError("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [showFilters, setShowFilters] = useState(false);
   const handleClick = () => {
     setShowFilters(!showFilters);
@@ -50,8 +60,12 @@ function Gallery(props) {
           <div className="offer_card_view">{listItems}</div>
           <div className="offer_card_view">{listItems}</div>
           <div className="offer_card_view">{listItems}</div>
+          <div className="offer_card_view">{listItems}</div>
+          <div className="offer_card_view">{listItems}</div>
+          <div className="offer_card_view">{listItems}</div>
         </div>
       </div>
+
     </div>
   );
 }

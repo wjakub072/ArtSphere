@@ -7,7 +7,8 @@ import "./RegisterView.css";
 
 const RegisterView = () => {
   useWebsiteTitle("Rejestracja");
-  const { register, responseError, setResponseError } = useContext(AuthContext);
+  const { register, responseError, setResponseError, setSesionError } =
+    useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -58,6 +59,7 @@ const RegisterView = () => {
     setEmailErrors("");
     setPasswordErrors("");
     setPasswordErrors2("");
+    setSesionError("");
   }, []);
 
   useEffect(() => {
@@ -78,7 +80,7 @@ const RegisterView = () => {
       email: email,
       password: pass,
     };
-    if (!email.length < 1 && !pass.length < 1 && pass2.length < 1) {
+    if (!email.length < 1 && !pass.length < 1 && !pass2.length < 1) {
       await register(data, loginData);
     } else {
       if (email.length < 1) {
@@ -87,7 +89,7 @@ const RegisterView = () => {
       if (pass.length < 1) {
         setPasswordErrors("Pole nie może być puste");
       }
-      if (pass.length < 1) {
+      if (pass2.length < 1) {
         setPasswordErrors2("Pole nie może być puste");
       }
     }
@@ -150,7 +152,7 @@ const RegisterView = () => {
           </label>
         </div>
         {responseError && (
-          <p className="text-danger text-center mt-3 mb-0">{responseError}</p>
+          <p className="text-danger text-center my-3">{responseError}</p>
         )}
         <button
           className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"

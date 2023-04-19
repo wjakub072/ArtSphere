@@ -7,13 +7,8 @@ import "./LoginView.css";
 
 function LoginView() {
   useWebsiteTitle("Logowanie");
-  const {
-    login,
-    responseError,
-    setResponseError,
-    sesionError,
-    setSesionError,
-  } = useContext(AuthContext);
+  const { login, responseError, setResponseError, sesionError } =
+    useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,7 +43,6 @@ function LoginView() {
   useEffect(() => {
     return () => {
       setResponseError("");
-      setSesionError("");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -116,19 +110,19 @@ function LoginView() {
           </button>
         </div>
         <p className="loginForm">
-          <a
-            className="btn nav-link text-primary text-decoration-underline"
-            href="#0"
+          <NavLink
+            to={"/logowanie/odzyskiwanieHasla"}
+            className="btn nav-link text-primary text-decoration-underline m-2"
           >
             Nie pamiętam hasła
-          </a>
+          </NavLink>
         </p>
 
         <NavLink
           to={"/rejestracja"}
           className="btn nav-link text-primary text-decoration-underline m-2"
         >
-          Nie masz konta? Zatejestruj się!
+          Nie masz konta? Zarejestruj się!
         </NavLink>
       </form>
     </div>

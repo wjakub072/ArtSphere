@@ -3,30 +3,25 @@ import GenericComboImput from "./Inputs/GenericComboInput";
 import PriceInput from "./Inputs/PriceInput";
 import DimensionsInput from "./Inputs/DimentionsInput";
 import TitleInput from "./Inputs/TitleInput";
-import "./addArt.css";
-import AddArtButton from "./Inputs/AddArtButton";
+import "./editArt.css";
+import EditArtButton from "./Inputs/EditArtButton";
 import AddImage from "./Inputs/AddImage";
 import TagInput from "./Inputs/TagInput";
 import Description from "./Inputs/Description";
 
-function AddArt() {
-  const [showAddForm, setShowAddForm] = useState(false);
-  const handleClick = () => {
-    setShowAddForm(!showAddForm);
-  };
-
+function EditArt() {
   const [validateError, setValidateError] = useState("");
 
   const [artData, setArtData] = useState({
     img: "",
-    category: "",
-    topic: "",
-    technic: "",
-    title: "",
-    description: "",
-    price: 0,
-    height: 0,
-    width: 0,
+    category: "Obrazy",
+    topic: "Abstrakcja",
+    technic: "Akryl",
+    title: "Jakiś tytuł",
+    description: "Cześć jestem opisem",
+    price: 214,
+    height: 21,
+    width: 21,
   });
 
   const possible_categories = [
@@ -154,11 +149,8 @@ function AddArt() {
 
   return (
     <>
-      <div>
-        <button onClick={handleClick}>Dodaj Dzieło</button>
-      </div>
-      <div className={`container add-art ${showAddForm ? "show" : ""}`}>
-        <div className="col-sub">
+      <div className={`container`}>
+        <div className="col-sub" style={{ width: "70%" }}>
           <AddImage
             value={artData.img}
             onChange={(val) => setArtData({ ...artData, img: val })}
@@ -168,6 +160,7 @@ function AddArt() {
           <div className="row">
             <GenericComboImput
               title="Kategoria"
+              val={artData.category}
               list={possible_categories}
               onChange={(val) => setArtData({ ...artData, category: val.name })}
             />
@@ -175,6 +168,7 @@ function AddArt() {
           <div className="row">
             <GenericComboImput
               title="Tematyka"
+              val={artData.topic}
               list={possible_topics}
               onChange={(val) => setArtData({ ...artData, topic: val.name })}
             />
@@ -182,6 +176,7 @@ function AddArt() {
           <div className="row">
             <GenericComboImput
               title="Technika"
+              val={artData.technic}
               list={possible_technics}
               onChange={(val) => setArtData({ ...artData, technic: val.name })}
             />
@@ -223,11 +218,18 @@ function AddArt() {
         <div className="col">
           <TagInput />
         </div>
-        <div className="col-sub mt-3">
-          {validateError && (
-            <div className="text-danger text-center mb-4">{validateError}</div>
-          )}
-          <AddArtButton title="Dodaj dzieło" onClick={clickHandle} />
+        <div style={{ width: "70%", margin: "0 auto" }}>
+          <div
+            className="col-sub mt-3"
+            style={{ width: "70%", margin: "0 auto" }}
+          >
+            {validateError && (
+              <div className="text-danger text-center mb-4">
+                {validateError}
+              </div>
+            )}
+            <EditArtButton title="Dodaj dzieło" onClick={clickHandle} />
+          </div>
         </div>
         <div className="col"></div>
       </div>
@@ -235,4 +237,4 @@ function AddArt() {
   );
 }
 
-export default AddArt;
+export default EditArt;
