@@ -6,17 +6,48 @@ import "./DeliveryAddress.css";
 
 const DeliveryAddress = () => {
   useWebsiteTitle("Adres dostawy");
-  const { responseError, setResponseError } = useContext(AuthContext);
+  const {
+    responseError,
+    setResponseError,
+    responseSuccess,
+    setResponseSuccess,
+    deliveryAddressData,
+    updateDeliveryAddressData,
+  } = useContext(AuthContext);
 
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [phone, setPhone] = useState("");
-  const [street, setStreet] = useState("");
-  const [homenr, setHomenr] = useState("");
-  const [flatnr, setFlatnr] = useState("");
-  const [postcode, setPostcode] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
+  const [name, setName] = useState(
+    deliveryAddressData.firstName ? deliveryAddressData.firstName : ""
+  );
+  const [surname, setSurname] = useState(
+    deliveryAddressData.lastName ? deliveryAddressData.lastName : ""
+  );
+  const [phone, setPhone] = useState(
+    deliveryAddressData.phoneNumber ? deliveryAddressData.phoneNumber : ""
+  );
+  const [street, setStreet] = useState(
+    deliveryAddressData.addressStreet ? deliveryAddressData.addressStreet : ""
+  );
+  const [homenr, setHomenr] = useState(
+    deliveryAddressData.addressBuilding
+      ? deliveryAddressData.addressBuilding
+      : ""
+  );
+  const [flatnr, setFlatnr] = useState(
+    deliveryAddressData.addressApartment
+      ? deliveryAddressData.addressApartment
+      : ""
+  );
+  const [postcode, setPostcode] = useState(
+    deliveryAddressData.addressPostalCode
+      ? deliveryAddressData.addressPostalCode
+      : ""
+  );
+  const [city, setCity] = useState(
+    deliveryAddressData.addressCity ? deliveryAddressData.addressCity : ""
+  );
+  const [country, setCountry] = useState(
+    deliveryAddressData.addressCountry ? deliveryAddressData.addressCountry : ""
+  );
 
   const [nameErrors, setNameErrors] = useState("");
   const [surnameErrors, setSurnameErrors] = useState("");
@@ -114,6 +145,14 @@ const DeliveryAddress = () => {
     setCountryErrors("");
   }, []);
 
+  useEffect(() => {
+    return () => {
+      setResponseError("");
+      setResponseSuccess("");
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const clickHandler = (e) => {
     e.preventDefault();
     if (
@@ -127,7 +166,17 @@ const DeliveryAddress = () => {
       city &&
       country
     ) {
-      console.log("Wszystko ok");
+      updateDeliveryAddressData({
+        firstName: name,
+        lastName: surname,
+        phoneNumber: phone,
+        addressStreet: street,
+        addressBuilding: homenr,
+        addressApartment: flatnr,
+        addressPostalCode: postcode,
+        addressCity: city,
+        addressCountry: country,
+      });
     } else {
       if (!name) {
         setNameErrors("Pole nie może być puste");
@@ -285,13 +334,22 @@ const DeliveryAddress = () => {
             <option value="" selected>
               -
             </option>
-            <option value="1">Polska</option>
-            <option value="2">Czehy</option>
-            <option value="3">Niemcy</option>
+            <option value="Polska">Polska</option>
+            <option value="Czehy">Czechy</option>
+            <option value="Niemcy">Niemcy</option>
+            <option value="Słowacja">Słowacja</option>
+            <option value="Ukraina">Ukraina</option>
+            <option value="Białoruś">Białoruś</option>
           </select>
           <div className="invalid-feedback absolute">{countryErrors}</div>
         </label>
 
+        {responseError && (
+          <p className="text-success text-center my-3">{responseError}</p>
+        )}
+        {responseSuccess && (
+          <p className="text-success text-center my-3">{responseSuccess}</p>
+        )}
         <input
           className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white w-44 m-3 py-2 rounded disabled:opacity-50"
           type="submit"

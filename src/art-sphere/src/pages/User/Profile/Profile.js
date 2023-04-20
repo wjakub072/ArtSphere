@@ -5,7 +5,13 @@ import "./Profile.css";
 
 const Profile = () => {
   useWebsiteTitle("Profil");
-  const { userData, updateProfileData } = useContext(AuthContext);
+  const {
+    userData,
+    updateProfileData,
+    responseSuccess,
+    setResponseSuccess,
+    setSesionError,
+  } = useContext(AuthContext);
 
   const [data, setData] = useState(userData);
   const [errors, setErrors] = useState({
@@ -33,6 +39,15 @@ const Profile = () => {
 
   useEffect(() => {
     setErrors({ firstNameError: "", lastNameError: "" });
+    setSesionError("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      setResponseSuccess("");
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const clickHandler = (e) => {
@@ -51,8 +66,8 @@ const Profile = () => {
 
   return (
     <div className="user-profile-wrap">
-      <h2>Profil</h2>
-      <p>Jeszcze będzie gdzieś zdjęcie</p>
+      <h2 className="mb-3">Profil</h2>
+      {/* <p>Jeszcze będzie gdzieś zdjęcie</p> */}
 
       <form className="user-profile-form">
         <label className="text-primary">
@@ -92,7 +107,9 @@ const Profile = () => {
             onChange={(e) => setData({ ...data, description: e.target.value })}
           ></textarea>
         </label>
-
+        {responseSuccess && (
+          <p className="text-success text-center my-3">{responseSuccess}</p>
+        )}
         <input
           className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
           type="submit"

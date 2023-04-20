@@ -1,19 +1,48 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { validatePostcode } from "../../../helpers/validation";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import "./InvoiceData.css";
+import AuthContext from "../../../context/AuthContext";
 
 const InvoiceData = () => {
   useWebsiteTitle("Dane do faktury");
+  const {
+    responseError,
+    setResponseError,
+    responseSuccess,
+    setResponseSuccess,
+    invoiceData,
+    updateInvoiceData,
+  } = useContext(AuthContext);
 
-  const [name, setName] = useState("");
-  const [nip, setNip] = useState("");
-  const [street, setStreet] = useState("");
-  const [homenr, setHomenr] = useState("");
-  const [flatnr, setFlatnr] = useState("");
-  const [postcode, setPostcode] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
+  const [name, setName] = useState(
+    invoiceData.companyName ? invoiceData.companyName : ""
+  );
+  const [nip, setNip] = useState(
+    invoiceData.companyVatId ? invoiceData.companyVatId : ""
+  );
+  const [street, setStreet] = useState(
+    invoiceData.companyAddressStreet ? invoiceData.companyAddressStreet : ""
+  );
+  const [homenr, setHomenr] = useState(
+    invoiceData.companyAddressApartment
+      ? invoiceData.companyAddressApartment
+      : ""
+  );
+  const [flatnr, setFlatnr] = useState(
+    invoiceData.companyAddressBuilding ? invoiceData.companyAddressBuilding : ""
+  );
+  const [postcode, setPostcode] = useState(
+    invoiceData.companyAddressPostalCode
+      ? invoiceData.companyAddressPostalCode
+      : ""
+  );
+  const [city, setCity] = useState(
+    invoiceData.companyAddressCity ? invoiceData.companyAddressCity : ""
+  );
+  const [country, setCountry] = useState(
+    invoiceData.companyAddressCountry ? invoiceData.companyAddressCountry : ""
+  );
 
   const [nameErrors, setNameErrors] = useState("");
   const [nipErrors, setNipErrors] = useState("");
@@ -91,6 +120,14 @@ const InvoiceData = () => {
   }, [country]);
 
   useEffect(() => {
+    return () => {
+      setResponseError("");
+      setResponseSuccess("");
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     setNameErrors("");
     setNipErrors("");
     setStreetErrors("");
@@ -113,7 +150,16 @@ const InvoiceData = () => {
       city &&
       country
     ) {
-      console.log("Wszystko ok");
+      updateInvoiceData({
+        companyName: name,
+        companyVatId: nip,
+        companyAddressStreet: street,
+        companyAddressApartment: homenr,
+        companyAddressBuilding: flatnr,
+        companyAddressPostalCode: postcode,
+        companyAddressCity: city,
+        companyAddressCountry: country,
+      });
     } else {
       if (!name) {
         setNameErrors("Pole nie może być puste");
@@ -253,13 +299,22 @@ const InvoiceData = () => {
             <option value="" selected>
               -
             </option>
-            <option value="1">Polska</option>
-            <option value="2">Czehy</option>
-            <option value="3">Niemcy</option>
+            <option value="Polska">Polska</option>
+            <option value="Czehy">Czechy</option>
+            <option value="Niemcy">Niemcy</option>
+            <option value="Słowacja">Słowacja</option>
+            <option value="Ukraina">Ukraina</option>
+            <option value="Białoruś">Białoruś</option>
           </select>
           <div className="invalid-feedback absolute">{countryErrors}</div>
         </label>
 
+        {responseError && (
+          <p className="text-success text-center my-3">{responseError}</p>
+        )}
+        {responseSuccess && (
+          <p className="text-success text-center my-3">{responseSuccess}</p>
+        )}
         <input
           className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white w-44 m-3 py-2 rounded disabled:opacity-50"
           type="submit"
