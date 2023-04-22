@@ -3,7 +3,10 @@ import classNames from "classnames";
 
 function TitleInput({ value, onChange }) {
   const [focused, setFocused] = useState(false);
+<<<<<<< HEAD
   const [val, setVal] = useState(value);
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 
   const handleFocus = () => {
     setFocused(true);
@@ -14,8 +17,12 @@ function TitleInput({ value, onChange }) {
   };
 
   const handleChange = (event) => {
+<<<<<<< HEAD
     setVal(event.target.value);
     onChange(val);
+=======
+    return event.target.value;
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   };
 
   return (
@@ -41,7 +48,11 @@ function TitleInput({ value, onChange }) {
             }
           )}
           placeholder="Tytuł"
+<<<<<<< HEAD
           value={val}
+=======
+          value={value}
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

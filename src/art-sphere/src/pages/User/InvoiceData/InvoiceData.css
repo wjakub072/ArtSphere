@@ -11,6 +11,7 @@
   padding: 7px;
   font-size: 0.9rem;
 }
+<<<<<<< HEAD
 .user-invoice-data-wrap .invoice-data-form label select {
   display: block;
   margin: 10px 0;
@@ -18,6 +19,8 @@
   padding: 7px;
   font-size: 0.9rem;
 }
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 .user-invoice-data-wrap .invoice-data-form label input:focus {
   border-color: #108df3;
   outline: none;

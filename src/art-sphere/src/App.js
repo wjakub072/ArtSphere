@@ -18,8 +18,13 @@ import AccountSettings from "./pages/User/AccountSettings/AccountSettings";
 import UserArts from "./pages/User/UserArts/UserArts";
 import AdminPanel from "./pages/User/AdminPanel/AdminPanel";
 import ProtectedRoute from "./hoc/ProtectedRoute";
+<<<<<<< HEAD
 import PasswordRecovery from "./components/Auth/PasswordRecovery/PasswordRecovery";
 import { AuthContextProvider } from "./context/AuthContext";
+=======
+import { AuthContextProvider } from "./context/AuthContext";
+import ArtistsDetails from "./pages/Artists/ArtistsDetails/ArtistsDetails";
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 
 function App() {
   const content = (
@@ -29,6 +34,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/galeria" element={<Gallery />} />
         <Route path="/artysci" element={<Artists />} />
+<<<<<<< HEAD
+=======
+        <Route path="/artysci/artysciszczegoly" element={<ArtistsDetails />} />
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
         <Route
           path="/logowanie"
           element={
@@ -38,6 +47,7 @@ function App() {
           }
         />
         <Route
+<<<<<<< HEAD
           path="/logowanie/odzyskiwanieHasla"
           element={
             <ProtectedRoute accesBy="non-authenticated">
@@ -46,6 +56,8 @@ function App() {
           }
         />
         <Route
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
           path="/rejestracja"
           element={
             <ProtectedRoute accesBy="non-authenticated">

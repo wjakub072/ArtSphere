@@ -14,8 +14,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
+<<<<<<< HEAD
     <PackageReference Include="SendGrid" Version="9.28.1" />
     <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
     <PackageReference Include="Serilog" Version="3.0.0-dev-01926" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.1-dev-00295" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.1-dev-00910" />

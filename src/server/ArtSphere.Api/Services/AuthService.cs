@@ -131,7 +131,11 @@ public class AuthService
 
         _logger.LogInformation("Konto o mailu {email} został zarejestrowany.", user.Email);
 
+<<<<<<< HEAD
         var appUser = await _userRepository.CreateBlankUserAsync(payload.Email);
+=======
+        var appUser = await _userRepository.CreateBlankUserAsync(payload);
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
         
         user.AccountId = appUser.Id;
         await _userManager.UpdateAsync(user);

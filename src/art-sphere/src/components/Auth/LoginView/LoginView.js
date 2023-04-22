@@ -7,14 +7,35 @@ import "./LoginView.css";
 
 function LoginView() {
   useWebsiteTitle("Logowanie");
+<<<<<<< HEAD
   const { login, responseError, setResponseError, sesionError } =
     useContext(AuthContext);
+=======
+  const {
+    login,
+    responseError,
+    setResponseError,
+    sesionError,
+    setSesionError,
+  } = useContext(AuthContext);
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErrors, setEmailErrors] = useState("");
   const [passwordErrors, setPasswordErrors] = useState("");
 
+<<<<<<< HEAD
+=======
+  const buttonDisabled = () => {
+    if (passwordErrors === "" && emailErrors === "") {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   useEffect(() => {
     if (email.length < 1) {
       setEmailErrors("Pole nie może być puste");
@@ -29,8 +50,21 @@ function LoginView() {
   useEffect(() => {
     if (password.length < 1) {
       setPasswordErrors("Pole nie może być puste");
+<<<<<<< HEAD
     } else {
       setPasswordErrors("");
+=======
+    } else if (
+      password.search(/[a-z]/) < 0 ||
+      password.search(/[A-Z]/) < 0 ||
+      password.search(/[0-9]/) < 0
+    ) {
+      setPasswordErrors("Muszą być duże i małe litery oraz liczby");
+    } else if (password.length > 7) {
+      setPasswordErrors("");
+    } else {
+      setPasswordErrors("Wymagane 8 znaków");
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password]);
@@ -43,6 +77,10 @@ function LoginView() {
   useEffect(() => {
     return () => {
       setResponseError("");
+<<<<<<< HEAD
+=======
+      setSesionError("");
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -53,6 +91,7 @@ function LoginView() {
       email: email,
       password: password,
     };
+<<<<<<< HEAD
     if (!email.length < 1 && !password.length < 1) {
       await login(data);
     } else {
@@ -63,6 +102,9 @@ function LoginView() {
         setPasswordErrors("Pole nie może być puste");
       }
     }
+=======
+    await login(data);
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   };
 
   return (
@@ -105,24 +147,44 @@ function LoginView() {
           <p className="text-danger text-center mt-3 mb-0">{responseError}</p>
         )}
         <div className="loginForm">
+<<<<<<< HEAD
           <button className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50">
+=======
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50"
+            disabled={buttonDisabled()}
+          >
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
             Zaloguj się
           </button>
         </div>
         <p className="loginForm">
+<<<<<<< HEAD
           <NavLink
             to={"/logowanie/odzyskiwanieHasla"}
             className="btn nav-link text-primary text-decoration-underline m-2"
           >
             Nie pamiętam hasła
           </NavLink>
+=======
+          <a
+            className="btn nav-link text-primary text-decoration-underline"
+            href="#0"
+          >
+            Nie pamiętam hasła
+          </a>
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
         </p>
 
         <NavLink
           to={"/rejestracja"}
           className="btn nav-link text-primary text-decoration-underline m-2"
         >
+<<<<<<< HEAD
           Nie masz konta? Zarejestruj się!
+=======
+          Nie masz konta? Zatejestruj się!
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
         </NavLink>
       </form>
     </div>

@@ -7,8 +7,12 @@ import "./RegisterView.css";
 
 const RegisterView = () => {
   useWebsiteTitle("Rejestracja");
+<<<<<<< HEAD
   const { register, responseError, setResponseError, setSesionError } =
     useContext(AuthContext);
+=======
+  const { register, responseError, setResponseError } = useContext(AuthContext);
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -18,6 +22,17 @@ const RegisterView = () => {
   const [passwordErrors, setPasswordErrors] = useState("");
   const [passwordErrors2, setPasswordErrors2] = useState("");
 
+<<<<<<< HEAD
+=======
+  const buttonDisabled = () => {
+    if (passwordErrors === "" && emailErrors === "" && passwordErrors2 === "") {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   useEffect(() => {
     if (email.length < 1) {
       setEmailErrors("Pole nie może być puste");
@@ -26,6 +41,10 @@ const RegisterView = () => {
     } else {
       setEmailErrors("Niepoprawny email");
     }
+<<<<<<< HEAD
+=======
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   }, [email]);
 
   useEffect(() => {
@@ -42,6 +61,10 @@ const RegisterView = () => {
     } else {
       setPasswordErrors("Wymagane 8 znaków");
     }
+<<<<<<< HEAD
+=======
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   }, [pass]);
 
   useEffect(() => {
@@ -50,7 +73,11 @@ const RegisterView = () => {
     } else if (pass2 === pass) {
       setPasswordErrors2("");
     } else {
+<<<<<<< HEAD
       setPasswordErrors2("Hasła nie są identyczne");
+=======
+      setPasswordErrors2("Należy wpisać hasło ponownie");
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pass2]);
@@ -59,7 +86,10 @@ const RegisterView = () => {
     setEmailErrors("");
     setPasswordErrors("");
     setPasswordErrors2("");
+<<<<<<< HEAD
     setSesionError("");
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   }, []);
 
   useEffect(() => {
@@ -80,6 +110,7 @@ const RegisterView = () => {
       email: email,
       password: pass,
     };
+<<<<<<< HEAD
     if (!email.length < 1 && !pass.length < 1 && !pass2.length < 1) {
       await register(data, loginData);
     } else {
@@ -93,6 +124,9 @@ const RegisterView = () => {
         setPasswordErrors2("Pole nie może być puste");
       }
     }
+=======
+    await register(data, loginData);
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   };
 
   return (
@@ -152,10 +186,18 @@ const RegisterView = () => {
           </label>
         </div>
         {responseError && (
+<<<<<<< HEAD
           <p className="text-danger text-center my-3">{responseError}</p>
         )}
         <button
           className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
+=======
+          <p className="text-danger text-center mt-3 mb-0">{responseError}</p>
+        )}
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50"
+          disabled={buttonDisabled()}
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
           type="submit"
         >
           Rejestruj

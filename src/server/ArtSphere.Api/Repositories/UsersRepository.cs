@@ -20,17 +20,26 @@ public class UsersRepository
         return user;
     }
 
+<<<<<<< HEAD
     public async Task<User> CreateBlankUserAsync(string email)
     {
         User appUser = new User() 
         { 
             Email = email
+=======
+    public async Task<User> CreateBlankUserAsync(SignUpCredentialsPayload payload)
+    {
+        User appUser = new User() 
+        { 
+            Email = payload.Email
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
         };
         _db.Add(appUser);
         await _db.SaveChangesAsync();
         return appUser;
     }
 
+<<<<<<< HEAD
     public async Task<User> UpdateUserEmailAsync(int accountId, string newEmail)
     {
         var user = _db.ASUsers.Where(u => u.Id == accountId).FirstOrDefault();
@@ -42,6 +51,8 @@ public class UsersRepository
         return user;
     }
 
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
     public async Task<User> UpdateUserAddressAsync(int accountId, ProfileAddressInfoPayload payload)
     {
         var user = _db.ASUsers.Where(u => u.Id == accountId).FirstOrDefault();

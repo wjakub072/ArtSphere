@@ -21,6 +21,7 @@ export const AuthContextProvider = ({ children }) => {
     return {};
   });
 
+<<<<<<< HEAD
   const [deliveryAddressData, setDeliveryAddressData] = useState(() => {
     let deliveryAddressData = localStorage.getItem("deliveryAddressData");
     if (deliveryAddressData) {
@@ -37,12 +38,17 @@ export const AuthContextProvider = ({ children }) => {
     return {};
   });
 
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   const [responseError, setResponseError] = useState("");
   const [passChangeResponseError, setPassChangeResponseError] = useState("");
   const [passChangeSuccess, setPassChangeSuccess] = useState("");
   const [emailChangeSuccess, setEmailChangeSuccess] = useState("");
   const [emailChangeResponseError, setEmailChangeResponseError] = useState("");
+<<<<<<< HEAD
   const [responseSuccess, setResponseSuccess] = useState("");
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   const [sesionError, setSesionError] = useState("");
 
   const navigate = useNavigate();
@@ -61,8 +67,11 @@ export const AuthContextProvider = ({ children }) => {
       setUser(response.data.role);
       setResponseError("");
       await getProfileData();
+<<<<<<< HEAD
       await getDeliveryAddressData();
       await getInvoiceData();
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
       navigate("/profil");
     } catch (err) {
       console.log("error logowania");
@@ -81,8 +90,11 @@ export const AuthContextProvider = ({ children }) => {
       localStorage.clear();
       setUser(null);
       setUserData(null);
+<<<<<<< HEAD
       setDeliveryAddressData(null);
       setInvoiceData(null);
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
       navigate("/");
     } catch (err) {
       console.log("error wylogowania");
@@ -135,7 +147,10 @@ export const AuthContextProvider = ({ children }) => {
       console.log("respons update'u profilu");
       console.log(response);
       await getProfileData();
+<<<<<<< HEAD
       setResponseSuccess("Dane zostały zaktualizowane");
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
     } catch (err) {
       errorResponseHandler(err);
     }
@@ -166,7 +181,11 @@ export const AuthContextProvider = ({ children }) => {
   const changeEmail = async (data) => {
     try {
       let response = await axios.post(
+<<<<<<< HEAD
         "http://127.0.0.1:5006/api/account/change-email",
+=======
+        "http://127.0.0.1:5006/api/account/reset-password",
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
         data,
         {
           withCredentials: true,
@@ -204,6 +223,7 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+<<<<<<< HEAD
   const getDeliveryAddressData = async () => {
     try {
       let response = await axios.get(
@@ -285,11 +305,14 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   const errorResponseHandler = (err) => {
     console.log(err);
     if (!err.response) {
       setSesionError("Sesja wygasła zaloguj się ponownie");
       console.log("Błąd autoryzacji");
+<<<<<<< HEAD
       console.log(sesionError);
       console.log("rrrrrrrrrrrrrr");
       localStorage.clear();
@@ -297,10 +320,16 @@ export const AuthContextProvider = ({ children }) => {
       setUserData(null);
       setDeliveryAddressData(null);
       setInvoiceData(null);
+=======
+      localStorage.clear();
+      setUser(null);
+      setUserData(null);
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
       navigate("/logowanie");
     } else if (err.response && err.response.status === 401) {
       setSesionError("Sesja wygasła zaloguj się ponownie");
       console.log("Błąd autoryzacji");
+<<<<<<< HEAD
       console.log(sesionError);
       console.log("rrrrrrrrrrrrrr");
       localStorage.clear();
@@ -308,6 +337,11 @@ export const AuthContextProvider = ({ children }) => {
       setUserData(null);
       setDeliveryAddressData(null);
       setInvoiceData(null);
+=======
+      localStorage.clear();
+      setUser(null);
+      setUserData(null);
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
       navigate("/logowanie");
     } else if (err.response && err.response.status === 500) {
       console.log("Błąd serwera");
@@ -327,12 +361,17 @@ export const AuthContextProvider = ({ children }) => {
           emailChangeSuccess,
           passChangeResponseError,
           passChangeSuccess,
+<<<<<<< HEAD
           responseSuccess,
           sesionError,
           userData,
           deliveryAddressData,
           invoiceData,
           setResponseSuccess,
+=======
+          sesionError,
+          userData,
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
           setEmailChangeResponseError,
           setEmailChangeSuccess,
           setPassChangeResponseError,
@@ -343,8 +382,11 @@ export const AuthContextProvider = ({ children }) => {
           logout,
           register,
           updateProfileData,
+<<<<<<< HEAD
           updateDeliveryAddressData,
           updateInvoiceData,
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
           changeEmail,
           changePassword,
           deleteAccount,

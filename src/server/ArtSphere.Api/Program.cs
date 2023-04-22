@@ -11,7 +11,10 @@ using ArtSphere.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+<<<<<<< HEAD
 using SendGrid.Extensions.DependencyInjection;
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 using Serilog;
 using Serilog.Events;
 
@@ -45,10 +48,13 @@ try
     }, 
     ServiceLifetime.Scoped, ServiceLifetime.Scoped);
 
+<<<<<<< HEAD
     builder.Services.AddSendGrid(options =>
         {
             options.ApiKey = builder.Configuration.GetValue<string>("SendGrid:ApiKey");
         });
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 
     builder.Services.AddControllers();
 
@@ -169,7 +175,10 @@ try
 
     builder.Services.AddScoped<UsersRepository>();
     builder.Services.AddScoped<AuthService>();
+<<<<<<< HEAD
     builder.Services.AddTransient<EmailSenderService>();
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 
     builder.Services.AddEndpointsApiExplorer();
 

@@ -1,7 +1,10 @@
 using ArtSphere.Api.Models.Dto.Payloads;
 using ArtSphere.Api.Models.Dto.Responses;
 using ArtSphere.Api.Repositories;
+<<<<<<< HEAD
 using ArtSphere.Api.Services;
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 using ArtSphere.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +20,7 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly UsersRepository _usersRepository;
+<<<<<<< HEAD
     private readonly EmailSenderService _emailSenderService;
 
     public AccountController(UserManager<ApplicationUser> userManager, UsersRepository usersRepository, EmailSenderService emailSenderService)
@@ -24,6 +28,13 @@ public class AccountController : ControllerBase
         _userManager = userManager;
         _usersRepository = usersRepository;
         _emailSenderService = emailSenderService;
+=======
+
+    public AccountController(UserManager<ApplicationUser> userManager, UsersRepository usersRepository)
+    {
+        _userManager = userManager;
+        _usersRepository = usersRepository;
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
     }
 
     [Authorize]
@@ -73,6 +84,7 @@ public class AccountController : ControllerBase
             return BadRequest(new PasswordChangeResult (false, "Nie udało się zaktualizować hasła."));
         }
     }
+<<<<<<< HEAD
 
     [Authorize]
     [HttpGet("reset-token")]
@@ -134,4 +146,6 @@ public class AccountController : ControllerBase
         }
     }
 
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 }

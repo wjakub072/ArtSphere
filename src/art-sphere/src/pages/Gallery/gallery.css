@@ -2,13 +2,18 @@
   position: relative;
 }
 
+<<<<<<< HEAD
 .filters-container .offers-container {
+=======
+.filters-container, .offers-container {
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   position: relative;
   height: fit-content;
   width: fit-content;
 }
 
 .filters {
+<<<<<<< HEAD
   position: absolute;
   /* top: -1000px; */
   width: 100%;
@@ -35,6 +40,25 @@
   justify-content: center;
   height: fit-content;
   margin: 0 auto;
+=======
+  position: fixed;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  background-color: white;
+  transform: translateY(-110%);
+  transition: transform 0.5s ease-in-out;
+  height: fit-content;
+}
+
+.filters.show {
+  transform: translateY(0%);
+}
+
+.offers {
+  width: 100%;
+  height: fit-content;
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   margin-top: 25px;
 }
 
@@ -44,6 +68,10 @@
   width: 300px;
   height: 350px;
   margin: 15px;
+<<<<<<< HEAD
+=======
+  float: left;
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
   padding: 10px;
   color: #fff;
 }
@@ -56,7 +84,11 @@
 
 .offer_card_image {
   width: auto;
+<<<<<<< HEAD
   height: 70%;
+=======
+  height: 75%;
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 }
 
 .offer_card_name h3 {
@@ -66,4 +98,8 @@
 
 .offer_card_name_author {
   font-style: italic;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca

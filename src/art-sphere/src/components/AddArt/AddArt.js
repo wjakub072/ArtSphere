@@ -2,12 +2,19 @@ import { useState } from "react";
 import GenericComboImput from "./Inputs/GenericComboInput";
 import PriceInput from "./Inputs/PriceInput";
 import DimensionsInput from "./Inputs/DimentionsInput";
+<<<<<<< HEAD
+=======
+import ArtistInput from "./Inputs/ArtistInput";
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 import TitleInput from "./Inputs/TitleInput";
 import "./addArt.css";
 import AddArtButton from "./Inputs/AddArtButton";
 import AddImage from "./Inputs/AddImage";
+<<<<<<< HEAD
 import TagInput from "./Inputs/TagInput";
 import Description from "./Inputs/Description";
+=======
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 
 function AddArt() {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -15,15 +22,23 @@ function AddArt() {
     setShowAddForm(!showAddForm);
   };
 
+<<<<<<< HEAD
   const [validateError, setValidateError] = useState("");
 
   const [artData, setArtData] = useState({
     img: "",
+=======
+  const [filters, setFilters] = useState({
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
     category: "",
     topic: "",
     technic: "",
     title: "",
+<<<<<<< HEAD
     description: "",
+=======
+    author: "",
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
     price: 0,
     height: 0,
     width: 0,
@@ -128,6 +143,7 @@ function AddArt() {
     },
   ];
 
+<<<<<<< HEAD
   const clickHandle = () => {
     if (
       !(artData.img === "") &&
@@ -151,6 +167,13 @@ function AddArt() {
       setValidateError("Wypełnij wszystkie pola");
     }
   };
+=======
+  function handleFilterChange(newFilterValus) {
+    console.log(newFilterValus);
+    setFilters({ ...filters, price: newFilterValus });
+    //props.onFilterChange(newFilters);
+  }
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
 
   return (
     <>
@@ -159,6 +182,7 @@ function AddArt() {
       </div>
       <div className={`container add-art ${showAddForm ? "show" : ""}`}>
         <div className="col-sub">
+<<<<<<< HEAD
           <AddImage
             value={artData.img}
             onChange={(val) => setArtData({ ...artData, img: val })}
@@ -185,17 +209,36 @@ function AddArt() {
               list={possible_technics}
               onChange={(val) => setArtData({ ...artData, technic: val.name })}
             />
+=======
+          <AddImage />
+        </div>
+        <div className="col">
+          <div className="row">
+            <GenericComboImput title="Kategorie" list={possible_categories} />
+          </div>
+          <div className="row">
+            <GenericComboImput title="Tematy" list={possible_topics} />
+          </div>
+          <div className="row">
+            <GenericComboImput title="Techniki" list={possible_technics} />
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
           </div>
           <div className="row">
             <DimensionsInput
               title="Wysokość"
+<<<<<<< HEAD
               value={artData.height}
               onChange={(val) => setArtData({ ...artData, height: val })}
+=======
+              value={filters.height}
+              onChange={handleFilterChange}
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
             />
           </div>
         </div>
         <div className="col">
           <div className="row">
+<<<<<<< HEAD
             <TitleInput
               value={artData.title}
               onChange={(val) => setArtData({ ...artData, title: val })}
@@ -207,10 +250,24 @@ function AddArt() {
               value={artData.price}
               onChange={(val) => setArtData({ ...artData, price: val })}
             />
+=======
+            <PriceInput
+              title="Cena"
+              value={filters.price}
+              onChange={handleFilterChange}
+            />
+          </div>
+          <div className="row">
+            <ArtistInput />
+          </div>
+          <div className="row">
+            <TitleInput />
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
           </div>
           <div className="row">
             <DimensionsInput
               title="Szerokość"
+<<<<<<< HEAD
               value={artData.width}
               onChange={(val) => setArtData({ ...artData, width: val })}
             />
@@ -228,6 +285,15 @@ function AddArt() {
             <div className="text-danger text-center mb-4">{validateError}</div>
           )}
           <AddArtButton title="Dodaj dzieło" onClick={clickHandle} />
+=======
+              value={filters.width}
+              onChange={handleFilterChange}
+            />
+          </div>
+        </div>
+        <div className="col-sub">
+          <AddArtButton title="Dodaj dzieło" />
+>>>>>>> 2a409a2a7127c6170586dce913d334e1b1f341ca
         </div>
         <div className="col"></div>
       </div>
