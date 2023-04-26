@@ -85,6 +85,39 @@ public class UsersRepository
         return user;    
     }
 
+    public async Task<User> GetArtistAsync(string email)
+    { 
+        var user = await _db.ASUsers.FromSqlRaw(@$"SELECT TOP (1) u.[Id]
+                    ,u.[Email]
+                    ,u.[FirstName]
+                    ,u.[LastName]
+                    ,u.[Description]
+                    ,u.[PhoneNumber]
+                    ,u.[AddressCountry]
+                    ,u.[AddressCity]
+                    ,u.[AddressStreet]
+                    ,u.[AddressBuilding]
+                    ,u.[AddressApartment]
+                    ,u.[AddressPostalCode]
+                    ,u.[CompanyName]
+                    ,u.[CompanyVatId]
+                    ,u.[CompanyAddressStreet]
+                    ,u.[CompanyAddressBuilding]
+                    ,u.[CompanyAddressApartment]
+                    ,u.[CompanyAddressPostalCode]
+                    ,u.[CompanyAddressCity]
+                    ,u.[CompanyAddressCountry]
+                    ,u.[ProfilePicture]
+                FROM [ArtSphere].[Sph].[Users] u
+                INNER JOIN AUTH.IdentityUsers io on AccountId = u.Id
+                INNER JOIN auth.UserRoles on io.Id = UserId
+                INNER JOIN auth.IdentityRoles ir on RoleId = ir.Id
+                WHERE NormalizedName = 'ARTYSTA' and u.Email = '{email}'")
+                .FirstOrDefaultAsync();
+        if(user == null) throw new Exception($"Nie odnaleziono artysty o emailu: {email}.");
+        return user;    
+    }
+
     public async Task<User> CreateBlankUserAsync(string email)
     {
         User appUser = new User() 
@@ -152,7 +185,8 @@ public class UsersRepository
         user.FirstName = payload.FirstName;
         user.LastName = payload.LastName;
         user.Description = payload.Description??string.Empty;
-
+        user.ProfilePicture = payload.Picture;
+        
         await _db.SaveChangesAsync();
         return user;
     }

@@ -17,8 +17,9 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
         builder.Property(o => o.Title).HasMaxLength(1000).IsRequired();
         builder.Property(o => o.Description).HasMaxLength(2000);
         builder.Property(o => o.Price).HasColumnType("decimal(17,4)").IsRequired();
-        builder.Property(o => o.DimensionsX).IsRequired();
-        builder.Property(o => o.DimensionsY).IsRequired();
+        builder.Property(o => o.DimensionsX).HasColumnType("decimal(11,4)").IsRequired();
+        builder.Property(o => o.DimensionsY).HasColumnType("decimal(11,4)").IsRequired();
         builder.Property(o => o.Unit).HasMaxLength(50).IsRequired();
+        builder.Property(o => o.Archived).HasDefaultValue(false);
     }
 }

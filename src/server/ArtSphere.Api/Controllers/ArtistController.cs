@@ -53,7 +53,9 @@ public class ArtistController : ControllerBase
                 o.Id, 
                 o.ArtistId, 
                 o.Title ?? string.Empty,
-                o.Price))
+                o.Price,
+                o.Archived,
+                o.Picture))
                 .ToArray()));
     }
 }

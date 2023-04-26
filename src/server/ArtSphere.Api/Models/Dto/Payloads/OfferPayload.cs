@@ -5,8 +5,6 @@ namespace ArtSphere.Api.Models.Dto.Payloads;
 public class OfferPayload
 {
     [Required]
-    public int ArtistId { get; set; }
-    [Required]
     public string Category { get; set; }
     [Required]
     public string Technic { get; set; }
@@ -21,4 +19,5 @@ public class OfferPayload
     public decimal DimensionsY { get; set; }
     [Required]
     public string Unit { get; set; }
+    public string? Picture { get; set; }
 }

@@ -5,5 +5,5 @@ public record ArtistListResponse
     int Id, 
     string FirstName,
     string LastName,
-    byte[] ProfilePicture
+    string ProfilePicture
 );

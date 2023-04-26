@@ -5,5 +5,7 @@ public record OfferListResponse
     int Id, 
     int ArtistId, 
     string Title, 
-    decimal Price
+    decimal Price,
+    bool Archived,
+    string? Photo
 );

@@ -7,7 +7,7 @@ public record ArtistResponse
     string LastName,
     string Description,
     string AddressCountry,
-    byte[] ProfilePicture,
+    string ProfilePicture,
 
     OfferListResponse[] Offers
 );
