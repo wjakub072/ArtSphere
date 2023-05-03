@@ -52,6 +52,7 @@ public class ArtistController : ControllerBase
             artistsOffers.Select(o => new OfferListResponse(
                 o.Id, 
                 o.ArtistId, 
+                string.Concat(artist.FirstName ?? string.Empty, artist.LastName ?? string.Empty),
                 o.Title ?? string.Empty,
                 o.Price,
                 o.Archived,

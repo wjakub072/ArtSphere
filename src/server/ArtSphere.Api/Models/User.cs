@@ -23,4 +23,6 @@ public class User
     public string? CompanyAddressCity { get; set; }
     public string? CompanyAddressCountry { get; set; }
     public string? ProfilePicture { get; set; }
+
+    public ICollection<Offer> Offers { get; set; }
 }
