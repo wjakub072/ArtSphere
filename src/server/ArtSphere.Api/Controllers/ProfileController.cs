@@ -37,7 +37,8 @@ public class ProfileController : ControllerBase
             return Ok(new ProfileInfoResponse(
                 account.FirstName?? string.Empty, 
                 account.LastName?? string.Empty, 
-                account.Description?? string.Empty));
+                account.Description?? string.Empty,
+                account.ProfilePicture ?? string.Empty));
         }
 
         throw new Exception("Do użytkownika nie został przypisany żaden profil.");

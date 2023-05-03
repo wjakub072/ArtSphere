@@ -4,6 +4,7 @@ public record ProfileInfoResponse
 (
     string FirstName,
     string LastName,
-    string Description
+    string Description,
+    string ProfilePicture
 )
 {}
