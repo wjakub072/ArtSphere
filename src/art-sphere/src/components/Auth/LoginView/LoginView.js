@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import AuthContext from "../../../context/AuthContext";
 import { validateEmail } from "../../../helpers/validation";
-import "./LoginView.css";
+import { ExclamationCircleIcon } from "@heroicons/react/outline";
 
 function LoginView() {
   useWebsiteTitle("Logowanie");
@@ -66,64 +66,91 @@ function LoginView() {
   };
 
   return (
-    <div className="login-form-container mt-5">
-      <form onSubmit={submitHandler} className="bg-dark-subtle rounded-3 p-3">
-        <h2 className="loginForm text-primary">Logowanie</h2>
+    <div className="mt-20 w-full px-6 sm:w-2/3 md:w-1/2 xl:w-1/3 2xl:w-1/4 mx-auto">
+      <form
+        onSubmit={submitHandler}
+        className="bg-zinc-200 rounded-lg p-6 mx-auto shadow-lg"
+      >
+        <h2 className="text-indigo-700 font-bold mb-4 text-2xl text-center tracking-widest">
+          Logowanie
+        </h2>
         {sesionError && (
-          <p className="text-danger text-center mt-3 mb-0">{sesionError}</p>
+          <p className="text-red-500 text-base text-center mt-3 mb-4">
+            {sesionError}
+          </p>
         )}
 
-        <div className="form-group">
-          <input
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            className={`form-control loginForm ${
-              emailErrors ? "is-invalid" : ""
-            }`}
-            type="email"
-            id="email"
-            placeholder="Adres email"
-          ></input>
-          <div className="invalid-feedback">{emailErrors}</div>
+        <div className="mb-4">
+          <div className="relative">
+            <input
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
+                emailErrors ? "border-red-500" : ""
+              }`}
+              type="text"
+              id="email"
+              placeholder="Adres email"
+            />
+            {emailErrors && (
+              <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                <ExclamationCircleIcon className="text-red-500 h-2/5" />
+              </div>
+            )}
+          </div>
+          <div className="text-red-500 text-sm ml-2 mt-1">{emailErrors}</div>
         </div>
 
-        <div className="form-group">
-          <input
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            className={`form-control loginForm ${
-              passwordErrors ? "is-invalid" : ""
-            }`}
-            type="password"
-            id="password"
-            placeholder="Hasło"
-          ></input>
-          <div className="invalid-feedback">{passwordErrors}</div>
+        <div className="mb-4">
+          <div className="relative">
+            <input
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
+                passwordErrors ? "border-red-500" : ""
+              }`}
+              type="password"
+              id="password"
+              placeholder="Hasło"
+            />
+            {passwordErrors && (
+              <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                <ExclamationCircleIcon className="text-red-500 h-2/5" />
+              </div>
+            )}
+          </div>
+
+          <div className="text-red-500 text-sm ml-2 mt-1">{passwordErrors}</div>
         </div>
 
         {responseError && (
-          <p className="text-danger text-center mt-3 mb-0">{responseError}</p>
+          <p className="text-red-500 text-base text-center my-3 font-medium">
+            {responseError}
+          </p>
         )}
-        <div className="loginForm">
-          <button className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50">
+
+        <div>
+          <button className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-none transition-colors">
             Zaloguj się
           </button>
-        </div>
-        <p className="loginForm">
-          <NavLink
-            to={"/logowanie/odzyskiwanieHasla"}
-            className="btn nav-link text-primary text-decoration-underline m-2"
-          >
-            Nie pamiętam hasła
-          </NavLink>
-        </p>
+          <p className="text-base text-center m-2">
+            <NavLink
+              to={"/logowanie/odzyskiwanieHasla"}
+              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 focus:outline-none transition-colors"
+            >
+              Nie pamiętam hasła
+            </NavLink>
+          </p>
 
-        <NavLink
-          to={"/rejestracja"}
-          className="btn nav-link text-primary text-decoration-underline m-2"
-        >
-          Nie masz konta? Zarejestruj się!
-        </NavLink>
+          <p className="text-base text-center">
+            <NavLink
+              to={"/rejestracja"}
+              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 focus:outline-none transition-colors"
+            >
+              Nie masz konta? Zarejestruj się!
+            </NavLink>
+          </p>
+        </div>
       </form>
     </div>
   );

@@ -14,4 +14,5 @@ public class ProfileInfoPayload
 
     [StringLength(2000)]
     public string Description { get; set; }
+    public string Picture { get; set; }
 }

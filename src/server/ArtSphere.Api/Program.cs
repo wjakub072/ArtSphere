@@ -168,6 +168,7 @@ try
     builder.Services.AddMemoryCache();
 
     builder.Services.AddScoped<UsersRepository>();
+    builder.Services.AddScoped<OffersRepository>();
     builder.Services.AddScoped<AuthService>();
     builder.Services.AddTransient<EmailSenderService>();
 

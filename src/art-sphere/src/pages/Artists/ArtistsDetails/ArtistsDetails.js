@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import artist_card from "../../../data/artistData";
 import "./ArtistsDetails.css";
-import offer_card from "../../../data/offerData";
 
 function ArtistsDetails(props) {
   const { artistId } = useParams();

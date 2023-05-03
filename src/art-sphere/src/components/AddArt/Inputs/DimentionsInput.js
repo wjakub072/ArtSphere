@@ -14,7 +14,7 @@ function DimensionInput({ title, value, onChange }) {
   };
 
   const handleChange = (event) => {
-    const newValue = parseInt(event.target.value);
+    const newValue = parseFloat(event.target.value);
     if (newValue >= 0) {
       value = newValue;
       setVal(newValue);

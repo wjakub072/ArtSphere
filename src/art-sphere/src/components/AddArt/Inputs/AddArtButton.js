@@ -4,7 +4,7 @@ import { PlusIcon } from "@heroicons/react/outline";
 function AddArtButton({ title, onClick }) {
   return (
     <button
-      className="inline-flex items-center justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      className="inline-flex items-center justify-center w-full 2xl:w-2/4 px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       onClick={onClick}
     >
       <PlusIcon className="-ml-1 mr-2 h-5 w-5" />

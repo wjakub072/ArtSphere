@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import AuthContext from "../../../context/AuthContext";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import { validateEmail } from "../../../helpers/validation";
-import "./RegisterView.css";
+import { ExclamationCircleIcon } from "@heroicons/react/outline";
 
 const RegisterView = () => {
   useWebsiteTitle("Rejestracja");
@@ -60,6 +60,7 @@ const RegisterView = () => {
     setPasswordErrors("");
     setPasswordErrors2("");
     setSesionError("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -96,77 +97,139 @@ const RegisterView = () => {
   };
 
   return (
-    <div className="auth-form-container bg-dark-subtle rounded-3 mt-5 p-3">
-      <h2 className=" text-primary">Rejestracja</h2>
-      <form className="register-form text-primary" onSubmit={submitHandler}>
-        <label htmlFor="email">Email</label>
-        <input
-          className={`form-control loginForm ${
-            emailErrors ? "is-invalid" : ""
-          }`}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="email@gmail.com"
-          id="email"
-          name="email"
-        />
-        <div className="invalid-feedback">{emailErrors}</div>
-        <label htmlFor="password">Hasło</label>
-        <input
-          className={`form-control loginForm ${
-            passwordErrors ? "is-invalid" : ""
-          }`}
-          value={pass}
-          onChange={(e) => setPass(e.target.value)}
-          type="password"
-          placeholder="********"
-          id="password"
-          name="password"
-        />
-        <div className="invalid-feedback">{passwordErrors}</div>
-        <label htmlFor="password2">Powtórz hasło</label>
-        <input
-          className={`form-control loginForm ${
-            passwordErrors2 ? "is-invalid" : ""
-          }`}
-          value={pass2}
-          onChange={(e) => setPass2(e.target.value)}
-          type="password"
-          placeholder="********"
-          id="password2"
-          name="password2"
-        />
-        <div className="invalid-feedback">{passwordErrors2}</div>
-        <div className="check-div">
+    <div className="mt-20 w-full px-6 sm:w-2/3 md:w-1/2 xl:w-1/3 2xl:w-1/4 mx-auto">
+      <form
+        onSubmit={submitHandler}
+        className="bg-zinc-200 rounded-lg p-6 mx-auto shadow-lg"
+      >
+        <h2 className="text-indigo-700 font-bold mb-4 text-2xl text-center tracking-widest">
+          Rejestracja
+        </h2>
+
+        <div className="mb-3">
+          <label
+            className="text-indigo-600 px-2 pb-1 text-base"
+            htmlFor="email"
+          >
+            Email
+          </label>
+          <div className="relative">
+            <input
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
+                emailErrors ? "border-red-500" : ""
+              }`}
+              type="text"
+              id="email"
+              name="email"
+              placeholder="Adres email"
+            />
+            {emailErrors && (
+              <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                <ExclamationCircleIcon className="text-red-500 h-2/5" />
+              </div>
+            )}
+          </div>
+          <div className="text-red-500 text-sm ml-2 mt-1">{emailErrors}</div>
+        </div>
+
+        <div className="mb-3">
+          <label
+            className="text-indigo-600 px-2 pb-1 text-base"
+            htmlFor="password"
+          >
+            Hasło
+          </label>
+          <div className="relative">
+            <input
+              onChange={(e) => setPass(e.target.value)}
+              value={pass}
+              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
+                passwordErrors ? "border-red-500" : ""
+              }`}
+              type="password"
+              id="password"
+              name="password"
+              placeholder="********"
+            />
+            {passwordErrors && (
+              <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                <ExclamationCircleIcon className="text-red-500 h-2/5" />
+              </div>
+            )}
+          </div>
+          <div className="text-red-500 text-sm ml-2 mt-1">{passwordErrors}</div>
+        </div>
+
+        <div className="mb-3">
+          <label
+            className="text-indigo-600 px-2 pb-1 text-base"
+            htmlFor="password2"
+          >
+            Powtórz hasło
+          </label>
+          <div className="relative">
+            <input
+              onChange={(e) => setPass2(e.target.value)}
+              value={pass2}
+              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
+                passwordErrors2 ? "border-red-500" : ""
+              }`}
+              type="password"
+              id="password2"
+              name="password2"
+              placeholder="********"
+            />
+            {passwordErrors2 && (
+              <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                <ExclamationCircleIcon className="text-red-500 h-2/5" />
+              </div>
+            )}
+          </div>
+          <div className="text-red-500 text-sm ml-2 mt-1">
+            {passwordErrors2}
+          </div>
+        </div>
+
+        <div className="flex items-center mb-3">
           <input
-            className="form-check-input m-2"
+            className="w-4 h-4 m-2 accent-indigo-600 bg-indigo-600 rounded-md focus:ring-1 focus:ring-indigo-600 focus:outline-none "
             value={check}
             onChange={(e) => setCheck(e.target.checked)}
             type="checkbox"
             id="artist"
             name="artist"
           />
-          <label className="form-check-label" htmlFor="artist">
+          <label
+            className="text-indigo-600 px-2 pb-1 text-base"
+            htmlFor="artist"
+          >
             Czy jesteś artystą?
           </label>
         </div>
+
         {responseError && (
-          <p className="text-danger text-center my-3">{responseError}</p>
+          <p className="text-red-500 text-base text-center my-3 font-medium">
+            {responseError}
+          </p>
         )}
-        <button
-          className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
-          type="submit"
-        >
-          Rejestruj
-        </button>
+
+        <div>
+          <button className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-none transition-colors">
+            Zarejestruj się
+          </button>
+
+          <p className="text-base text-center">
+            <NavLink
+              to={"/logowanie"}
+              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 focus:outline-none transition-colors"
+            >
+              Masz już konto? Zaloguj się!
+            </NavLink>
+          </p>
+        </div>
       </form>
-      <NavLink
-        to={"/logowanie"}
-        className="btn nav-link text-primary text-decoration-underline m-2"
-      >
-        Masz już konto? Zaloguj się!
-      </NavLink>
     </div>
   );
 };

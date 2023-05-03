@@ -219,7 +219,6 @@ export const AuthContextProvider = ({ children }) => {
         JSON.stringify(response.data)
       );
       setDeliveryAddressData(response.data);
-      setResponseSuccess("Dane zostały zaktualizowane");
     } catch (err) {
       errorResponseHandler(err);
     }
@@ -236,6 +235,7 @@ export const AuthContextProvider = ({ children }) => {
       );
       console.log("respons update'u adresu dostawy");
       console.log(response);
+      setResponseSuccess("Dane zostały zaktualizowane");
       await getDeliveryAddressData();
     } catch (err) {
       if (err.response) {
@@ -258,7 +258,6 @@ export const AuthContextProvider = ({ children }) => {
       console.log(response);
       localStorage.setItem("invoiceData", JSON.stringify(response.data));
       setInvoiceData(response.data);
-      setResponseSuccess("Dane zostały zaktualizowane");
     } catch (err) {
       errorResponseHandler(err);
     }
@@ -275,6 +274,7 @@ export const AuthContextProvider = ({ children }) => {
       );
       console.log("respons update'u danych do faktury");
       console.log(response);
+      setResponseSuccess("Dane zostały zaktualizowane");
       await getInvoiceData();
     } catch (err) {
       if (err.response) {
@@ -291,7 +291,6 @@ export const AuthContextProvider = ({ children }) => {
       setSesionError("Sesja wygasła zaloguj się ponownie");
       console.log("Błąd autoryzacji");
       console.log(sesionError);
-      console.log("rrrrrrrrrrrrrr");
       localStorage.clear();
       setUser(null);
       setUserData(null);
@@ -302,7 +301,6 @@ export const AuthContextProvider = ({ children }) => {
       setSesionError("Sesja wygasła zaloguj się ponownie");
       console.log("Błąd autoryzacji");
       console.log(sesionError);
-      console.log("rrrrrrrrrrrrrr");
       localStorage.clear();
       setUser(null);
       setUserData(null);
@@ -317,6 +315,7 @@ export const AuthContextProvider = ({ children }) => {
       console.log(err);
     }
   };
+
   return (
     <>
       <AuthContext.Provider
@@ -348,6 +347,7 @@ export const AuthContextProvider = ({ children }) => {
           changeEmail,
           changePassword,
           deleteAccount,
+          errorResponseHandler,
         }}
       >
         {children}
