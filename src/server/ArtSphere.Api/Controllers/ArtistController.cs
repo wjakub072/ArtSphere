@@ -48,8 +48,17 @@ public class ArtistController : ControllerBase
             artist.LastName ?? string.Empty,
             artist.Description ?? string.Empty,
             artist.AddressCountry ?? string.Empty,
-            artist.ProfilePicture,
-            artistsOffers.Select(o => new OfferListResponse(
+            artist.ProfilePicture));
+    }
+
+    [HttpGet(("{id}/offers"))]
+    public async Task<ActionResult<OfferListResponse[]>> GetArtistOffersAsync(int id)
+    {
+        var artist = await _usersRepository.GetArtistAsync(id);
+
+        var artistsOffers = await _offersRepository.GetArtistsOffers(artist.Id);
+
+        return Ok(artistsOffers.Select(o => new OfferListResponse(
                 o.Id, 
                 o.ArtistId, 
                 string.Concat(artist.FirstName ?? string.Empty, artist.LastName ?? string.Empty),
@@ -57,6 +66,6 @@ public class ArtistController : ControllerBase
                 o.Price,
                 o.Archived,
                 o.Picture))
-                .ToArray()));
+                .ToArray());
     }
 }
