@@ -29,5 +29,10 @@ class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(c => c.CompanyAddressApartment).HasMaxLength(20);
         builder.Property(c => c.CompanyAddressPostalCode).HasMaxLength(12);
         builder.Property(c => c.CompanyAddressBuilding).HasMaxLength(12);
+
+        builder.HasMany(c => c.Offers)
+        .WithOne(o => o.Artist)
+        .HasForeignKey(o => o.ArtistId)
+        .HasPrincipalKey(c => c.Id);
     }
 }

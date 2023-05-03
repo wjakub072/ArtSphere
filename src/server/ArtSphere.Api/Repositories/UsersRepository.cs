@@ -185,7 +185,7 @@ public class UsersRepository
         user.FirstName = payload.FirstName;
         user.LastName = payload.LastName;
         user.Description = payload.Description??string.Empty;
-        user.ProfilePicture = payload.Picture;
+        user.ProfilePicture = payload.Picture??string.Empty;
         
         await _db.SaveChangesAsync();
         return user;

@@ -15,12 +15,12 @@ public class OffersRepository
 
     public async Task<IEnumerable<Offer>> GetOffersAsync()
     {
-        return await _db.Offers.ToListAsync();
+        return await _db.Offers.Include(c => c.Artist).AsNoTracking().ToListAsync();
     }
 
     public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId)
     {
-        return await _db.Offers.Where(o => o.ArtistId == artistId).ToListAsync();
+        return await _db.Offers.Where(o => o.ArtistId == artistId).AsNoTracking().ToListAsync();
     }
 
     public async Task<Offer> AddOffer(int artistId, OfferPayload offerPayload)
@@ -31,6 +31,7 @@ public class OffersRepository
             Category = offerPayload.Category,
             Technic = offerPayload.Technic,
             Title = offerPayload.Title, 
+            Topic = offerPayload.Topic,
             Description = offerPayload.Description,
             Price = offerPayload.Price,
             DimensionsX = offerPayload.DimensionsX, 
@@ -51,6 +52,7 @@ public class OffersRepository
         offer.Category = offerPayload.Category;
         offer.Technic = offerPayload.Technic;
         offer.Title = offerPayload.Title;
+        offer.Topic = offerPayload.Topic;
         offer.Description = offerPayload.Description;
         offer.Price = offerPayload.Price;
         offer.DimensionsX = offerPayload.DimensionsX;
@@ -79,6 +81,14 @@ public class OffersRepository
         offer.Archived = true;
         
         await _db.SaveChangesAsync();
+        return offer;
+    }
+
+    public async Task<Offer> GetOfferAsync(int id)
+    {
+        var offer = await _db.Offers.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
+
         return offer;
     }
 }

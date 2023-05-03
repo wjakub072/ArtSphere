@@ -92,6 +92,7 @@ public class OfferController : ControllerBase
                 new OfferListResponse(
                     o.Id, 
                     o.ArtistId, 
+                    string.Concat(artist.FirstName ?? string.Empty, artist.LastName ?? string.Empty),
                     o.Title, 
                     o.Price, 
                     o.Archived,
@@ -108,10 +109,33 @@ public class OfferController : ControllerBase
                 new OfferListResponse(
                     o.Id, 
                     o.ArtistId, 
+                    string.Concat(o.Artist?.FirstName ?? string.Empty, o.Artist?.LastName ?? string.Empty),
                     o.Title, 
                     o.Price, 
                     o.Archived,
                     o.Picture))
                     .ToArray();
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OfferDetailsResponse>> GetOfferDescriptionAsync(int id)
+    {
+        var offer = await _offersRepository.GetOfferAsync(id);
+        return new OfferDetailsResponse(
+            offer.Id,
+            offer.ArtistId,
+            string.Concat(offer.Artist?.FirstName ?? string.Empty, offer.Artist?.LastName ?? string.Empty),
+            offer.Category,
+            offer.Technic,
+            offer.Topic,
+            offer.Description,
+            offer.DimensionsX,
+            offer.DimensionsY,
+            offer.Unit,
+            offer.Title,
+            offer.Price,
+            offer.Archived,
+            offer.Picture
+        );
     }
 }
