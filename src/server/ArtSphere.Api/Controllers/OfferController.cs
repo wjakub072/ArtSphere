@@ -135,7 +135,8 @@ public class OfferController : ControllerBase
             offer.Title,
             offer.Price,
             offer.Archived,
-            offer.Picture
+            offer.Picture,
+            offer.Tags?.Select(o => o.Name).ToArray()
         );
     }
 }

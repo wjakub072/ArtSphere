@@ -16,4 +16,5 @@ public class Offer
     public bool Archived { get; set; }
     public string? Picture { get; set; }
     public User Artist { get; set; }
+    public ICollection<Tag> Tags { get; set; }
 }

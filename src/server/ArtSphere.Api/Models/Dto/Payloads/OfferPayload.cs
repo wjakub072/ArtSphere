@@ -22,4 +22,5 @@ public class OfferPayload
     [Required]
     public string Unit { get; set; }
     public string? Picture { get; set; }
+    public string[]? Tags { get; set; }
 }

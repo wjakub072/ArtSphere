@@ -39,6 +39,16 @@ public class OffersRepository
             Unit = offerPayload.Unit,
             Picture = offerPayload.Picture
         };
+        if(offerPayload.Tags != null){
+            offer.Tags = new List<Tag>();
+            foreach (var tag in offerPayload.Tags)
+            {
+                offer.Tags.Add(new Tag(){
+                    DefinedByUser = true,
+                    Name = tag
+                });
+            }
+        }
         _db.Offers.Add(offer);
         await _db.SaveChangesAsync();
         return offer;
@@ -46,7 +56,7 @@ public class OffersRepository
 
     public async Task<Offer> EditOffer(int id, OfferPayload offerPayload)
     {
-        var offer = await _db.Offers.FirstOrDefaultAsync(c => c.Id == id);
+        var offer = await _db.Offers.Include(o => o.Tags).FirstOrDefaultAsync(c => c.Id == id);
         if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
 
         offer.Category = offerPayload.Category;
@@ -59,6 +69,22 @@ public class OffersRepository
         offer.DimensionsY = offerPayload.DimensionsY;
         offer.Unit = offerPayload.Unit;
         offer.Picture = offerPayload.Picture;
+
+        if(offerPayload.Tags != null){
+            foreach (var tag in offerPayload.Tags)
+            {
+                if(!offer.Tags.Select(ot => ot.Name).Contains(tag)){
+                    offer.Tags.Add(new Tag(){
+                        DefinedByUser = true,
+                        Name = tag
+                    });
+                }
+            }
+            foreach (var tagToDelete in offer.Tags.Where(ot => !offerPayload.Tags.Contains(ot.Name)))
+            {
+                offer.Tags.Remove(tagToDelete);
+            }
+        }
 
         await _db.SaveChangesAsync();
         return offer;
@@ -86,7 +112,7 @@ public class OffersRepository
 
     public async Task<Offer> GetOfferAsync(int id)
     {
-        var offer = await _db.Offers.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        var offer = await _db.Offers.Include(o => o.Tags).AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
         if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
 
         return offer;

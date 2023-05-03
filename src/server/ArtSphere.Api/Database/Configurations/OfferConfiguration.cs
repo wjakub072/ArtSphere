@@ -24,8 +24,13 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
         builder.Property(o => o.Archived).HasDefaultValue(false);
 
         builder.HasOne(o => o.Artist)
-        .WithMany(c => c.Offers)
-        .HasForeignKey(o => o.ArtistId)
-        .HasPrincipalKey(c => c.Id);
+            .WithMany(c => c.Offers)
+            .HasForeignKey(o => o.ArtistId)
+            .HasPrincipalKey(c => c.Id);
+
+        builder.HasMany(o => o.Tags)
+            .WithOne(t => t.Offer)
+            .HasForeignKey(t => t.OfferId)
+            .HasPrincipalKey(o => o.Id);
     }
 }
