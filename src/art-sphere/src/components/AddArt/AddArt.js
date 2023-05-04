@@ -21,6 +21,7 @@ function AddArt() {
   };
 
   const [validateError, setValidateError] = useState("");
+  const [dataResponse, setDataResponse] = useState("");
   const [artData, setArtData] = useState({
     img: "",
     category: "",
@@ -174,6 +175,7 @@ function AddArt() {
       const data = {
         category: artData.category,
         technic: artData.technic,
+        topic: artData.topic,
         title: artData.title,
         description: artData.description,
         price: artData.price,

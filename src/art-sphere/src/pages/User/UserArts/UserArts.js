@@ -4,6 +4,7 @@ import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import AuthContext from "../../../context/AuthContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Loading from "../../../components/Loading/Loading";
 
 const UserArts = () => {
   useWebsiteTitle("Twoje dzieła");
@@ -37,13 +38,15 @@ const UserArts = () => {
 
       <div className="offers-container">
         <div className="offers w-full">
-          {loading ? null : (
+          {loading ? (
+            <Loading />
+          ) : (
             <div className="m-7 grid grid-cols-1 auto-rows-min xl:grid-cols-2 2xl:grid-cols-3 gap-4">
               {offerList.map((item) => (
                 <Link
                   to={`/galeria/${item.id}`}
                   key={item.id}
-                  className="bg-white rounded-lg overflow-hidden h-fit xl:h-96 shadow-md w-auto "
+                  className="bg-white rounded-lg overflow-hidden h-fit xl:h-96 shadow-md w-auto hover:opacity-75"
                 >
                   <div className="w-full h-3/4">
                     <img
@@ -54,8 +57,7 @@ const UserArts = () => {
                   </div>
                   <div className="px-4 py-2">
                     <h2 className="text-lg font-bold">{item.title}</h2>
-                    <p className="text-gray-700 text-sm">by {item.artistId}</p>
-                    <p className="text-lg font-bold mt-2">${item.price}</p>
+                    <p className="text-lg font-bold mt-2">{item.price} PLN</p>
                   </div>
                 </Link>
               ))}

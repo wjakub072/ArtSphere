@@ -58,7 +58,7 @@ function Artists(props) {
         <div className="m-7 lg:mx-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {artistList.map((item) => (
             <Link
-              to={`/galeria/${item.id}`}
+              to={`/artysci/${item.id}`}
               key={item.id}
               className="bg-white rounded-lg shadow-xl w-auto h-fit sm:h-96 hover:opacity-75"
             >

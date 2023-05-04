@@ -65,7 +65,9 @@ function Gallery(props) {
               </div>
               <div className="px-4 py-2">
                 <h2 className="text-lg font-bold">{item.title}</h2>
-                <p className="text-gray-700 text-sm">Autor: {item.artistId}</p>
+                <p className="text-gray-700 text-sm">
+                  Autor: {item.artistName}
+                </p>
                 <p className="text-lg font-bold mt-2">{item.price} PLN</p>
               </div>
             </Link>
