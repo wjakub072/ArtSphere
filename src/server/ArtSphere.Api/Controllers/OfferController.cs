@@ -92,7 +92,7 @@ public class OfferController : ControllerBase
                 new OfferListResponse(
                     o.Id, 
                     o.ArtistId, 
-                    string.Concat(artist.FirstName ?? string.Empty, artist.LastName ?? string.Empty),
+                    string.Concat(artist.FirstName ?? string.Empty, " ", artist.LastName ?? string.Empty),
                     o.Title, 
                     o.Price, 
                     o.Archived,
@@ -109,7 +109,7 @@ public class OfferController : ControllerBase
                 new OfferListResponse(
                     o.Id, 
                     o.ArtistId, 
-                    string.Concat(o.Artist?.FirstName ?? string.Empty, o.Artist?.LastName ?? string.Empty),
+                    string.Concat(o.Artist?.FirstName ?? string.Empty, " ", o.Artist?.LastName ?? string.Empty),
                     o.Title, 
                     o.Price, 
                     o.Archived,
@@ -124,7 +124,7 @@ public class OfferController : ControllerBase
         return new OfferDetailsResponse(
             offer.Id,
             offer.ArtistId,
-            string.Concat(offer.Artist?.FirstName ?? string.Empty, offer.Artist?.LastName ?? string.Empty),
+            string.Concat(offer.Artist?.FirstName ?? string.Empty, " ", offer.Artist?.LastName ?? string.Empty),
             offer.Category,
             offer.Technic,
             offer.Topic,
@@ -135,7 +135,8 @@ public class OfferController : ControllerBase
             offer.Title,
             offer.Price,
             offer.Archived,
-            offer.Picture
+            offer.Picture,
+            offer.Tags?.Select(o => o.Name).ToArray()
         );
     }
 }

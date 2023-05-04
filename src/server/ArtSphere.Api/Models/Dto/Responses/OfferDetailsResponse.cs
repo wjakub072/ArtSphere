@@ -15,5 +15,6 @@ public record OfferDetailsResponse
     string Title, 
     decimal Price,
     bool Archived,
-    string? Photo
+    string? Photo,
+    string[]? Tags
 );
