@@ -112,7 +112,7 @@ public class OffersRepository
 
     public async Task<Offer> GetOfferAsync(int id)
     {
-        var offer = await _db.Offers.Include(o => o.Tags).AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        var offer = await _db.Offers.Include(o => o.Artist).Include(o => o.Tags).AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
         if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
 
         return offer;
