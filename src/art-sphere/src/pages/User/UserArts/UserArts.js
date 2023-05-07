@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import AddArt from "../../../components/AddArt/AddArt";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import AuthContext from "../../../context/AuthContext";
-import axios from "axios";
-import { Link } from "react-router-dom";
 import Loading from "../../../components/Loading/Loading";
+import axiosInstace from "../../../api/axiosInstance";
 
 const UserArts = () => {
   useWebsiteTitle("Twoje dzieła");
@@ -20,7 +20,7 @@ const UserArts = () => {
 
   const getUserOffers = async () => {
     try {
-      let response = await axios.get("http://127.0.0.1:5006/api/offers/my", {
+      let response = await axiosInstace.get("offers/my", {
         withCredentials: true,
       });
       console.log("respons ofert użytkownika");
@@ -46,7 +46,7 @@ const UserArts = () => {
                 <Link
                   to={`/galeria/${item.id}`}
                   key={item.id}
-                  className="bg-white rounded-lg overflow-hidden h-fit xl:h-96 shadow-md w-auto hover:opacity-75"
+                  className="bg-white rounded-lg overflow-hidden h-fit xl:h-96 shadow-md w-auto hover:opacity-75 transition-opacity"
                 >
                   <div className="w-full h-3/4">
                     <img

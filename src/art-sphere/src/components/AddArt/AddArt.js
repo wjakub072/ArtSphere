@@ -8,12 +8,16 @@ import AddImage from "./Inputs/AddImage";
 import TagInput from "./Inputs/TagInput";
 import Description from "./Inputs/Description";
 import AuthContext from "../../context/AuthContext";
-import axios from "axios";
+import axiosInstace from "../../api/axiosInstance";
 import "./addArt.css";
 
 function AddArt() {
-  const { errorResponseHandler, setResponseSuccess, setResponseError } =
-    useContext(AuthContext);
+  const {
+    errorResponseHandler,
+    responseSuccess,
+    setResponseSuccess,
+    setResponseError,
+  } = useContext(AuthContext);
 
   const [showAddForm, setShowAddForm] = useState(false);
   const handleClick = () => {
@@ -21,7 +25,7 @@ function AddArt() {
   };
 
   const [validateError, setValidateError] = useState("");
-  const [dataResponse, setDataResponse] = useState("");
+  const [loadingButton, setLoadingButton] = useState(false);
   const [artData, setArtData] = useState({
     img: "",
     category: "",
@@ -135,23 +139,23 @@ function AddArt() {
 
   const addArt = async (data) => {
     try {
-      let response = await axios.post(
-        "http://127.0.0.1:5006/api/offers",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
+      setLoadingButton(true);
+      let response = await axiosInstace.post("offers", data, {
+        withCredentials: true,
+      });
       console.log("respons dodania dzieła");
       console.log(response);
       setResponseSuccess("Dzieło zostało dodane");
     } catch (err) {
+      setLoadingButton(false);
       if (err.response) {
         setResponseSuccess("");
         setResponseError(err.response.data.message);
       }
       console.log(err);
       errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
@@ -183,8 +187,10 @@ function AddArt() {
         DimensionsY: artData.height,
         unit: "cm",
         picture: artData.img,
+        tags: [],
       };
       setValidateError("");
+      setResponseSuccess("");
       addArt(data);
     } else {
       setValidateError("Wypełnij wszystkie pola");
@@ -268,8 +274,15 @@ function AddArt() {
         {validateError && (
           <div className="text-danger text-center mb-4">{validateError}</div>
         )}
+        {responseSuccess && (
+          <p className="text-success text-center mb-4">{responseSuccess}</p>
+        )}
         <div className="mx-auto text-center">
-          <AddArtButton title="Dodaj dzieło" onClick={clickHandle} />
+          <AddArtButton
+            title="Dodaj dzieło"
+            onClick={clickHandle}
+            loading={loadingButton}
+          />
         </div>
       </div>
     </>

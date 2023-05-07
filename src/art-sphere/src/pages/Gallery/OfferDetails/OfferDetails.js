@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Loading from "../../../components/Loading/Loading";
-import axios from "axios";
+import axiosInstace from "../../../api/axiosInstance";
+import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 
 function OfferDetails() {
+  useWebsiteTitle("Oferty - Szczegóły");
   const { offerId } = useParams();
   const [loading, setLoading] = useState(true);
   const [offer, setOffer] = useState(null);
@@ -15,9 +17,7 @@ function OfferDetails() {
 
   const getOffer = async () => {
     try {
-      const offerData = await axios.get(
-        `http://127.0.0.1:5006/api/offers/${offerId}`
-      );
+      const offerData = await axiosInstace.get(`offers/${offerId}`);
       console.log(offerData.data);
       setOffer(offerData.data);
       setLoading(false);
