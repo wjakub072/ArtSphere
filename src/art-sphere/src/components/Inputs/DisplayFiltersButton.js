@@ -1,7 +1,10 @@
 function DisplayFiltersButton({ onClick, show }) {
   return (
     <div className="text-indigo-600 font-bold relative z-10 ">
-      <button className="flex gap-2 align-middle" onClick={onClick}>
+      <button
+        className="flex gap-2 align-middle rounded-md px-1 border-2 border-transparent focus:outline-none focus:border-indigo-600"
+        onClick={onClick}
+      >
         Pokaż filtry
         <div
           className={`w-4 fill-indigo-600 duration-700 transition-transform ${

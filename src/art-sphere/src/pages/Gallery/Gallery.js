@@ -40,7 +40,7 @@ function Gallery(props) {
   return (
     <div>
       <div
-        className={`pl-3 py-1 transition-colors ${showFilters && "bg-gray-50"}`}
+        className={`pl-1 py-1 transition-colors ${showFilters && "bg-gray-50"}`}
       >
         <DisplayFiltersButton onClick={handleClick} show={showFilters} />
       </div>
