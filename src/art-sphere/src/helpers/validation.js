@@ -5,7 +5,6 @@ export function validateEmail(text) {
 }
 
 export function validatePostcode(text) {
-  const re =
-    /^[0-9]{1,2}-[0-9]{1,3}$/
-  return re.test(text)
+  const re = /^[0-9]{2}-[0-9]{3}$/;
+  return re.test(text);
 }

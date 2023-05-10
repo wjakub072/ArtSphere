@@ -12,14 +12,15 @@ import Profile from "./pages/User/Profile/Profile";
 import ShoppingHistory from "./pages/User/ShoppingHistory/ShoppingHistory";
 import Favorite from "./pages/User/Favorite/Favorite";
 import TopUpWallet from "./pages/User/TopUpWallet/TopUpWallet";
+import TopUpWalletLink from "./pages/User/TopUpWallet/TopUpWalletLink/TopUpWalletLink";
 import DeliveryAddress from "./pages/User/DeliveryAddress/DeliveryAddress";
 import InvoiceData from "./pages/User/InvoiceData/InvoiceData";
 import AccountSettings from "./pages/User/AccountSettings/AccountSettings";
 import UserArts from "./pages/User/UserArts/UserArts";
 import AdminPanel from "./pages/User/AdminPanel/AdminPanel";
 import ProtectedRoute from "./hoc/ProtectedRoute";
+import PasswordRecovery from "./components/Auth/PasswordRecovery/PasswordRecovery";
 import { AuthContextProvider } from "./context/AuthContext";
-import ArtistsDetails from "./pages/Artists/ArtistsDetails/ArtistsDetails";
 
 function App() {
   const content = (
@@ -29,12 +30,19 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/galeria" element={<Gallery />} />
         <Route path="/artysci" element={<Artists />} />
-        <Route path="/artysci/artysciszczegoly" element={<ArtistsDetails />} />
         <Route
           path="/logowanie"
           element={
             <ProtectedRoute accesBy="non-authenticated">
               <LoginView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/logowanie/odzyskiwanieHasla"
+          element={
+            <ProtectedRoute accesBy="non-authenticated">
+              <PasswordRecovery />
             </ProtectedRoute>
           }
         />

@@ -9,12 +9,19 @@
   padding: 7px;
   font-size: 0.9rem;
 }
+
+.user-delivery-address-wrap .delivery-address-form label select {
+  display: block;
+  margin: 10px 0;
+  border-radius: 5px;
+  padding: 7px;
+  font-size: 0.9rem;
+}
 .user-delivery-address-wrap .delivery-address-form label input:focus {
   border-color: #108df3;
   outline: none;
 }
 .user-delivery-address-wrap .delivery-address-form input[type="submit"] {
-  margin: 0 auto;
   font-size: 0.9rem;
   padding: 7px;
   border-radius: 5px;

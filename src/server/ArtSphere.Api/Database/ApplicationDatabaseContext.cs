@@ -11,6 +11,9 @@ public class ApplicationDatabaseContext : IdentityDbContext<ApplicationUser, App
 {
     public ApplicationDatabaseContext(DbContextOptions<ApplicationDatabaseContext> options) : base(options) { }
     public DbSet<User> ASUsers { get; set; }
+    public DbSet<Offer> Offers { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<TagDictionary> TagDictionary { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

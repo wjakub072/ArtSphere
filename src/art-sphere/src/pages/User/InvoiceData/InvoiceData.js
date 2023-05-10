@@ -1,25 +1,48 @@
-import { useState, useContext, useEffect } from "react";
-import AuthContext from "../../../context/AuthContext";
+import { useState, useEffect, useContext } from "react";
+import { validatePostcode } from "../../../helpers/validation";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import "./InvoiceData.css";
-import { validatePostcode } from "../../../helpers/validation";
+import AuthContext from "../../../context/AuthContext";
 
 const InvoiceData = () => {
   useWebsiteTitle("Dane do faktury");
-
   const {
     responseError,
-    setResponseError
+    setResponseError,
+    responseSuccess,
+    setResponseSuccess,
+    invoiceData,
+    updateInvoiceData,
   } = useContext(AuthContext);
 
-  const [name, setName] = useState("");
-  const [nip, setNip] = useState("");
-  const [street, setStreet] = useState("");
-  const [homenr, setHomenr] = useState("");
-  const [flatnr, setFlatnr] = useState("");
-  const [postcode, setPostcode] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
+  const [name, setName] = useState(
+    invoiceData.companyName ? invoiceData.companyName : ""
+  );
+  const [nip, setNip] = useState(
+    invoiceData.companyVatId ? invoiceData.companyVatId : ""
+  );
+  const [street, setStreet] = useState(
+    invoiceData.companyAddressStreet ? invoiceData.companyAddressStreet : ""
+  );
+  const [homenr, setHomenr] = useState(
+    invoiceData.companyAddressApartment
+      ? invoiceData.companyAddressApartment
+      : ""
+  );
+  const [flatnr, setFlatnr] = useState(
+    invoiceData.companyAddressBuilding ? invoiceData.companyAddressBuilding : ""
+  );
+  const [postcode, setPostcode] = useState(
+    invoiceData.companyAddressPostalCode
+      ? invoiceData.companyAddressPostalCode
+      : ""
+  );
+  const [city, setCity] = useState(
+    invoiceData.companyAddressCity ? invoiceData.companyAddressCity : ""
+  );
+  const [country, setCountry] = useState(
+    invoiceData.companyAddressCountry ? invoiceData.companyAddressCountry : ""
+  );
 
   const [nameErrors, setNameErrors] = useState("");
   const [nipErrors, setNipErrors] = useState("");
@@ -32,37 +55,47 @@ const InvoiceData = () => {
 
   useEffect(() => {
     if (name.length < 1) {
-      setNameErrors("Imię - Pole nie może być puste");
+      setNameErrors("Pole nie może być puste");
+    } else {
+      setNameErrors("");
     }
   }, [name]);
 
   useEffect(() => {
     if (nip.length < 1) {
-      setNipErrors("NIP - Pole nie może być puste");
+      setNipErrors("Pole nie może być puste");
+    } else {
+      setNipErrors("");
     }
   }, [nip]);
 
   useEffect(() => {
     if (street.length < 1) {
-      setStreetErrors("Ulica - Pole nie może być puste");
+      setStreetErrors("Pole nie może być puste");
+    } else {
+      setStreetErrors("");
     }
   }, [street]);
 
   useEffect(() => {
     if (homenr.length < 1) {
-      setHomenrErrors("Numer domu - Pole nie może być puste");
+      setHomenrErrors("Pole nie może być puste");
+    } else {
+      setHomenrErrors("");
     }
   }, [homenr]);
 
   useEffect(() => {
     if (flatnr.length < 1) {
-      setFlatnrErrors("Numer lokalu - Pole nie może być puste");
+      setFlatnrErrors("Pole nie może być puste");
+    } else {
+      setFlatnrErrors("");
     }
   }, [flatnr]);
 
   useEffect(() => {
     if (postcode.length < 1) {
-      setPostcodeErrors("Kod pocztowy - Pole nie może być puste");
+      setPostcodeErrors("Pole nie może być puste");
     } else if (validatePostcode(postcode)) {
       setPostcodeErrors("");
     } else {
@@ -72,15 +105,27 @@ const InvoiceData = () => {
 
   useEffect(() => {
     if (city.length < 1) {
-      setCityErrors("Miasto - Pole nie może być puste");
+      setCityErrors("Pole nie może być puste");
+    } else {
+      setCityErrors("");
     }
   }, [city]);
 
   useEffect(() => {
     if (country === "") {
-      setCountryErrors("Kraj - Musisz wybrać");
+      setCountryErrors("Niepoprawny kraj");
+    } else {
+      setCountryErrors("");
     }
   }, [country]);
+
+  useEffect(() => {
+    return () => {
+      setResponseError("");
+      setResponseSuccess("");
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setNameErrors("");
@@ -93,54 +138,105 @@ const InvoiceData = () => {
     setCountryErrors("");
   }, []);
 
-  useEffect(() => {
-    return () => setResponseError("");
-  }, []);
+  const clickHandler = (e) => {
+    e.preventDefault();
+    if (
+      name &&
+      nip &&
+      street &&
+      homenr &&
+      flatnr &&
+      postcode &&
+      city &&
+      country
+    ) {
+      updateInvoiceData({
+        companyName: name,
+        companyVatId: nip,
+        companyAddressStreet: street,
+        companyAddressApartment: homenr,
+        companyAddressBuilding: flatnr,
+        companyAddressPostalCode: postcode,
+        companyAddressCity: city,
+        companyAddressCountry: country,
+      });
+    } else {
+      if (!name) {
+        setNameErrors("Pole nie może być puste");
+      }
+      if (!nip) {
+        setNipErrors("Pole nie może być puste");
+      }
+      if (!street) {
+        setStreetErrors("Pole nie może być puste");
+      }
+      if (!homenr) {
+        setHomenrErrors("Pole nie może być puste");
+      }
+      if (!flatnr) {
+        setFlatnrErrors("Pole nie może być puste");
+      }
+      if (!postcode) {
+        setPostcodeErrors("Pole nie może być puste");
+      }
+      if (!city) {
+        setCityErrors("Pole nie może być puste");
+      }
+      if (!country) {
+        setCountryErrors("Niepoprawny kraj");
+      }
+    }
+  };
 
   return (
     <div className="user-invoice-data-wrap">
       <h2>Dane do faktury</h2>
       <form className="invoice-data-form">
-        <label className="text-primary m-3">
+        <label className="text-primary m-3 relative">
           Nazwa firmy
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               nameErrors ? "is-invalid" : ""
             }`}
+            placeholder="Nazwa firmy"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            type="text"
-            placeholder="Nazwa firmy"
           />
+          <div className="invalid-feedback absolute">{nameErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           NIP
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               nipErrors ? "is-invalid" : ""
             }`}
             value={nip}
             onChange={(e) => setNip(e.target.value)}
             type="text"
-            placeholder="NIP" />
-            <div className="invalid-feedback">{nipErrors}</div>
+            placeholder="NIP"
+          />
+          <div className="invalid-feedback absolute">{nipErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Ulica
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               streetErrors ? "is-invalid" : ""
             }`}
             value={street}
             onChange={(e) => setStreet(e.target.value)}
             type="text"
-            placeholder="Ulica" />
-            <div className="invalid-feedback">{streetErrors}</div>
+            placeholder="Ulica"
+          />
+          <div className="invalid-feedback absolute">{streetErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Numer domu
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               homenrErrors ? "is-invalid" : ""
             }`}
             value={homenr}
@@ -148,12 +244,13 @@ const InvoiceData = () => {
             type="text"
             placeholder="Numer domu"
           />
-          <div className="invalid-feedback">{homenrErrors}</div>
+          <div className="invalid-feedback absolute">{homenrErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Numer lokalu
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               flatnrErrors ? "is-invalid" : ""
             }`}
             value={flatnr}
@@ -161,12 +258,13 @@ const InvoiceData = () => {
             type="text"
             placeholder="Numer lokalu"
           />
-          <div className="invalid-feedback">{flatnrErrors}</div>
+          <div className="invalid-feedback absolute">{flatnrErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Kod pocztowy
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               postcodeErrors ? "is-invalid" : ""
             }`}
             value={postcode}
@@ -174,42 +272,54 @@ const InvoiceData = () => {
             type="text"
             placeholder="Kod pocztowy"
           />
-          <div className="invalid-feedback">{postcodeErrors}</div>
+          <div className="invalid-feedback absolute">{postcodeErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Miasto
-          <input className={`form-control loginForm ${
+          <input
+            className={`form-control w-44 loginForm ${
               cityErrors ? "is-invalid" : ""
             }`}
             value={city}
             onChange={(e) => setCity(e.target.value)}
             type="text"
-            placeholder="Miasto" />
-            <div className="invalid-feedback">{cityErrors}</div>
+            placeholder="Miasto"
+          />
+          <div className="invalid-feedback absolute">{cityErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
+          Wybierz kraj
           <select
-            className={`form-control loginForm ${
-              countryErrors ? "is-invalid" : ""
-            }`}
+            className={`form-control w-44 ${countryErrors ? "is-invalid" : ""}`}
             value={country}
-            onChange={(e) => setCountry(e.target.value)}>
-            <option value="" selected>Wybierz Kraj </option>
-            <option value="1">Polska</option>
-            <option value="2">Czehy</option>
-            <option value="3">Niemcy</option>
+            onChange={(e) => setCountry(e.target.value)}
+          >
+            <option value="" selected>
+              -
+            </option>
+            <option value="Polska">Polska</option>
+            <option value="Czehy">Czechy</option>
+            <option value="Niemcy">Niemcy</option>
+            <option value="Słowacja">Słowacja</option>
+            <option value="Ukraina">Ukraina</option>
+            <option value="Białoruś">Białoruś</option>
           </select>
-          <div className="invalid-feedback">{countryErrors}</div>
+          <div className="invalid-feedback absolute">{countryErrors}</div>
         </label>
 
         {responseError && (
-          <p className="text-danger text-center mt-3 mb-0">{responseError}</p>
+          <p className="text-success text-center my-3">{responseError}</p>
         )}
-
+        {responseSuccess && (
+          <p className="text-success text-center my-3">{responseSuccess}</p>
+        )}
         <input
-          className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
+          className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white w-44 m-3 py-2 rounded disabled:opacity-50"
           type="submit"
           value="Zapisz dane do faktury"
+          onClick={clickHandler}
         />
       </form>
     </div>

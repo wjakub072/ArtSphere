@@ -25,26 +25,13 @@ const AccountSettings = () => {
   const [oldPass, setOldPass] = useState("");
   const [pass, setPass] = useState("");
   const [pass2, setPass2] = useState("");
+  const [emailPass, setEmailPass] = useState("");
+  const [emailPassErrors, setEmailPassErrors] = useState("");
   const [emailErrors, setEmailErrors] = useState("");
   const [emailErrors2, setEmailErrors2] = useState("");
   const [passwordErrors, setPasswordErrors] = useState("");
   const [passwordErrors2, setPasswordErrors2] = useState("");
-
-  const buttonDisabledEmail = () => {
-    if (emailErrors === "") {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const buttonDisabledPassword = () => {
-    if (passwordErrors === "" && passwordErrors2 === "") {
-      return false;
-    } else {
-      return true;
-    }
-  };
+  const [oldPassErrors, setOldPassErrors] = useState("");
 
   useEffect(() => {
     if (email.length < 1) {
@@ -54,7 +41,6 @@ const AccountSettings = () => {
     } else {
       setEmailErrors("Niepoprawny email");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email]);
 
   useEffect(() => {
@@ -65,8 +51,15 @@ const AccountSettings = () => {
     } else {
       setEmailErrors2("Niepoprawny email");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email2]);
+
+  useEffect(() => {
+    if (oldPass.length < 1) {
+      setOldPassErrors("Pole nie może być puste");
+    } else {
+      setOldPassErrors("");
+    }
+  }, [oldPass]);
 
   useEffect(() => {
     if (pass.length < 1) {
@@ -82,13 +75,12 @@ const AccountSettings = () => {
     } else {
       setPasswordErrors("Wymagane 8 znaków");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pass]);
 
   useEffect(() => {
     if (pass2.length < 1) {
       setPasswordErrors2("Pole nie może być puste");
-    } else if (pass2.length === pass.length) {
+    } else if (pass2 === pass) {
       setPasswordErrors2("");
     } else {
       setPasswordErrors2("Należy wpisać hasło ponownie");
@@ -97,10 +89,20 @@ const AccountSettings = () => {
   }, [pass2]);
 
   useEffect(() => {
+    if (emailPass.length < 1) {
+      setEmailPassErrors("Pole nie może być puste");
+    } else {
+      setEmailPassErrors("");
+    }
+  }, [emailPass]);
+
+  useEffect(() => {
     setEmailErrors("");
     setEmailErrors2("");
     setPasswordErrors("");
     setPasswordErrors2("");
+    setEmailPassErrors("");
+    setOldPassErrors("");
   }, []);
 
   useEffect(() => {
@@ -120,15 +122,45 @@ const AccountSettings = () => {
       CurrentPassword: oldPass,
       NewPassword: pass,
     };
-    await changePassword(data);
+    if (
+      !email.length < 1 &&
+      !oldPass.length < 1 &&
+      !pass.length < 1 &&
+      !pass2.length < 1
+    ) {
+      await changePassword(data);
+    } else {
+      if (pass2.length < 1) {
+        setPasswordErrors2("Pole nie może być puste");
+      }
+      if (pass.length < 1) {
+        setPasswordErrors("Pole nie może być puste");
+      }
+      if (email.length < 1) {
+        setEmailErrors("Pole nie może być puste");
+      }
+      if (oldPass.length < 1) {
+        setOldPassErrors("Pole nie może być puste");
+      }
+    }
   };
 
   const emailClickHandler = async (e) => {
     e.preventDefault();
     const data = {
-      Email: email2,
+      CurrentPassword: emailPass,
+      NewEmail: email2,
     };
-    await changeEmail(data);
+    if (!email2.length < 1 && !emailPass.length < 1) {
+      await changeEmail(data);
+    } else {
+      if (email2.length < 1) {
+        setEmailErrors2("Pole nie może być puste");
+      }
+      if (emailPass.length < 1) {
+        setEmailPassErrors("Pole nie może być puste");
+      }
+    }
   };
 
   const deleteClickHandler = async () => {
@@ -149,18 +181,19 @@ const AccountSettings = () => {
           type="email"
           id="email"
           placeholder="Adres email"
-        ></input>
+        />
         <div className="invalid-feedback">{emailErrors}</div>
 
         <input
           className={`form-control loginForm ${
-            passwordErrors ? "is-invalid" : ""
+            oldPassErrors ? "is-invalid" : ""
           }`}
           value={oldPass}
           onChange={(e) => setOldPass(e.target.value)}
           type="password"
           placeholder="Aktualne hasło"
         />
+        <div className="invalid-feedback">{oldPassErrors}</div>
 
         <input
           className={`form-control loginForm ${
@@ -196,7 +229,6 @@ const AccountSettings = () => {
         )}
         <input
           className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
-          disabled={buttonDisabledPassword()}
           type="submit"
           value="Zmień hasło"
           onClick={passwordClickHandler}
@@ -216,6 +248,17 @@ const AccountSettings = () => {
         />
         <div className="invalid-feedback">{emailErrors2}</div>
 
+        <input
+          className={`form-control loginForm ${
+            emailPassErrors ? "is-invalid" : ""
+          }`}
+          value={emailPass}
+          onChange={(e) => setEmailPass(e.target.value)}
+          type="password"
+          placeholder="Aktualne hasło"
+        />
+        <div className="invalid-feedback">{emailPassErrors}</div>
+
         {emailChangeResponseError && (
           <p className="text-danger text-center mt-3 mb-0">
             {emailChangeResponseError}
@@ -228,7 +271,6 @@ const AccountSettings = () => {
         )}
         <input
           className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
-          disabled={buttonDisabledEmail()}
           type="submit"
           value="Zmień e-mail"
           onClick={emailClickHandler}

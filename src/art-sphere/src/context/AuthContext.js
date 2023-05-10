@@ -21,11 +21,28 @@ export const AuthContextProvider = ({ children }) => {
     return {};
   });
 
+  const [deliveryAddressData, setDeliveryAddressData] = useState(() => {
+    let deliveryAddressData = localStorage.getItem("deliveryAddressData");
+    if (deliveryAddressData) {
+      return JSON.parse(deliveryAddressData);
+    }
+    return {};
+  });
+
+  const [invoiceData, setInvoiceData] = useState(() => {
+    let invoiceData = localStorage.getItem("invoiceData");
+    if (invoiceData) {
+      return JSON.parse(invoiceData);
+    }
+    return {};
+  });
+
   const [responseError, setResponseError] = useState("");
   const [passChangeResponseError, setPassChangeResponseError] = useState("");
   const [passChangeSuccess, setPassChangeSuccess] = useState("");
   const [emailChangeSuccess, setEmailChangeSuccess] = useState("");
   const [emailChangeResponseError, setEmailChangeResponseError] = useState("");
+  const [responseSuccess, setResponseSuccess] = useState("");
   const [sesionError, setSesionError] = useState("");
 
   const navigate = useNavigate();
@@ -44,6 +61,8 @@ export const AuthContextProvider = ({ children }) => {
       setUser(response.data.role);
       setResponseError("");
       await getProfileData();
+      await getDeliveryAddressData();
+      await getInvoiceData();
       navigate("/profil");
     } catch (err) {
       console.log("error logowania");
@@ -62,6 +81,8 @@ export const AuthContextProvider = ({ children }) => {
       localStorage.clear();
       setUser(null);
       setUserData(null);
+      setDeliveryAddressData(null);
+      setInvoiceData(null);
       navigate("/");
     } catch (err) {
       console.log("error wylogowania");
@@ -114,6 +135,7 @@ export const AuthContextProvider = ({ children }) => {
       console.log("respons update'u profilu");
       console.log(response);
       await getProfileData();
+      setResponseSuccess("Dane zostały zaktualizowane");
     } catch (err) {
       errorResponseHandler(err);
     }
@@ -144,7 +166,7 @@ export const AuthContextProvider = ({ children }) => {
   const changeEmail = async (data) => {
     try {
       let response = await axios.post(
-        "http://127.0.0.1:5006/api/account/reset-password",
+        "http://127.0.0.1:5006/api/account/change-email",
         data,
         {
           withCredentials: true,
@@ -182,21 +204,110 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  const getDeliveryAddressData = async () => {
+    try {
+      let response = await axios.get(
+        "http://127.0.0.1:5006/api/profile/address",
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("respons danych adresu dostawy");
+      console.log(response);
+      localStorage.setItem(
+        "deliveryAddressData",
+        JSON.stringify(response.data)
+      );
+      setDeliveryAddressData(response.data);
+      setResponseSuccess("Dane zostały zaktualizowane");
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
+
+  const updateDeliveryAddressData = async (data) => {
+    try {
+      let response = await axios.put(
+        "http://127.0.0.1:5006/api/profile/address",
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("respons update'u adresu dostawy");
+      console.log(response);
+      await getDeliveryAddressData();
+    } catch (err) {
+      if (err.response) {
+        setResponseSuccess("");
+        setResponseError(err.response.data.message);
+      }
+      errorResponseHandler(err);
+    }
+  };
+
+  const getInvoiceData = async () => {
+    try {
+      let response = await axios.get(
+        "http://127.0.0.1:5006/api/profile/company",
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("respons danych do faktury");
+      console.log(response);
+      localStorage.setItem("invoiceData", JSON.stringify(response.data));
+      setInvoiceData(response.data);
+      setResponseSuccess("Dane zostały zaktualizowane");
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
+
+  const updateInvoiceData = async (data) => {
+    try {
+      let response = await axios.put(
+        "http://127.0.0.1:5006/api/profile/company",
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("respons update'u danych do faktury");
+      console.log(response);
+      await getInvoiceData();
+    } catch (err) {
+      if (err.response) {
+        setResponseSuccess("");
+        setResponseError(err.response.data.message);
+      }
+      errorResponseHandler(err);
+    }
+  };
+
   const errorResponseHandler = (err) => {
     console.log(err);
     if (!err.response) {
       setSesionError("Sesja wygasła zaloguj się ponownie");
       console.log("Błąd autoryzacji");
+      console.log(sesionError);
+      console.log("rrrrrrrrrrrrrr");
       localStorage.clear();
       setUser(null);
       setUserData(null);
+      setDeliveryAddressData(null);
+      setInvoiceData(null);
       navigate("/logowanie");
     } else if (err.response && err.response.status === 401) {
       setSesionError("Sesja wygasła zaloguj się ponownie");
       console.log("Błąd autoryzacji");
+      console.log(sesionError);
+      console.log("rrrrrrrrrrrrrr");
       localStorage.clear();
       setUser(null);
       setUserData(null);
+      setDeliveryAddressData(null);
+      setInvoiceData(null);
       navigate("/logowanie");
     } else if (err.response && err.response.status === 500) {
       console.log("Błąd serwera");
@@ -216,8 +327,12 @@ export const AuthContextProvider = ({ children }) => {
           emailChangeSuccess,
           passChangeResponseError,
           passChangeSuccess,
+          responseSuccess,
           sesionError,
           userData,
+          deliveryAddressData,
+          invoiceData,
+          setResponseSuccess,
           setEmailChangeResponseError,
           setEmailChangeSuccess,
           setPassChangeResponseError,
@@ -228,6 +343,8 @@ export const AuthContextProvider = ({ children }) => {
           logout,
           register,
           updateProfileData,
+          updateDeliveryAddressData,
+          updateInvoiceData,
           changeEmail,
           changePassword,
           deleteAccount,

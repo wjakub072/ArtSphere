@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 function PriceInput({ title, value, onChange }) {
   const [focused, setFocused] = useState(false);
-  const [val, setVal] = useState(0);
+  const [val, setVal] = useState(value);
 
   const handleFocus = () => {
     setFocused(true);

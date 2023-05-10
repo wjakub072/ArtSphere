@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 
-function ArtistInput({ value, onChange }) {
+function PriceInput({ title, value, onChange }) {
   const [focused, setFocused] = useState(false);
+  const [val, setVal] = useState(value);
 
   const handleFocus = () => {
     setFocused(true);
@@ -13,24 +14,35 @@ function ArtistInput({ value, onChange }) {
   };
 
   const handleChange = (event) => {
-    return event.target.value;
+    const newValue = parseInt(event.target.value);
+    if (newValue >= 0) {
+      value = newValue;
+      setVal(newValue);
+      onChange(value);
+    } else {
+      onChange(0);
+      setVal(0);
+    }
   };
 
   return (
-    <div className="relative">
+    <div className="PriceInput relative">
       <label
         htmlFor="price"
         className="block text-sm font-medium leading-6 text-gray-900"
       >
-        Artysta
+        {title}
       </label>
       <div className="mt-2 relative rounded-md shadow-sm">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <span className="text-gray-500 sm:text-sm">$</span>
+        </div>
         <input
-          id="search"
-          name="search"
-          type="text"
+          id="price"
+          name="price"
+          type="number"
           className={classNames(
-            "form-input rounded-md block w-full py-2 pl-4 pr-3 sm:text-sm sm:leading-5",
+            "form-input rounded-md block w-full py-2 px-4 pr-12 sm:text-sm sm:leading-5",
             {
               "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500":
                 !focused,
@@ -38,8 +50,8 @@ function ArtistInput({ value, onChange }) {
                 focused,
             }
           )}
-          placeholder="Imie 'Pseudonim' Nazwisko"
-          value={value}
+          placeholder="0.00"
+          value={val}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -49,4 +61,4 @@ function ArtistInput({ value, onChange }) {
   );
 }
 
-export default ArtistInput;
+export default PriceInput;

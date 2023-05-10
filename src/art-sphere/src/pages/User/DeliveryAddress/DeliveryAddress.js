@@ -1,22 +1,53 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../../../context/AuthContext";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
-import "./DeliveryAddress.css";
 import { validatePostcode } from "../../../helpers/validation";
+import "./DeliveryAddress.css";
 
 const DeliveryAddress = () => {
   useWebsiteTitle("Adres dostawy");
-  const { responseError, setResponseError } = useContext(AuthContext);
+  const {
+    responseError,
+    setResponseError,
+    responseSuccess,
+    setResponseSuccess,
+    deliveryAddressData,
+    updateDeliveryAddressData,
+  } = useContext(AuthContext);
 
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [phone, setPhone] = useState("");
-  const [street, setStreet] = useState("");
-  const [homenr, setHomenr] = useState("");
-  const [flatnr, setFlatnr] = useState("");
-  const [postcode, setPostcode] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
+  const [name, setName] = useState(
+    deliveryAddressData.firstName ? deliveryAddressData.firstName : ""
+  );
+  const [surname, setSurname] = useState(
+    deliveryAddressData.lastName ? deliveryAddressData.lastName : ""
+  );
+  const [phone, setPhone] = useState(
+    deliveryAddressData.phoneNumber ? deliveryAddressData.phoneNumber : ""
+  );
+  const [street, setStreet] = useState(
+    deliveryAddressData.addressStreet ? deliveryAddressData.addressStreet : ""
+  );
+  const [homenr, setHomenr] = useState(
+    deliveryAddressData.addressBuilding
+      ? deliveryAddressData.addressBuilding
+      : ""
+  );
+  const [flatnr, setFlatnr] = useState(
+    deliveryAddressData.addressApartment
+      ? deliveryAddressData.addressApartment
+      : ""
+  );
+  const [postcode, setPostcode] = useState(
+    deliveryAddressData.addressPostalCode
+      ? deliveryAddressData.addressPostalCode
+      : ""
+  );
+  const [city, setCity] = useState(
+    deliveryAddressData.addressCity ? deliveryAddressData.addressCity : ""
+  );
+  const [country, setCountry] = useState(
+    deliveryAddressData.addressCountry ? deliveryAddressData.addressCountry : ""
+  );
 
   const [nameErrors, setNameErrors] = useState("");
   const [surnameErrors, setSurnameErrors] = useState("");
@@ -30,60 +61,75 @@ const DeliveryAddress = () => {
 
   useEffect(() => {
     if (name.length < 1) {
-      setNameErrors("Imię - Pole nie może być puste");
+      setNameErrors("Pole nie może być puste");
+    } else {
+      setNameErrors("");
     }
   }, [name]);
 
   useEffect(() => {
     if (surname.length < 1) {
-      setSurnameErrors("Nazwisko - Pole nie może być puste");
+      setSurnameErrors("Pole nie może być puste");
+    } else {
+      setSurnameErrors("");
     }
   }, [surname]);
 
   useEffect(() => {
     if (phone.length < 1) {
-      setPhoneErrors("Numer telefonu - Pole nie może być puste");
+      setPhoneErrors("Pole nie może być puste");
+    } else {
+      setPhoneErrors("");
     }
   }, [phone]);
 
   useEffect(() => {
     if (street.length < 1) {
-      setStreetErrors("Ulica - Pole nie może być puste");
+      setStreetErrors("Pole nie może być puste");
+    } else {
+      setStreetErrors("");
     }
   }, [street]);
 
   useEffect(() => {
     if (homenr.length < 1) {
-      setHomenrErrors("Numer domu - Pole nie może być puste");
+      setHomenrErrors("Pole nie może być puste");
+    } else {
+      setHomenrErrors("");
     }
   }, [homenr]);
 
   useEffect(() => {
     if (flatnr.length < 1) {
-      setFlatnrErrors("Numer lokalu - Pole nie może być puste");
+      setFlatnrErrors("Pole nie może być puste");
+    } else {
+      setFlatnrErrors("");
     }
   }, [flatnr]);
 
   useEffect(() => {
     if (postcode.length < 1) {
-      setPostcodeErrors("Kod pocztowy - Pole nie może być puste");
+      setPostcodeErrors("Pole nie może być puste");
     } else if (validatePostcode(postcode)) {
       setPostcodeErrors("");
     } else {
       setPostcodeErrors("Niepoprawny kod pocztowy");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postcode]);
 
   useEffect(() => {
     if (city.length < 1) {
-      setCityErrors("Miasto - Pole nie może być puste");
+      setCityErrors("Pole nie może być puste");
+    } else {
+      setCityErrors("");
     }
   }, [city]);
 
   useEffect(() => {
-    if (country.length < 1) {
-      setCountryErrors("Kraj - Pole nie może być puste");
+    if (country === "") {
+      setCountryErrors("Niepoprawny kraj");
+    } else {
+      setCountryErrors("");
     }
   }, [country]);
 
@@ -100,44 +146,104 @@ const DeliveryAddress = () => {
   }, []);
 
   useEffect(() => {
-    return () => setResponseError("");
+    return () => {
+      setResponseError("");
+      setResponseSuccess("");
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const clickHandler = (e) => {
+    e.preventDefault();
+    if (
+      name &&
+      surname &&
+      phone &&
+      street &&
+      homenr &&
+      flatnr &&
+      postcode &&
+      city &&
+      country
+    ) {
+      updateDeliveryAddressData({
+        firstName: name,
+        lastName: surname,
+        phoneNumber: phone,
+        addressStreet: street,
+        addressBuilding: homenr,
+        addressApartment: flatnr,
+        addressPostalCode: postcode,
+        addressCity: city,
+        addressCountry: country,
+      });
+    } else {
+      if (!name) {
+        setNameErrors("Pole nie może być puste");
+      }
+      if (!surname) {
+        setSurnameErrors("Pole nie może być puste");
+      }
+      if (!phone) {
+        setPhoneErrors("Pole nie może być puste");
+      }
+      if (!street) {
+        setStreetErrors("Pole nie może być puste");
+      }
+      if (!homenr) {
+        setHomenrErrors("Pole nie może być puste");
+      }
+      if (!flatnr) {
+        setFlatnrErrors("Pole nie może być puste");
+      }
+      if (!postcode) {
+        setPostcodeErrors("Pole nie może być puste");
+      }
+      if (!city) {
+        setCityErrors("Pole nie może być puste");
+      }
+      if (!country) {
+        setCountryErrors("Niepoprawny kraj");
+      }
+    }
+  };
 
   return (
     <div className="user-delivery-address-wrap">
       <h2>Adres dostawy</h2>
       <form className="delivery-address-form">
-        <label className="text-primary m-3">
+        <label className="text-primary m-3 relative">
           Imię
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               nameErrors ? "is-invalid" : ""
             }`}
             value={name}
             onChange={(e) => setName(e.target.value)}
             type="text"
             placeholder="Imię"
-            />
-            <div className="invalid-feedback">{nameErrors}</div>
+          />
+          <div className="invalid-feedback absolute">{nameErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Nazwisko
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               surnameErrors ? "is-invalid" : ""
             }`}
             value={surname}
             onChange={(e) => setSurname(e.target.value)}
             type="text"
             placeholder="Nazwisko"
-            />
-            <div className="invalid-feedback">{surnameErrors}</div>
+          />
+          <div className="invalid-feedback absolute">{surnameErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Numer telefonu
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               phoneErrors ? "is-invalid" : ""
             }`}
             value={phone}
@@ -145,25 +251,27 @@ const DeliveryAddress = () => {
             type="text"
             placeholder="Numer telefonu"
           />
-          <div className="invalid-feedback">{phoneErrors}</div>
+          <div className="invalid-feedback absolute">{phoneErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Ulica
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               streetErrors ? "is-invalid" : ""
             }`}
             value={street}
             onChange={(e) => setStreet(e.target.value)}
             type="text"
             placeholder="Ulica"
-            />
-            <div className="invalid-feedback">{streetErrors}</div>
+          />
+          <div className="invalid-feedback absolute">{streetErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Numer domu
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               homenrErrors ? "is-invalid" : ""
             }`}
             value={homenr}
@@ -171,12 +279,13 @@ const DeliveryAddress = () => {
             type="text"
             placeholder="Numer domu"
           />
-          <div className="invalid-feedback">{homenrErrors}</div>
+          <div className="invalid-feedback absolute">{homenrErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Numer lokalu
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               flatnrErrors ? "is-invalid" : ""
             }`}
             value={flatnr}
@@ -184,12 +293,13 @@ const DeliveryAddress = () => {
             type="text"
             placeholder="Numer lokalu"
           />
-          <div className="invalid-feedback">{flatnrErrors}</div>
+          <div className="invalid-feedback absolute">{flatnrErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Kod pocztowy
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               postcodeErrors ? "is-invalid" : ""
             }`}
             value={postcode}
@@ -197,50 +307,54 @@ const DeliveryAddress = () => {
             type="text"
             placeholder="Kod pocztowy"
           />
-          <div className="invalid-feedback">{postcodeErrors}</div>
+          <div className="invalid-feedback absolute">{postcodeErrors}</div>
         </label>
-        <label className="text-primary m-3">
+
+        <label className="text-primary m-3 relative">
           Miasto
           <input
-            className={`form-control loginForm ${
+            className={`form-control w-44 loginForm ${
               cityErrors ? "is-invalid" : ""
             }`}
             value={city}
             onChange={(e) => setCity(e.target.value)}
             type="text"
-            placeholder="Miasto" />
-            <div className="invalid-feedback">{cityErrors}</div>
+            placeholder="Miasto"
+          />
+          <div className="invalid-feedback absolute">{cityErrors}</div>
         </label>
-        <label className="text-primary m-3">
-          Kraj
-          <input
-            className={`form-control loginForm ${
-              countryErrors ? "is-invalid" : ""
-            }`}
+
+        <label className="text-primary m-3 relative">
+          Wybierz kraj
+          <select
+            className={`form-control w-44 ${countryErrors ? "is-invalid" : ""}`}
             value={country}
             onChange={(e) => setCountry(e.target.value)}
-            type="text"
-            placeholder="Polska"
-          />
-          <div className="invalid-feedback">{countryErrors}</div>
-        </label>
-        <label className="text-primary m-3">
-          <select class="form-control">
-            <option value="" selected>Wybierz Kraj</option>
-            <option value="1">Polska</option>
-            <option value="2">Czehy</option>
-            <option value="3">Niemcy</option>
+          >
+            <option value="" selected>
+              -
+            </option>
+            <option value="Polska">Polska</option>
+            <option value="Czehy">Czechy</option>
+            <option value="Niemcy">Niemcy</option>
+            <option value="Słowacja">Słowacja</option>
+            <option value="Ukraina">Ukraina</option>
+            <option value="Białoruś">Białoruś</option>
           </select>
+          <div className="invalid-feedback absolute">{countryErrors}</div>
         </label>
 
         {responseError && (
-          <p className="text-danger text-center mt-3 mb-0">{responseError}</p>
+          <p className="text-success text-center my-3">{responseError}</p>
         )}
-
+        {responseSuccess && (
+          <p className="text-success text-center my-3">{responseSuccess}</p>
+        )}
         <input
-          className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
+          className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white w-44 m-3 py-2 rounded disabled:opacity-50"
           type="submit"
           value="Zapisz dane adresowe"
+          onClick={clickHandler}
         />
       </form>
     </div>
