@@ -32,21 +32,25 @@ const UserArts = () => {
     setLoading(false);
   };
   return (
-    <div className="user-user-arts-wrap">
-      <h2 className="mt-2">Twoje dzieła</h2>
+    <div className="w-full text-center mx-auto">
+      <h2 className="mb-3 text-4xl text-indigo-600 font-semibold tracking-wider">
+        Twoje dzieła
+      </h2>
       <AddArt />
 
-      <div className="offers-container">
-        <div className="offers w-full">
+      <div className="text-left">
+        <div className="w-full">
           {loading ? (
-            <Loading />
+            <div className="mx-auto text-center">
+              <Loading />
+            </div>
           ) : (
-            <div className="m-7 grid grid-cols-1 auto-rows-min xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+            <div className="m-7 grid grid-cols-1 auto-rows-min lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {offerList.map((item) => (
                 <Link
-                  to={`/galeria/${item.id}`}
+                  to={`/profil/twojeDziela/edycja/${item.id}`}
                   key={item.id}
-                  className="bg-white rounded-lg overflow-hidden h-fit xl:h-96 shadow-md w-auto hover:opacity-75 transition-opacity"
+                  className="bg-white rounded-lg overflow-hidden h-fit lg:h-96 shadow-md w-auto hover:opacity-75 transition-opacity border-2 border-transparent focus:outline-none focus:border-indigo-600"
                 >
                   <div className="w-full h-3/4">
                     <img

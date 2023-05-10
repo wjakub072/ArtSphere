@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { AuthContextProvider } from "./context/AuthContext";
 import LoginView from "./components/Auth/LoginView/LoginView";
 import RegisterView from "./components/Auth/RegisterView/RegisterView";
 import Menu from "./components/Header/Menu/Menu";
@@ -19,9 +20,9 @@ import UserArts from "./pages/User/UserArts/UserArts";
 import AdminPanel from "./pages/User/AdminPanel/AdminPanel";
 import ProtectedRoute from "./hoc/ProtectedRoute";
 import PasswordRecovery from "./components/Auth/PasswordRecovery/PasswordRecovery";
-import { AuthContextProvider } from "./context/AuthContext";
 import ArtistsDetails from "./pages/Artists/ArtistsDetails/ArtistsDetails";
 import OfferDetails from "./pages/Gallery/OfferDetails/OfferDetails";
+import EditArt from "./components/EditArt/EditArt";
 
 function App() {
   const content = (
@@ -77,6 +78,14 @@ function App() {
             element={
               <ProtectedRoute accesBy="authenticated" role="artysta">
                 <UserArts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="twojeDziela/edycja/:artId"
+            element={
+              <ProtectedRoute accesBy="authenticated" role="artysta">
+                <EditArt />
               </ProtectedRoute>
             }
           />

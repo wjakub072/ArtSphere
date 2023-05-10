@@ -85,8 +85,8 @@ function LoginView() {
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
-                emailErrors ? "border-red-500" : ""
+              className={`block appearance-none w-full py-3 px-3 leading-tight rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 ${
+                emailErrors ? "!border-red-500" : ""
               }`}
               type="text"
               id="email"
@@ -106,8 +106,8 @@ function LoginView() {
             <input
               onChange={(e) => setPassword(e.target.value)}
               value={password}
-              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
-                passwordErrors ? "border-red-500" : ""
+              className={`block appearance-none w-full py-3 px-3 leading-tight rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 ${
+                passwordErrors ? "!border-red-500" : ""
               }`}
               type="password"
               id="password"
@@ -155,14 +155,14 @@ function LoginView() {
               Logowanie...
             </button>
           ) : (
-            <button className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-none transition-colors">
+            <button className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors">
               Zaloguj się
             </button>
           )}
           <p className="text-base text-center m-2">
             <NavLink
               to={"/logowanie/odzyskiwanieHasla"}
-              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 focus:outline-none transition-colors"
+              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 p-0.5 rounded-md border-2 border-transparent focus:outline-none focus:border-indigo-600 transition-colors"
             >
               Nie pamiętam hasła
             </NavLink>
@@ -171,7 +171,7 @@ function LoginView() {
           <p className="text-base text-center">
             <NavLink
               to={"/rejestracja"}
-              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 focus:outline-none transition-colors"
+              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 p-0.5 rounded-md border-2 border-transparent focus:outline-none focus:border-indigo-600 transition-colors"
             >
               Nie masz konta? Zarejestruj się!
             </NavLink>

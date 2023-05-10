@@ -51,8 +51,8 @@ function PasswordRecovery() {
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
-                emailErrors ? "border-red-500" : ""
+              className={`block appearance-none w-full py-3 px-3 leading-tight rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 ${
+                emailErrors ? "!border-red-500" : ""
               }`}
               type="text"
               id="email"
@@ -68,13 +68,13 @@ function PasswordRecovery() {
         </div>
 
         <div>
-          <button className="w-full p-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-none transition-colors">
+          <button className="w-full p-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors">
             Wyślij email do zmiany hasła
           </button>
           <p className="text-base text-center m-2">
             <NavLink
               to={"/logowanie/"}
-              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 focus:outline-none transition-colors"
+              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 p-0.5 rounded-md border-2 border-transparent focus:outline-none focus:border-indigo-600 transition-colors"
             >
               Wróć do logowania
             </NavLink>

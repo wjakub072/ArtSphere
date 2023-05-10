@@ -37,7 +37,7 @@ function Artists(props) {
         <Link
           to={`/artysci/${item.id}`}
           key={item.id}
-          className="bg-white rounded-lg shadow-xl w-auto h-fit sm:h-96 hover:opacity-75 transition-opacity"
+          className="bg-white rounded-lg shadow-xl w-auto h-fit sm:h-96 hover:opacity-75 transition-opacity border-transparent border-2 focus:outline-none focus:border-indigo-600"
         >
           <div className="w-full h-3/4">
             <img

@@ -122,8 +122,8 @@ const RegisterView = () => {
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
-                emailErrors ? "border-red-500" : ""
+              className={`block appearance-none w-full py-3 px-3 leading-tight rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 ${
+                emailErrors ? "!border-red-500" : ""
               }`}
               type="text"
               id="email"
@@ -150,8 +150,8 @@ const RegisterView = () => {
             <input
               onChange={(e) => setPass(e.target.value)}
               value={pass}
-              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
-                passwordErrors ? "border-red-500" : ""
+              className={`block appearance-none w-full py-3 px-3 leading-tight rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 ${
+                passwordErrors ? "!border-red-500" : ""
               }`}
               type="password"
               id="password"
@@ -178,8 +178,8 @@ const RegisterView = () => {
             <input
               onChange={(e) => setPass2(e.target.value)}
               value={pass2}
-              className={`block appearance-none w-full !border py-3 px-3 leading-tight rounded-xl focus:outline-none ${
-                passwordErrors2 ? "border-red-500" : ""
+              className={`block appearance-none w-full py-3 px-3 leading-tight rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 ${
+                passwordErrors2 ? "!border-red-500" : ""
               }`}
               type="password"
               id="password2"
@@ -199,7 +199,7 @@ const RegisterView = () => {
 
         <div className="flex items-center mb-3">
           <input
-            className="w-4 h-4 m-2 accent-indigo-600 bg-indigo-600 rounded-md focus:ring-1 focus:ring-indigo-600 focus:outline-none "
+            className="w-4 h-4 m-2 accent-indigo-600 bg-indigo-600 rounded-md focus:ring-1 focus:ring-indigo-600 border-2 focus:outline-none focus:border-indigo-600 "
             value={check}
             onChange={(e) => setCheck(e.target.checked)}
             type="checkbox"
@@ -246,7 +246,7 @@ const RegisterView = () => {
               Rejestracja...
             </button>
           ) : (
-            <button className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-none transition-colors">
+            <button className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors">
               Zarejestruj się
             </button>
           )}
@@ -254,7 +254,7 @@ const RegisterView = () => {
           <p className="text-base text-center">
             <NavLink
               to={"/logowanie"}
-              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 focus:outline-none transition-colors"
+              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 p-0.5 rounded-md border-2 border-transparent focus:outline-none focus:border-indigo-600 transition-colors"
             >
               Masz już konto? Zaloguj się!
             </NavLink>

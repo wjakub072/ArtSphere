@@ -1,13 +1,14 @@
 import { Outlet } from "react-router-dom";
 import UserNav from "./UserNav/UserNav";
-import "./User.css";
 
 function User() {
   return (
-    <section className="user-view bg-dark-subtle rounded-3 mt-5 p-3">
-      <UserNav />
-      <Outlet />
-    </section>
+    <div className="px-5">
+      <section className="mt-5 md:flex bg-zinc-200 rounded-lg p-6 shadow-lg w-full xl:w-5/6 xl:mx-auto">
+        <UserNav />
+        <Outlet />
+      </section>
+    </div>
   );
 }
 

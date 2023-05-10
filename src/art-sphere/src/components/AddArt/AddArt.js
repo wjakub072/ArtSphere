@@ -1,14 +1,15 @@
 import { useContext, useState } from "react";
-import GenericComboImput from "./Inputs/GenericComboInput";
-import PriceInput from "./Inputs/PriceInput";
-import DimensionsInput from "./Inputs/DimentionsInput";
-import TitleInput from "./Inputs/TitleInput";
-import AddArtButton from "./Inputs/AddArtButton";
-import AddImage from "./Inputs/AddImage";
-import TagInput from "./Inputs/TagInput";
-import Description from "./Inputs/Description";
+import GenericComboImput from "../Inputs/GenericComboInput";
+import PriceInput from "../Inputs/PriceInput";
+import DimensionsInput from "../Inputs/DimentionsInput";
+import TitleInput from "../Inputs/TitleInput";
+import AddArtButton from "../Inputs/AddArtButton";
+import AddImage from "../Inputs/AddImage";
+import TagInput from "../Inputs/TagInput";
+import Description from "../Inputs/Description";
 import AuthContext from "../../context/AuthContext";
 import axiosInstace from "../../api/axiosInstance";
+import { categories, topics, technics } from "../../data/artStaticData";
 import "./addArt.css";
 
 function AddArt() {
@@ -36,106 +37,8 @@ function AddArt() {
     price: 0,
     height: 0,
     width: 0,
+    tags: [],
   });
-
-  const possible_categories = [
-    {
-      id: 1,
-      name: "-",
-    },
-    {
-      id: 2,
-      name: "Obrazy",
-    },
-    {
-      id: 3,
-      name: "Grafika",
-    },
-    {
-      id: 4,
-      name: "Rzeźba",
-    },
-    {
-      id: 5,
-      name: "Zdjęcie",
-    },
-  ];
-  const possible_topics = [
-    {
-      id: 1,
-      name: "-",
-    },
-    {
-      id: 2,
-      name: "Abstrakcja",
-    },
-    {
-      id: 3,
-      name: "Architektura",
-    },
-    {
-      id: 4,
-      name: "Człowiek",
-    },
-    {
-      id: 5,
-      name: "Fantastyka",
-    },
-    {
-      id: 6,
-      name: "Geometria",
-    },
-    {
-      id: 7,
-      name: "Kwiaty",
-    },
-    {
-      id: 8,
-      name: "Martwa Natura",
-    },
-  ];
-  const possible_technics = [
-    {
-      id: 1,
-      name: "-",
-    },
-    {
-      id: 2,
-      name: "Akryl",
-    },
-    {
-      id: 3,
-      name: "Akwarela",
-    },
-    {
-      id: 4,
-      name: "Pastel",
-    },
-    {
-      id: 5,
-      name: "Węgiel",
-    },
-    {
-      id: 6,
-      name: "Tusz",
-    },
-    {
-      id: 7,
-      name: "Spray",
-    },
-    {
-      id: 8,
-      name: "Sitodruk",
-    },
-    {
-      id: 9,
-      name: "Olej",
-    },
-    {
-      id: 10,
-      name: "Ołówek",
-    },
-  ];
 
   const addArt = async (data) => {
     try {
@@ -187,7 +90,7 @@ function AddArt() {
         DimensionsY: artData.height,
         unit: "cm",
         picture: artData.img,
-        tags: [],
+        tags: artData.tags,
       };
       setValidateError("");
       setResponseSuccess("");
@@ -200,41 +103,55 @@ function AddArt() {
   return (
     <>
       <div>
-        <button onClick={handleClick}>Dodaj Dzieło</button>
+        <button
+          className="flex gap-6 align-middle mx-auto text-white py-2 px-5 bg-indigo-600 border-2 rounded-md border-transparent focus:outline-none focus:border-indigo-400"
+          onClick={handleClick}
+        >
+          Dodaj Dzieło
+          <div
+            className={`w-4 fill-white transition-transform duration-500 ${
+              showAddForm && "rotate-180"
+            }`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+              <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z" />
+            </svg>
+          </div>
+        </button>
       </div>
       <div className={`add-art ${showAddForm ? "show" : ""}`}>
         <AddImage
           value={artData.img}
           onChange={(val) => setArtData({ ...artData, img: val })}
         />
-
-        <TitleInput
-          value={artData.title}
-          onChange={(val) => setArtData({ ...artData, title: val })}
-        />
-        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+        <div className="text-left mb-3 p-0.5">
+          <TitleInput
+            value={artData.title}
+            onChange={(val) => setArtData({ ...artData, title: val })}
+          />
+        </div>
+        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 text-left">
           <div>
-            <div className=""></div>
-            <div className="">
+            <div className="mb-3 p-0.5">
               <GenericComboImput
                 title="Kategoria"
-                list={possible_categories}
+                list={categories}
                 onChange={(val) =>
                   setArtData({ ...artData, category: val.name })
                 }
               />
             </div>
-            <div className="">
+            <div className="mb-3 p-0.5">
               <GenericComboImput
                 title="Tematyka"
-                list={possible_topics}
+                list={topics}
                 onChange={(val) => setArtData({ ...artData, topic: val.name })}
               />
             </div>
-            <div className="">
+            <div className="mb-3 p-0.5">
               <GenericComboImput
                 title="Technika"
-                list={possible_technics}
+                list={technics}
                 onChange={(val) =>
                   setArtData({ ...artData, technic: val.name })
                 }
@@ -242,21 +159,21 @@ function AddArt() {
             </div>
           </div>
           <div>
-            <div className="">
+            <div className="mb-3 p-0.5">
               <PriceInput
                 title="Cena"
                 value={artData.price}
                 onChange={(val) => setArtData({ ...artData, price: val })}
               />
             </div>
-            <div className="">
+            <div className="mb-3 p-0.5">
               <DimensionsInput
                 title="Wysokość"
                 value={artData.height}
                 onChange={(val) => setArtData({ ...artData, height: val })}
               />
             </div>
-            <div className="">
+            <div className="mb-3 p-0.5">
               <DimensionsInput
                 title="Szerokość"
                 value={artData.width}
@@ -265,19 +182,31 @@ function AddArt() {
             </div>
           </div>
         </div>
-        <Description
-          value={artData.description}
-          onChange={(val) => setArtData({ ...artData, description: val })}
-        />
+        <div className="p-0.5">
+          <Description
+            title="Opis dzieła"
+            value={artData.description}
+            onChange={(val) => setArtData({ ...artData, description: val })}
+          />
+        </div>
 
-        <TagInput />
+        <div className="p-0.5">
+          <TagInput
+            prevTags={artData.tags}
+            actualTags={(val) => setArtData({ ...artData, tags: val })}
+          />
+        </div>
         {validateError && (
-          <div className="text-danger text-center mb-4">{validateError}</div>
+          <div className="text-red-500 text-center my-3 font-medium">
+            {validateError}
+          </div>
         )}
         {responseSuccess && (
-          <p className="text-success text-center mb-4">{responseSuccess}</p>
+          <p className="text-green-800 text-center my-3 font-medium">
+            {responseSuccess}
+          </p>
         )}
-        <div className="mx-auto text-center">
+        <div className="mx-auto mt-5 text-center p-0.5">
           <AddArtButton
             title="Dodaj dzieło"
             onClick={clickHandle}

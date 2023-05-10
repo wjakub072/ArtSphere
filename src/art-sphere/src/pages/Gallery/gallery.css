@@ -1,13 +1,3 @@
-.gallery {
-  position: relative;
-}
-
-.filters-container .offers-container {
-  position: relative;
-  height: fit-content;
-  width: fit-content;
-}
-
 .filters {
   position: absolute;
   /* top: -1000px; */
@@ -17,7 +7,7 @@
   /* max-height: 0; */
   /* transition: max-height 0.5s ease-in-out; */
   /* overflow: hidden; */
-  transform: translateY(-110%);
+  transform: translateY(-150%);
   transition: transform 0.5s ease-in-out;
   /* transition: top 0.5s ease-in-out; */
 }

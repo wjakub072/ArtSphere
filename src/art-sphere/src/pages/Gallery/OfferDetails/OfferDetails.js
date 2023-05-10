@@ -50,7 +50,7 @@ function OfferDetails() {
             <p className="text-indigo-800 font-bold">Autor:</p>
             <Link
               to={`/artysci/${offer.artistId}`}
-              className="text-indigo-600 font-semibold underline hover:text-indigo-900 focus:text-indigo-900 focus:outline-none transition-colors "
+              className="text-indigo-600 font-semibold underline hover:text-indigo-900 focus:text-indigo-900 p-0.5 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600 transition-colors "
             >
               {offer.artistName}
             </Link>
@@ -77,7 +77,9 @@ function OfferDetails() {
             </div>
             <div className="col-span-2">
               <p className="text-indigo-800 font-bold">Tagi:</p>
-              <p className="text-indigo-600 font-semibold">{offer.tags}</p>
+              <p className="text-indigo-600 font-semibold">
+                {offer.tags.join(", ")}
+              </p>
             </div>
           </div>
 
@@ -91,13 +93,13 @@ function OfferDetails() {
           </div>
           {offer.archived ? (
             <button
-              className="py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-none transition-colors opacity-70"
+              className="py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-indigo-400 transition-colors opacity-70"
               disabled
             >
               Produkt niedostępny
             </button>
           ) : (
-            <button className="py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-none transition-colors">
+            <button className="py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-transparent border-2 focus:outline-none focus:border-indigo-400 transition-colors">
               Dodaj do koszyka
             </button>
           )}

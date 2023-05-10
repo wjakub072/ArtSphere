@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import DisplayFiltersButton from "../../components/Filters/DisplayFiltersButton";
+import DisplayFiltersButton from "../../components/Inputs/DisplayFiltersButton";
 import Filters from "../../components/Filters/Filters";
 import useWebsiteTitle from "../../hooks/useWebsiteTitle";
 import AuthContext from "../../context/AuthContext";
@@ -38,9 +38,13 @@ function Gallery(props) {
   };
 
   return (
-    <div className="gallery">
-      <DisplayFiltersButton onClick={handleClick} />
-      <div className="filters-container">
+    <div>
+      <div
+        className={`pl-3 py-1 transition-colors ${showFilters && "bg-gray-50"}`}
+      >
+        <DisplayFiltersButton onClick={handleClick} show={showFilters} />
+      </div>
+      <div>
         <div className={`filters shadow-md ${showFilters ? "show" : ""}`}>
           <Filters />
         </div>
@@ -54,7 +58,7 @@ function Gallery(props) {
             <Link
               to={`/galeria/${item.id}`}
               key={item.id}
-              className="bg-white rounded-lg shadow-xl w-auto h-fit sm:h-96 hover:opacity-75 transition-opacity"
+              className="bg-white rounded-lg shadow-xl w-auto h-fit sm:h-96 hover:opacity-75 transition-opacity border-transparent border-2 focus:outline-none focus:border-indigo-600"
             >
               <div className="w-full h-2/3">
                 <img

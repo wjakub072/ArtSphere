@@ -1,7 +1,7 @@
 import React from "react";
-import { PlusIcon } from "@heroicons/react/outline";
+import { PencilIcon } from "@heroicons/react/outline";
 
-function AddArtButton({ title, onClick, loading }) {
+function EditArtButton({ title, onClick, loading }) {
   return loading ? (
     <button
       className="inline-flex items-center justify-center w-full 2xl:w-2/4 px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm opacity-70"
@@ -25,17 +25,17 @@ function AddArtButton({ title, onClick, loading }) {
           fill="#1C64F2"
         />
       </svg>
-      Dodawanie...
+      Aktualizowanie...
     </button>
   ) : (
     <button
-      className="inline-flex items-center justify-center w-full 2xl:w-2/4 px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      className="inline-flex items-center justify-center w-full 2xl:w-2/4 px-4 py-2 text-base font-medium text-white bg-indigo-600 border-2 border-transparent rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-indigo-400 transition-colors"
       onClick={onClick}
     >
-      <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
+      <PencilIcon className="-ml-1 mr-2 h-5 w-5" />
       {title}
     </button>
   );
 }
 
-export default AddArtButton;
+export default EditArtButton;

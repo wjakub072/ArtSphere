@@ -45,6 +45,8 @@ export const AuthContextProvider = ({ children }) => {
   const [responseSuccess, setResponseSuccess] = useState("");
   const [sesionError, setSesionError] = useState("");
   const [loadingButton, setLoadingButton] = useState(false);
+  const [loadingButtonPass, setLoadingButtonPass] = useState(false);
+  const [loadingButtonEmail, setLoadingButtonEmail] = useState(false);
 
   const navigate = useNavigate();
   const login = async (data) => {
@@ -109,36 +111,9 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
-  const getProfileData = async () => {
-    try {
-      let response = await axiosInstace.get("profile", {
-        withCredentials: true,
-      });
-      console.log("respons danych profilu");
-      console.log(response);
-      localStorage.setItem("userData", JSON.stringify(response.data));
-      setUserData({ ...response.data, Picture: response.data.profilePicture });
-    } catch (err) {
-      errorResponseHandler(err);
-    }
-  };
-
-  const updateProfileData = async (data) => {
-    try {
-      let response = await axiosInstace.put("profile", data, {
-        withCredentials: true,
-      });
-      console.log("respons update'u profilu");
-      console.log(response);
-      await getProfileData();
-      setResponseSuccess("Dane zostały zaktualizowane");
-    } catch (err) {
-      errorResponseHandler(err);
-    }
-  };
-
   const changePassword = async (data) => {
     try {
+      setLoadingButtonPass(true);
       let response = await axiosInstace.post("account/reset-password", data, {
         withCredentials: true,
       });
@@ -147,16 +122,20 @@ export const AuthContextProvider = ({ children }) => {
       setPassChangeSuccess("Hasło zostało zmienione");
       setPassChangeResponseError("");
     } catch (err) {
+      setLoadingButtonPass(false);
       if (err.response) {
         setPassChangeSuccess("");
         setPassChangeResponseError(err.response.data.message);
       }
       errorResponseHandler(err);
+    } finally {
+      setLoadingButtonPass(false);
     }
   };
 
   const changeEmail = async (data) => {
     try {
+      setLoadingButtonEmail(true);
       let response = await axiosInstace.post("account/change-email", data, {
         withCredentials: true,
       });
@@ -165,16 +144,20 @@ export const AuthContextProvider = ({ children }) => {
       setEmailChangeSuccess("Email został zmieniony");
       setEmailChangeResponseError("");
     } catch (err) {
+      setLoadingButtonEmail(false);
       if (err.response) {
         setEmailChangeSuccess("");
         setEmailChangeResponseError(err.response.data.message);
       }
       errorResponseHandler(err);
+    } finally {
+      setLoadingButtonEmail(false);
     }
   };
 
   const deleteAccount = async () => {
     try {
+      setLoadingButton(true);
       let response = await axiosInstace.delete("account/delete", {
         withCredentials: true,
       });
@@ -185,7 +168,10 @@ export const AuthContextProvider = ({ children }) => {
       setUserData(null);
       navigate("/");
     } catch (err) {
+      setLoadingButton(false);
       errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
@@ -208,19 +194,23 @@ export const AuthContextProvider = ({ children }) => {
 
   const updateDeliveryAddressData = async (data) => {
     try {
+      setLoadingButton(true);
       let response = await axiosInstace.put("profile/address", data, {
         withCredentials: true,
       });
       console.log("respons update'u adresu dostawy");
       console.log(response);
-      setResponseSuccess("Dane zostały zaktualizowane");
       await getDeliveryAddressData();
+      setResponseSuccess("Dane zostały zapisane");
     } catch (err) {
+      setLoadingButton(false);
       if (err.response) {
         setResponseSuccess("");
         setResponseError(err.response.data.message);
       }
       errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
@@ -240,19 +230,23 @@ export const AuthContextProvider = ({ children }) => {
 
   const updateInvoiceData = async (data) => {
     try {
+      setLoadingButton(true);
       let response = await axiosInstace.put("profile/company", data, {
         withCredentials: true,
       });
       console.log("respons update'u danych do faktury");
       console.log(response);
-      setResponseSuccess("Dane zostały zaktualizowane");
       await getInvoiceData();
+      setResponseSuccess("Dane zostały zapisane");
     } catch (err) {
+      setLoadingButton(false);
       if (err.response) {
         setResponseSuccess("");
         setResponseError(err.response.data.message);
       }
       errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
@@ -300,10 +294,11 @@ export const AuthContextProvider = ({ children }) => {
           responseSuccess,
           sesionError,
           loadingButton,
+          loadingButtonPass,
+          loadingButtonEmail,
           userData,
           deliveryAddressData,
           invoiceData,
-          getProfileData,
           setResponseSuccess,
           setEmailChangeResponseError,
           setEmailChangeSuccess,
@@ -314,7 +309,6 @@ export const AuthContextProvider = ({ children }) => {
           login,
           logout,
           register,
-          updateProfileData,
           updateDeliveryAddressData,
           updateInvoiceData,
           changeEmail,

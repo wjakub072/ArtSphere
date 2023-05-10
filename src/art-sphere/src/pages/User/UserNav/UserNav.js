@@ -1,83 +1,106 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import AuthContext from "../../../context/AuthContext";
-import "./UserNav.css";
 
 const UserViewNav = (props) => {
   const { logout, user } = useContext(AuthContext);
   const url = "/profil";
   return (
-    <div className="user-menu-wrap">
-      <ul className="user-menu nav">
-        <li className="nav-item">
+    <div className="mb-4 md:mb-0">
+      <ul className="text-xl tracking-wider text-indigo-500 inline-flex flex-wrap justify-center gap-3 md:block md:w-max">
+        <li className="md:py-2 md:px-3">
           <NavLink
             to={`${url}/`}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className="nav-link"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+                : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+            }
           >
             Profil
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="md:py-2 md:px-3">
           <NavLink
             to={`${url}/mojeZakupy`}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className="nav-link"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+                : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+            }
           >
             Moje zakupy
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="md:py-2 md:px-3">
           <NavLink
             to={`${url}/ulubione`}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className="nav-link"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+                : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+            }
           >
             Ulubione
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="md:py-2 md:px-3">
           <NavLink
             to={`${url}/doladujPortfel`}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className="nav-link"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+                : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+            }
           >
             Doładuj portfel
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="md:py-2 md:px-3">
           <NavLink
             to={`${url}/adresDostawy`}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className="nav-link"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+                : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+            }
           >
             Adres dostawy
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="md:py-2 md:px-3">
           <NavLink
             to={`${url}/daneDoFaktury`}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className="nav-link"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+                : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+            }
           >
             Dane do faktury
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="md:py-2 md:px-3">
           <NavLink
             to={`${url}/ustawieniaKonta`}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className="nav-link"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+                : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+            }
           >
             Ustawienia konta
           </NavLink>
         </li>
         {(user === "artysta" || user === "administrator") && (
-          <li className="nav-item">
+          <li className="md:py-2 md:px-3">
             <NavLink
               to={`${url}/twojeDziela`}
-              style={({ isActive }) => (isActive ? { color: "red" } : {})}
-              className="nav-link"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+                  : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+              }
             >
               Twoje dzieła
             </NavLink>
@@ -85,19 +108,25 @@ const UserViewNav = (props) => {
         )}
 
         {user === "administrator" && (
-          <li className="nav-item">
+          <li className="md:py-2 md:px-3">
             <NavLink
               to={`${url}/panelAdministratora`}
-              style={({ isActive }) => (isActive ? { color: "red" } : {})}
-              className="nav-link"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+                  : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+              }
             >
               Panel Administratora
             </NavLink>
           </li>
         )}
 
-        <li className="nav-item">
-          <button onClick={() => logout()} className="nav-link">
+        <li className="md:py-2 md:px-3">
+          <button
+            onClick={() => logout()}
+            className="hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
+          >
             Wyloguj
           </button>
         </li>

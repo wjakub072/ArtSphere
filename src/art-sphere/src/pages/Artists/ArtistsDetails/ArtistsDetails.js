@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import axiosInstace from "../../../api/axiosInstance";
-import "./ArtistsDetails.css";
 import Loading from "../../../components/Loading/Loading";
 
 function ArtistsDetails(props) {
@@ -99,7 +98,7 @@ function ArtistsDetails(props) {
                 <Link
                   to={`/galeria/${item.id}`}
                   key={item.id}
-                  className="bg-white rounded-lg shadow-xl w-auto h-fit sm:h-96 hover:opacity-75 transition-opacity"
+                  className="bg-white rounded-lg shadow-xl w-auto h-fit sm:h-96 hover:opacity-75 transition-opacity border-transparent border-2 focus:outline-none focus:border-indigo-600"
                 >
                   <div className="w-full h-2/3">
                     <img

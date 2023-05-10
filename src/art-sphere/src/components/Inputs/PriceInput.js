@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 
-function PriceInput({ title, value, onChange }) {
+function PriceInput({ title, value, onChange, label = title }) {
   const [focused, setFocused] = useState(false);
   const [val, setVal] = useState(value);
 
-  const handleFocus = () => {
+  const handleFocus = (e) => {
+    e.target.select();
     setFocused(true);
   };
 
@@ -26,20 +27,20 @@ function PriceInput({ title, value, onChange }) {
   };
 
   return (
-    <div className="PriceInput relative">
+    <div className="relative">
       <label
-        htmlFor="price"
-        className="block text-sm font-medium leading-6 text-gray-900"
+        htmlFor={label}
+        className="block text-sm font-medium leading-6 text-indigo-600"
       >
         {title}
       </label>
       <div className="mt-2 relative rounded-md shadow-sm">
         <input
-          id="price"
-          name="price"
+          id={label}
+          name={label}
           type="number"
           className={classNames(
-            "form-input rounded-md block w-full py-2 pl-4 sm:text-sm sm:leading-5",
+            "form-input border-2 rounded-md border-transparent focus:outline-none focus:border-indigo-600 block w-full py-2 pl-4 pr-10 sm:text-sm sm:leading-5",
             {
               "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500":
                 !focused,
@@ -53,9 +54,9 @@ function PriceInput({ title, value, onChange }) {
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <div className="absolute inset-y-0 right-0 mr-14 flex items-center pointer-events-none">
-          <span className="text-gray-500 sm:text-sm">PLN</span>
-        </div>
+        <span className="absolute inset-y-0 right-0 mr-14 flex items-center text-gray-500 sm:text-sm  pointer-events-none">
+          PLN
+        </span>
       </div>
     </div>
   );

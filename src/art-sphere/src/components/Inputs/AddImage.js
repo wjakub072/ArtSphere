@@ -42,7 +42,7 @@ function AddImage({ value, onChange }) {
         type="file"
         onChange={handleImageChange}
         accept="image/*"
-        className="w-full border border-gray-300 rounded-md p-2 mb-4"
+        className="w-full border border-gray-300 rounded-md p-2 mb-4 focus:outline-indigo-600"
       />
     </div>
   );
