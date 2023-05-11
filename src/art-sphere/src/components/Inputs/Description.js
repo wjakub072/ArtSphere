@@ -9,7 +9,7 @@ function Description({ title, subtitle, value, onChange }) {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-4 p-3 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto mt-4 p-3 bg-white rounded-xl shadow-md">
       {title && (
         <h2 className="text-xl font-bold text-indigo-600 mb-2">{title}</h2>
       )}
@@ -20,7 +20,7 @@ function Description({ title, subtitle, value, onChange }) {
         value={description}
         onChange={handleDescriptionChange}
         rows={7}
-        className="w-full border-2 rounded-md focus:outline-none focus:border-indigo-600 border-gray-300 p-2"
+        className="w-full border-2 rounded-lg focus:outline-none focus:border-indigo-600 border-gray-300 p-2"
       />
     </div>
   );

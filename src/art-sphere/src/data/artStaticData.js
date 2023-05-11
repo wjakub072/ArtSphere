@@ -98,3 +98,34 @@ export const technics = [
     name: "Ołówek",
   },
 ];
+
+export const countries = [
+  {
+    id: 1,
+    name: "-",
+  },
+  {
+    id: 2,
+    name: "Polska",
+  },
+  {
+    id: 3,
+    name: "Czechy",
+  },
+  {
+    id: 4,
+    name: "Niemcy",
+  },
+  {
+    id: 5,
+    name: "Słowacja",
+  },
+  {
+    id: 6,
+    name: "Ukraina",
+  },
+  {
+    id: 7,
+    name: "Białoruś",
+  },
+];

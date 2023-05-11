@@ -16,12 +16,8 @@ import Loading from "../Loading/Loading";
 
 function EditArt() {
   useWebsiteTitle("Edycja Dzieła");
-  const {
-    errorResponseHandler,
-    responseSuccess,
-    setResponseSuccess,
-    setResponseError,
-  } = useContext(AuthContext);
+  const { errorResponseHandler, responseSuccess, setResponseSuccess } =
+    useContext(AuthContext);
 
   const { artId } = useParams();
   const [loading, setLoading] = useState(true);
@@ -35,6 +31,13 @@ function EditArt() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    return () => {
+      setResponseSuccess("");
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const getOffer = async () => {
     try {
       const offerData = await axiosInstace.get(`offers/${artId}`);
@@ -43,6 +46,23 @@ function EditArt() {
       setLoading(false);
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const editOffer = async (data) => {
+    try {
+      setLoadingButton(true);
+      const response = await axiosInstace.post(`offers/${artId}`, data, {
+        withCredentials: true,
+      });
+      console.log("respons edycji oferty");
+      console.log(response);
+      setResponseSuccess("Ofera została zakutalizowana");
+    } catch (err) {
+      setLoadingButton(false);
+      errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
@@ -70,16 +90,14 @@ function EditArt() {
         title: artData.title,
         description: artData.description,
         price: artData.price,
-        DimensionsX: artData.width,
-        DimensionsY: artData.height,
+        DimensionsX: artData.dimensionsX,
+        DimensionsY: artData.dimensionsY,
         unit: "cm",
-        picture: artData.img,
-        tags: [],
+        picture: artData.photo,
+        tags: artData.tags,
       };
       setValidateError("");
-      setResponseSuccess("");
-      console.log(data);
-      setValidateError("");
+      editOffer(data);
     } else {
       setValidateError("Wypełnij wszystkie pola");
     }
@@ -110,6 +128,7 @@ function EditArt() {
                 <GenericComboImput
                   title="Kategoria"
                   list={categories}
+                  value={artData.category}
                   onChange={(val) =>
                     setArtData({ ...artData, category: val.name })
                   }
@@ -119,6 +138,7 @@ function EditArt() {
                 <GenericComboImput
                   title="Tematyka"
                   list={topics}
+                  value={artData.topic}
                   onChange={(val) =>
                     setArtData({ ...artData, topic: val.name })
                   }
@@ -128,6 +148,7 @@ function EditArt() {
                 <GenericComboImput
                   title="Technika"
                   list={technics}
+                  value={artData.technic}
                   onChange={(val) =>
                     setArtData({ ...artData, technic: val.name })
                   }

@@ -7,7 +7,7 @@ const UserViewNav = (props) => {
   const url = "/profil";
   return (
     <div className="mb-4 md:mb-0">
-      <ul className="text-xl tracking-wider text-indigo-500 inline-flex flex-wrap justify-center gap-3 md:block md:w-max">
+      <ul className="text-xl tracking-wider rounded-lg text-indigo-500 inline-flex flex-wrap justify-center gap-3 md:block md:w-max">
         <li className="md:py-2 md:px-3">
           <NavLink
             to={`${url}/`}

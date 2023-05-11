@@ -3,6 +3,8 @@ import { ExclamationCircleIcon } from "@heroicons/react/outline";
 import { validatePostcode } from "../../../helpers/validation";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import AuthContext from "../../../context/AuthContext";
+import GenericComboImput from "../../../components/Inputs/GenericComboInput";
+import { countries } from "../../../data/artStaticData";
 
 const InvoiceData = () => {
   useWebsiteTitle("Dane do faktury");
@@ -104,7 +106,7 @@ const InvoiceData = () => {
   }, [city]);
 
   useEffect(() => {
-    if (country === "") {
+    if (country === "-") {
       setCountryErrors("Niepoprawny kraj");
     } else {
       setCountryErrors("");
@@ -131,7 +133,15 @@ const InvoiceData = () => {
 
   const clickHandler = (e) => {
     e.preventDefault();
-    if (name && nip && street && homenr && postcode && city && country) {
+    if (
+      name &&
+      nip &&
+      street &&
+      homenr &&
+      postcode &&
+      city &&
+      country !== "-"
+    ) {
       setResponseError("");
       updateInvoiceData({
         companyName: name,
@@ -162,7 +172,7 @@ const InvoiceData = () => {
       if (!city) {
         setCityErrors("Pole nie może być puste");
       }
-      if (!country) {
+      if (country === "-") {
         setCountryErrors("Niepoprawny kraj");
       }
     }
@@ -363,6 +373,12 @@ const InvoiceData = () => {
         </div>
 
         <div className="mb-3 lg:col-span-2">
+          {/* <GenericComboImput
+            value={country}
+            title="Wybierz kraj"
+            list={countries}
+            onChange={(val) => setCountry(val.name)}
+          /> */}
           <label
             className="text-indigo-600 px-2 pb-1 text-lg font-medium"
             htmlFor="miasto"
@@ -377,7 +393,7 @@ const InvoiceData = () => {
                 countryErrors ? "!border-red-500" : ""
               }`}
             >
-              <option className="rounded-sm" value="" selected>
+              <option value="-" selected>
                 -
               </option>
               <option value="Polska">Polska</option>

@@ -26,13 +26,13 @@ function TitleInput({ value, onChange }) {
       >
         Tytuł
       </label>
-      <div className="mt-1 relative rounded-md shadow-sm">
+      <div className="mt-1 relative rounded-xl shadow-sm">
         <input
           id="title"
           name="title"
           type="text"
           className={classNames(
-            "form-input rounded-md block w-full py-2 pl-4 pr-3 sm:text-sm sm:leading-5 border-2 border-transparent focus:outline-none focus:border-indigo-600",
+            "form-input rounded-xl block w-full py-2 pl-4 pr-3 sm:text-sm sm:leading-5 border-2 border-transparent focus:outline-none focus:border-indigo-600",
             {
               "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500":
                 !focused,

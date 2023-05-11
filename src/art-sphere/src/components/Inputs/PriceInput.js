@@ -34,13 +34,13 @@ function PriceInput({ title, value, onChange, label = title }) {
       >
         {title}
       </label>
-      <div className="mt-2 relative rounded-md shadow-sm">
+      <div className="mt-2 relative rounded-xl shadow-sm">
         <input
           id={label}
           name={label}
           type="number"
           className={classNames(
-            "form-input border-2 rounded-md border-transparent focus:outline-none focus:border-indigo-600 block w-full py-2 pl-4 pr-10 sm:text-sm sm:leading-5",
+            "form-input border-2 rounded-xl border-transparent focus:outline-none focus:border-indigo-600 block w-full py-2 pl-4 pr-10 sm:text-sm sm:leading-5",
             {
               "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500":
                 !focused,
