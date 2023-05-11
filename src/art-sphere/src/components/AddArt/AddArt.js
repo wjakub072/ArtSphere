@@ -1,22 +1,31 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import GenericComboImput from "./Inputs/GenericComboInput";
 import PriceInput from "./Inputs/PriceInput";
 import DimensionsInput from "./Inputs/DimentionsInput";
 import TitleInput from "./Inputs/TitleInput";
-import "./addArt.css";
 import AddArtButton from "./Inputs/AddArtButton";
 import AddImage from "./Inputs/AddImage";
 import TagInput from "./Inputs/TagInput";
 import Description from "./Inputs/Description";
+import AuthContext from "../../context/AuthContext";
+import axiosInstace from "../../api/axiosInstance";
+import "./addArt.css";
 
 function AddArt() {
+  const {
+    errorResponseHandler,
+    responseSuccess,
+    setResponseSuccess,
+    setResponseError,
+  } = useContext(AuthContext);
+
   const [showAddForm, setShowAddForm] = useState(false);
   const handleClick = () => {
     setShowAddForm(!showAddForm);
   };
 
   const [validateError, setValidateError] = useState("");
-
+  const [loadingButton, setLoadingButton] = useState(false);
   const [artData, setArtData] = useState({
     img: "",
     category: "",
@@ -128,6 +137,28 @@ function AddArt() {
     },
   ];
 
+  const addArt = async (data) => {
+    try {
+      setLoadingButton(true);
+      let response = await axiosInstace.post("offers", data, {
+        withCredentials: true,
+      });
+      console.log("respons dodania dzieła");
+      console.log(response);
+      setResponseSuccess("Dzieło zostało dodane");
+    } catch (err) {
+      setLoadingButton(false);
+      if (err.response) {
+        setResponseSuccess("");
+        setResponseError(err.response.data.message);
+      }
+      console.log(err);
+      errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
+    }
+  };
+
   const clickHandle = () => {
     if (
       !(artData.img === "") &&
@@ -145,8 +176,22 @@ function AddArt() {
       !(artData.height === 0) &&
       !(artData.width === 0)
     ) {
-      console.log(artData);
+      const data = {
+        category: artData.category,
+        technic: artData.technic,
+        topic: artData.topic,
+        title: artData.title,
+        description: artData.description,
+        price: artData.price,
+        DimensionsX: artData.width,
+        DimensionsY: artData.height,
+        unit: "cm",
+        picture: artData.img,
+        tags: [],
+      };
       setValidateError("");
+      setResponseSuccess("");
+      addArt(data);
     } else {
       setValidateError("Wypełnij wszystkie pola");
     }
@@ -157,79 +202,88 @@ function AddArt() {
       <div>
         <button onClick={handleClick}>Dodaj Dzieło</button>
       </div>
-      <div className={`container add-art ${showAddForm ? "show" : ""}`}>
-        <div className="col-sub">
-          <AddImage
-            value={artData.img}
-            onChange={(val) => setArtData({ ...artData, img: val })}
+      <div className={`add-art ${showAddForm ? "show" : ""}`}>
+        <AddImage
+          value={artData.img}
+          onChange={(val) => setArtData({ ...artData, img: val })}
+        />
+
+        <TitleInput
+          value={artData.title}
+          onChange={(val) => setArtData({ ...artData, title: val })}
+        />
+        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+          <div>
+            <div className=""></div>
+            <div className="">
+              <GenericComboImput
+                title="Kategoria"
+                list={possible_categories}
+                onChange={(val) =>
+                  setArtData({ ...artData, category: val.name })
+                }
+              />
+            </div>
+            <div className="">
+              <GenericComboImput
+                title="Tematyka"
+                list={possible_topics}
+                onChange={(val) => setArtData({ ...artData, topic: val.name })}
+              />
+            </div>
+            <div className="">
+              <GenericComboImput
+                title="Technika"
+                list={possible_technics}
+                onChange={(val) =>
+                  setArtData({ ...artData, technic: val.name })
+                }
+              />
+            </div>
+          </div>
+          <div>
+            <div className="">
+              <PriceInput
+                title="Cena"
+                value={artData.price}
+                onChange={(val) => setArtData({ ...artData, price: val })}
+              />
+            </div>
+            <div className="">
+              <DimensionsInput
+                title="Wysokość"
+                value={artData.height}
+                onChange={(val) => setArtData({ ...artData, height: val })}
+              />
+            </div>
+            <div className="">
+              <DimensionsInput
+                title="Szerokość"
+                value={artData.width}
+                onChange={(val) => setArtData({ ...artData, width: val })}
+              />
+            </div>
+          </div>
+        </div>
+        <Description
+          value={artData.description}
+          onChange={(val) => setArtData({ ...artData, description: val })}
+        />
+
+        <TagInput />
+        {validateError && (
+          <div className="text-danger text-center mb-4">{validateError}</div>
+        )}
+        {responseSuccess && (
+          <p className="text-success text-center mb-4">{responseSuccess}</p>
+        )}
+        <div className="mx-auto text-center">
+          <AddArtButton
+            title="Dodaj dzieło"
+            onClick={clickHandle}
+            loading={loadingButton}
           />
         </div>
-        <div className="col">
-          <div className="row">
-            <GenericComboImput
-              title="Kategoria"
-              list={possible_categories}
-              onChange={(val) => setArtData({ ...artData, category: val.name })}
-            />
-          </div>
-          <div className="row">
-            <GenericComboImput
-              title="Tematyka"
-              list={possible_topics}
-              onChange={(val) => setArtData({ ...artData, topic: val.name })}
-            />
-          </div>
-          <div className="row">
-            <GenericComboImput
-              title="Technika"
-              list={possible_technics}
-              onChange={(val) => setArtData({ ...artData, technic: val.name })}
-            />
-          </div>
-          <div className="row">
-            <DimensionsInput
-              title="Wysokość"
-              value={artData.height}
-              onChange={(val) => setArtData({ ...artData, height: val })}
-            />
-          </div>
-        </div>
-        <div className="col">
-          <div className="row">
-            <TitleInput
-              value={artData.title}
-              onChange={(val) => setArtData({ ...artData, title: val })}
-            />
-          </div>
-          <div className="row">
-            <PriceInput
-              title="Cena"
-              value={artData.price}
-              onChange={(val) => setArtData({ ...artData, price: val })}
-            />
-          </div>
-          <div className="row">
-            <DimensionsInput
-              title="Szerokość"
-              value={artData.width}
-              onChange={(val) => setArtData({ ...artData, width: val })}
-            />
-            <Description
-              value={artData.description}
-              onChange={(val) => setArtData({ ...artData, description: val })}
-            />
-          </div>
-        </div>
-        <div className="col">
-          <TagInput />
-        </div>
-        <div className="col-sub mt-3">
-          {validateError && (
-            <div className="text-danger text-center mb-4">{validateError}</div>
-          )}
-          <AddArtButton title="Dodaj dzieło" onClick={clickHandle} />
-        </div>
-        <div className="col"></div>
       </div>
     </>
   );

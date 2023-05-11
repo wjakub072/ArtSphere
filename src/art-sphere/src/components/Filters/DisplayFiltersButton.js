@@ -1,6 +1,6 @@
 import "./filters.css";
 
-function DisplayFiltersButton({onClick}) {
+function DisplayFiltersButton({ onClick }) {
   return (
     <div>
       <button onClick={onClick}>Show Filters</button>

@@ -20,6 +20,8 @@ import AdminPanel from "./pages/User/AdminPanel/AdminPanel";
 import ProtectedRoute from "./hoc/ProtectedRoute";
 import PasswordRecovery from "./components/Auth/PasswordRecovery/PasswordRecovery";
 import { AuthContextProvider } from "./context/AuthContext";
+import ArtistsDetails from "./pages/Artists/ArtistsDetails/ArtistsDetails";
+import OfferDetails from "./pages/Gallery/OfferDetails/OfferDetails";
 
 function App() {
   const content = (
@@ -28,7 +30,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/galeria" element={<Gallery />} />
+        <Route path="/galeria/:offerId" element={<OfferDetails />} />
         <Route path="/artysci" element={<Artists />} />
+        <Route path="/artysci/:artistId" element={<ArtistsDetails />} />
         <Route
           path="/logowanie"
           element={

@@ -1,78 +1,95 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import AuthContext from "../../../context/AuthContext";
-import style from "./Menu.module.css";
 
 function Menu() {
   const { user, logout } = useContext(AuthContext);
 
   return (
-    <nav className={`bg-dark ${style.menuNav}`}>
-      <ul className={`nav p-3 justify-content-center`}>
-        <li className="nav-item">
+    <nav className="bg-black text-white relative z-10 p-4">
+      <ul className="flex justify-center items-center flex-wrap sm:space-x-4">
+        <li className="my-2">
           <NavLink
-            to={"/"}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className={`${style.font} nav-link`}
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-400 hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+                : "hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+            }
           >
             Home
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="my-2">
           <NavLink
-            to={"/galeria"}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className={`${style.font} nav-link`}
+            to="/galeria"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-400 hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+                : "hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+            }
           >
             Galeria
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="my-2">
           <NavLink
-            to={"/artysci"}
-            style={({ isActive }) => (isActive ? { color: "red" } : {})}
-            className={`${style.font} nav-link`}
+            to="/artysci"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-400 hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+                : "hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+            }
           >
             Artyści
           </NavLink>
         </li>
         {!user && (
-          <li className="nav-item">
+          <li className="my-2">
             <NavLink
-              to={"/logowanie"}
-              style={({ isActive }) => (isActive ? { color: "red" } : {})}
-              className={`${style.font} nav-link`}
+              to="/logowanie"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-400 hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+                  : "hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+              }
             >
               Logowanie
             </NavLink>
           </li>
         )}
         {!user && (
-          <li className="nav-item">
+          <li className="my-2">
             <NavLink
-              to={"/rejestracja"}
-              style={({ isActive }) => (isActive ? { color: "red" } : {})}
-              className={`${style.font} nav-link`}
+              to="/rejestracja"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-400 hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+                  : "hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+              }
             >
               Rejestracja
             </NavLink>
           </li>
         )}
         {user && (
-          <li className="nav-item">
+          <li className="my-2">
             <NavLink
-              to={"/profil"}
-              style={({ isActive }) => (isActive ? { color: "red" } : {})}
-              className={`${style.font} nav-link`}
+              to="/profil"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-400 hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+                  : "hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 text-2xl font-medium transition-colors"
+              }
             >
               Profil
             </NavLink>
           </li>
         )}
         {user && (
-          <li className="nav-item">
+          <li className="my-2">
             <button
-              className={`${style.font} nav-link`}
+              className=" hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 text-2xl font-medium transition-colors"
               onClick={() => logout()}
             >
               Wyloguj

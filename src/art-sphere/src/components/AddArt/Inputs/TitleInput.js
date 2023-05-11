@@ -15,7 +15,7 @@ function TitleInput({ value, onChange }) {
 
   const handleChange = (event) => {
     setVal(event.target.value);
-    onChange(val);
+    onChange(event.target.value);
   };
 
   return (
