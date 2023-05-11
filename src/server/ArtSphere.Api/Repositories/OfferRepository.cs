@@ -1,6 +1,7 @@
 using ArtSphere.Api.Database;
 using ArtSphere.Api.Models;
 using ArtSphere.Api.Models.Dto.Payloads;
+using ArtSphere.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArtSphere.Api.Repositories;
@@ -8,9 +9,11 @@ namespace ArtSphere.Api.Repositories;
 public class OffersRepository
 {
     private readonly ApplicationDatabaseContext _db;
-    public OffersRepository(ApplicationDatabaseContext db)
+    private readonly ImageCompressionService _compressionService;
+    public OffersRepository(ApplicationDatabaseContext db, ImageCompressionService compressionService)
     {
         _db = db;
+        _compressionService = compressionService;
     }
 
     public async Task<IEnumerable<Offer>> GetOffersAsync()
@@ -39,6 +42,12 @@ public class OffersRepository
             Unit = offerPayload.Unit,
             Picture = offerPayload.Picture
         };
+        if(!string.IsNullOrEmpty(offerPayload.Picture))
+        {
+            var compressedPicture = _compressionService.CompressBase64Image(offerPayload.Picture);
+            offer.CompressedPicture = compressedPicture;
+        }
+
         if(offerPayload.Tags != null){
             offer.Tags = new List<Tag>();
             foreach (var tag in offerPayload.Tags)
@@ -68,7 +77,18 @@ public class OffersRepository
         offer.DimensionsX = offerPayload.DimensionsX;
         offer.DimensionsY = offerPayload.DimensionsY;
         offer.Unit = offerPayload.Unit;
-        offer.Picture = offerPayload.Picture;
+        if(offer.Picture != offerPayload.Picture)
+        {
+            if(string.IsNullOrEmpty(offerPayload.Picture))
+            {
+                offer.Picture = string.Empty;
+                offer.CompressedPicture = string.Empty;
+            } else {
+                offer.Picture = offerPayload.Picture;
+                var compressedPicture = _compressionService.CompressBase64Image(offerPayload.Picture);
+                offer.CompressedPicture = compressedPicture;
+            }
+        }
 
         if(offerPayload.Tags != null){
             foreach (var tag in offerPayload.Tags)

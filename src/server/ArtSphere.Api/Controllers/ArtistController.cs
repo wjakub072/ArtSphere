@@ -65,7 +65,7 @@ public class ArtistController : ControllerBase
                 o.Title ?? string.Empty,
                 o.Price,
                 o.Archived,
-                o.Picture))
+                o.CompressedPicture))
                 .ToArray());
     }
 }
