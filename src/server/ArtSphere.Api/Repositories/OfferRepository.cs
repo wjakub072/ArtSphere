@@ -44,7 +44,7 @@ public class OffersRepository
         };
         if(!string.IsNullOrEmpty(offerPayload.Picture))
         {
-            var compressedPicture = _compressionService.CompressBase64Image(offerPayload.Picture);
+            var compressedPicture = _compressionService.CompressBase64ImageWithDataTag(offerPayload.Picture);
             offer.CompressedPicture = compressedPicture;
         }
 
@@ -85,7 +85,7 @@ public class OffersRepository
                 offer.CompressedPicture = string.Empty;
             } else {
                 offer.Picture = offerPayload.Picture;
-                var compressedPicture = _compressionService.CompressBase64Image(offerPayload.Picture);
+                var compressedPicture = _compressionService.CompressBase64ImageWithDataTag(offerPayload.Picture);
                 offer.CompressedPicture = compressedPicture;
             }
         }
