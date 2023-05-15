@@ -34,5 +34,10 @@ class UserConfiguration : IEntityTypeConfiguration<User>
         .WithOne(o => o.Artist)
         .HasForeignKey(o => o.ArtistId)
         .HasPrincipalKey(c => c.Id);
+
+        builder.HasOne(u => u.Wallet)
+               .WithOne(w => w.User)
+               .HasForeignKey<Wallet>(w => w.UserId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

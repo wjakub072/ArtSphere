@@ -25,4 +25,5 @@ public class User
     public string? ProfilePicture { get; set; }
 
     public ICollection<Offer> Offers { get; set; }
+    public Wallet Wallet { get; set; }
 }

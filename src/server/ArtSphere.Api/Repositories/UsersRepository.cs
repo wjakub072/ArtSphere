@@ -21,7 +21,14 @@ public class UsersRepository
         return user;
     }
 
-//TODO IMPLEMENT ProfilePicture AND PAGINATION
+    public async Task<User> GetUserWithWalletAsync(int id)
+    {
+        var user = await _db.ASUsers.Include(u => u.Wallet).FirstOrDefaultAsync(u => u.Id == id);
+        if(user == null) throw new Exception("Użytkownik o podanym Id nie został odnaleziony.");
+        if(user.Wallet == null) throw new Exception("Użytkownik o podanym Id nie posiada określnego portfela.");
+        return user;
+    }
+
     public async Task<IEnumerable<User>> GetArtistsAsync(){ 
         return await _db.ASUsers.FromSqlRaw(@"SELECT TOP (1000) u.[Id]
                     ,u.[Email]
@@ -124,6 +131,7 @@ public class UsersRepository
         { 
             Email = email
         };
+        appUser.Wallet = new Wallet();
         _db.Add(appUser);
         await _db.SaveChangesAsync();
         return appUser;
