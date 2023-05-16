@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosInstace from "../api/axiosInstance";
 
 const AuthContext = React.createContext();
 
@@ -44,36 +44,38 @@ export const AuthContextProvider = ({ children }) => {
   const [emailChangeResponseError, setEmailChangeResponseError] = useState("");
   const [responseSuccess, setResponseSuccess] = useState("");
   const [sesionError, setSesionError] = useState("");
+  const [loadingButton, setLoadingButton] = useState(false);
+  const [loadingButtonPass, setLoadingButtonPass] = useState(false);
+  const [loadingButtonEmail, setLoadingButtonEmail] = useState(false);
 
   const navigate = useNavigate();
   const login = async (data) => {
     try {
-      let response = await axios.post(
-        "http://127.0.0.1:5006/api/auth/login",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
+      setLoadingButton(true);
+      let response = await axiosInstace.post("auth/login", data, {
+        withCredentials: true,
+      });
       console.log("respons zalogowania");
       console.log(response);
       localStorage.setItem("userRole", JSON.stringify(response.data.role));
       setUser(response.data.role);
       setResponseError("");
-      await getProfileData();
+      navigate("/profil/");
       await getDeliveryAddressData();
       await getInvoiceData();
-      navigate("/profil");
     } catch (err) {
+      setLoadingButton(false);
       console.log("error logowania");
       console.log(err);
       setResponseError(err.response.data.title);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
   const logout = async () => {
     try {
-      let response = await axios.post("http://127.0.0.1:5006/api/auth/logout", {
+      let response = await axiosInstace.post("auth/logout", {
         withCredentials: true,
       });
       console.log("respons wylogowania");
@@ -92,107 +94,73 @@ export const AuthContextProvider = ({ children }) => {
 
   const register = async (data, loginData) => {
     try {
-      let response = await axios.post(
-        "http://127.0.0.1:5006/api/auth/signup",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
+      setLoadingButton(true);
+      let response = await axiosInstace.post("auth/signup", data, {
+        withCredentials: true,
+      });
       console.log("respons rejestracji");
       console.log(response);
       await login(loginData);
     } catch (err) {
+      setLoadingButton(false);
       console.log("error rejestracji");
       console.log(err);
       setResponseError(err.response.data.title);
-    }
-  };
-
-  const getProfileData = async () => {
-    try {
-      let response = await axios.get("http://127.0.0.1:5006/api/profile", {
-        withCredentials: true,
-      });
-      console.log("respons danych profilu");
-      console.log(response);
-      localStorage.setItem("userData", JSON.stringify(response.data));
-      setUserData(response.data);
-    } catch (err) {
-      errorResponseHandler(err);
-    }
-  };
-
-  const updateProfileData = async (data) => {
-    try {
-      let response = await axios.put(
-        "http://127.0.0.1:5006/api/profile",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("respons update'u profilu");
-      console.log(response);
-      await getProfileData();
-      setResponseSuccess("Dane zostały zaktualizowane");
-    } catch (err) {
-      errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
   const changePassword = async (data) => {
     try {
-      let response = await axios.post(
-        "http://127.0.0.1:5006/api/account/reset-password",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
+      setLoadingButtonPass(true);
+      let response = await axiosInstace.post("account/reset-password", data, {
+        withCredentials: true,
+      });
       console.log("respons zmiany hasła");
       console.log(response);
       setPassChangeSuccess("Hasło zostało zmienione");
       setPassChangeResponseError("");
     } catch (err) {
+      setLoadingButtonPass(false);
       if (err.response) {
         setPassChangeSuccess("");
         setPassChangeResponseError(err.response.data.message);
       }
       errorResponseHandler(err);
+    } finally {
+      setLoadingButtonPass(false);
     }
   };
 
   const changeEmail = async (data) => {
     try {
-      let response = await axios.post(
-        "http://127.0.0.1:5006/api/account/change-email",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
+      setLoadingButtonEmail(true);
+      let response = await axiosInstace.post("account/change-email", data, {
+        withCredentials: true,
+      });
       console.log("respons zmiany emaila");
       console.log(response);
       setEmailChangeSuccess("Email został zmieniony");
       setEmailChangeResponseError("");
     } catch (err) {
+      setLoadingButtonEmail(false);
       if (err.response) {
         setEmailChangeSuccess("");
         setEmailChangeResponseError(err.response.data.message);
       }
       errorResponseHandler(err);
+    } finally {
+      setLoadingButtonEmail(false);
     }
   };
 
   const deleteAccount = async () => {
     try {
-      let response = await axios.delete(
-        "http://127.0.0.1:5006/api/account/delete",
-        {
-          withCredentials: true,
-        }
-      );
+      setLoadingButton(true);
+      let response = await axiosInstace.delete("account/delete", {
+        withCredentials: true,
+      });
       console.log("respons usuwania konta");
       console.log(response);
       localStorage.clear();
@@ -200,18 +168,18 @@ export const AuthContextProvider = ({ children }) => {
       setUserData(null);
       navigate("/");
     } catch (err) {
+      setLoadingButton(false);
       errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
   const getDeliveryAddressData = async () => {
     try {
-      let response = await axios.get(
-        "http://127.0.0.1:5006/api/profile/address",
-        {
-          withCredentials: true,
-        }
-      );
+      let response = await axiosInstace.get("profile/address", {
+        withCredentials: true,
+      });
       console.log("respons danych adresu dostawy");
       console.log(response);
       localStorage.setItem(
@@ -219,7 +187,6 @@ export const AuthContextProvider = ({ children }) => {
         JSON.stringify(response.data)
       );
       setDeliveryAddressData(response.data);
-      setResponseSuccess("Dane zostały zaktualizowane");
     } catch (err) {
       errorResponseHandler(err);
     }
@@ -227,38 +194,35 @@ export const AuthContextProvider = ({ children }) => {
 
   const updateDeliveryAddressData = async (data) => {
     try {
-      let response = await axios.put(
-        "http://127.0.0.1:5006/api/profile/address",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
+      setLoadingButton(true);
+      let response = await axiosInstace.put("profile/address", data, {
+        withCredentials: true,
+      });
       console.log("respons update'u adresu dostawy");
       console.log(response);
       await getDeliveryAddressData();
+      setResponseSuccess("Dane zostały zapisane");
     } catch (err) {
+      setLoadingButton(false);
       if (err.response) {
         setResponseSuccess("");
         setResponseError(err.response.data.message);
       }
       errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
   const getInvoiceData = async () => {
     try {
-      let response = await axios.get(
-        "http://127.0.0.1:5006/api/profile/company",
-        {
-          withCredentials: true,
-        }
-      );
+      let response = await axiosInstace.get("profile/company", {
+        withCredentials: true,
+      });
       console.log("respons danych do faktury");
       console.log(response);
       localStorage.setItem("invoiceData", JSON.stringify(response.data));
       setInvoiceData(response.data);
-      setResponseSuccess("Dane zostały zaktualizowane");
     } catch (err) {
       errorResponseHandler(err);
     }
@@ -266,22 +230,23 @@ export const AuthContextProvider = ({ children }) => {
 
   const updateInvoiceData = async (data) => {
     try {
-      let response = await axios.put(
-        "http://127.0.0.1:5006/api/profile/company",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
+      setLoadingButton(true);
+      let response = await axiosInstace.put("profile/company", data, {
+        withCredentials: true,
+      });
       console.log("respons update'u danych do faktury");
       console.log(response);
       await getInvoiceData();
+      setResponseSuccess("Dane zostały zapisane");
     } catch (err) {
+      setLoadingButton(false);
       if (err.response) {
         setResponseSuccess("");
         setResponseError(err.response.data.message);
       }
       errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
     }
   };
 
@@ -291,7 +256,6 @@ export const AuthContextProvider = ({ children }) => {
       setSesionError("Sesja wygasła zaloguj się ponownie");
       console.log("Błąd autoryzacji");
       console.log(sesionError);
-      console.log("rrrrrrrrrrrrrr");
       localStorage.clear();
       setUser(null);
       setUserData(null);
@@ -302,7 +266,6 @@ export const AuthContextProvider = ({ children }) => {
       setSesionError("Sesja wygasła zaloguj się ponownie");
       console.log("Błąd autoryzacji");
       console.log(sesionError);
-      console.log("rrrrrrrrrrrrrr");
       localStorage.clear();
       setUser(null);
       setUserData(null);
@@ -317,6 +280,7 @@ export const AuthContextProvider = ({ children }) => {
       console.log(err);
     }
   };
+
   return (
     <>
       <AuthContext.Provider
@@ -329,6 +293,9 @@ export const AuthContextProvider = ({ children }) => {
           passChangeSuccess,
           responseSuccess,
           sesionError,
+          loadingButton,
+          loadingButtonPass,
+          loadingButtonEmail,
           userData,
           deliveryAddressData,
           invoiceData,
@@ -342,12 +309,12 @@ export const AuthContextProvider = ({ children }) => {
           login,
           logout,
           register,
-          updateProfileData,
           updateDeliveryAddressData,
           updateInvoiceData,
           changeEmail,
           changePassword,
           deleteAccount,
+          errorResponseHandler,
         }}
       >
         {children}

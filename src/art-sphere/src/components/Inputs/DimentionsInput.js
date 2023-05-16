@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 
-function DimensionInput({ title, value, onChange }) {
+function DimensionInput({ title, value, onChange, label = title }) {
   const [focused, setFocused] = useState(false);
   const [val, setVal] = useState(value);
 
-  const handleFocus = () => {
+  const handleFocus = (e) => {
+    e.target.select();
     setFocused(true);
   };
 
@@ -14,7 +15,7 @@ function DimensionInput({ title, value, onChange }) {
   };
 
   const handleChange = (event) => {
-    const newValue = parseInt(event.target.value);
+    const newValue = parseFloat(event.target.value);
     if (newValue >= 0) {
       value = newValue;
       setVal(newValue);
@@ -28,18 +29,18 @@ function DimensionInput({ title, value, onChange }) {
   return (
     <div className="relative">
       <label
-        htmlFor={title}
-        className="block text-sm font-medium leading-6 text-gray-900"
+        htmlFor={label}
+        className="block text-sm font-medium leading-6 text-indigo-600"
       >
         {title}
       </label>
-      <div className="mt-2 relative rounded-md shadow-sm">
+      <div className="mt-2 relative rounded-xl shadow-sm">
         <input
-          id={title}
-          name={title}
+          id={label}
+          name={label}
           type="number"
           className={classNames(
-            "form-input rounded-md block w-full py-2 pl-4 pr-12 sm:text-sm sm:leading-5",
+            "form-input block w-full py-2 pl-4 pr-11 sm:text-sm sm:leading-5 border-2 rounded-xl border-transparent focus:outline-none focus:border-indigo-600",
             {
               "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500":
                 !focused,

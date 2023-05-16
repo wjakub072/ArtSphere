@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { AuthContextProvider } from "./context/AuthContext";
 import LoginView from "./components/Auth/LoginView/LoginView";
 import RegisterView from "./components/Auth/RegisterView/RegisterView";
 import Menu from "./components/Header/Menu/Menu";
@@ -12,7 +13,6 @@ import Profile from "./pages/User/Profile/Profile";
 import ShoppingHistory from "./pages/User/ShoppingHistory/ShoppingHistory";
 import Favorite from "./pages/User/Favorite/Favorite";
 import TopUpWallet from "./pages/User/TopUpWallet/TopUpWallet";
-import TopUpWalletLink from "./pages/User/TopUpWallet/TopUpWalletLink/TopUpWalletLink";
 import DeliveryAddress from "./pages/User/DeliveryAddress/DeliveryAddress";
 import InvoiceData from "./pages/User/InvoiceData/InvoiceData";
 import AccountSettings from "./pages/User/AccountSettings/AccountSettings";
@@ -20,7 +20,9 @@ import UserArts from "./pages/User/UserArts/UserArts";
 import AdminPanel from "./pages/User/AdminPanel/AdminPanel";
 import ProtectedRoute from "./hoc/ProtectedRoute";
 import PasswordRecovery from "./components/Auth/PasswordRecovery/PasswordRecovery";
-import { AuthContextProvider } from "./context/AuthContext";
+import ArtistsDetails from "./pages/Artists/ArtistsDetails/ArtistsDetails";
+import OfferDetails from "./pages/Gallery/OfferDetails/OfferDetails";
+import EditArt from "./components/EditArt/EditArt";
 
 function App() {
   const content = (
@@ -29,7 +31,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/galeria" element={<Gallery />} />
+        <Route path="/galeria/:offerId" element={<OfferDetails />} />
         <Route path="/artysci" element={<Artists />} />
+        <Route path="/artysci/:artistId" element={<ArtistsDetails />} />
         <Route
           path="/logowanie"
           element={
@@ -74,6 +78,14 @@ function App() {
             element={
               <ProtectedRoute accesBy="authenticated" role="artysta">
                 <UserArts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="twojeDziela/edycja/:artId"
+            element={
+              <ProtectedRoute accesBy="authenticated" role="artysta">
+                <EditArt />
               </ProtectedRoute>
             }
           />

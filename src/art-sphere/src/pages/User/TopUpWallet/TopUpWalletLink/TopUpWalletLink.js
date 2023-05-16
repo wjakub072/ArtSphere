@@ -7,7 +7,7 @@ const TopUpWalletLink = () => {
   return (
     <div className="text-4xl text-center mt-20 w-100">
         <form className="top-up-wallet-link-form">
-            <h2 className="text-blue-600">Wpisz kwotę</h2>
+            <h2 className="text-indigo-700">Wpisz kwotę</h2>
             <div className="mt-2 relative rounded-md shadow-sm">
               <input
                 type="number"
@@ -19,7 +19,7 @@ const TopUpWalletLink = () => {
             </div>
         </form>
 
-        <button className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50">
+        <button className="bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:bg-indigo-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50">
             Doładuj portfel
         </button>
     </div>

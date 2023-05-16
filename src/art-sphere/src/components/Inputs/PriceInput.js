@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 
-function DimensionInput({ title, value, onChange }) {
+function PriceInput({ title, value, onChange, label = title }) {
   const [focused, setFocused] = useState(false);
   const [val, setVal] = useState(value);
 
-  const handleFocus = () => {
+  const handleFocus = (e) => {
+    e.target.select();
     setFocused(true);
   };
 
@@ -14,7 +15,7 @@ function DimensionInput({ title, value, onChange }) {
   };
 
   const handleChange = (event) => {
-    const newValue = parseInt(event.target.value);
+    const newValue = parseFloat(event.target.value);
     if (newValue >= 0) {
       value = newValue;
       setVal(newValue);
@@ -28,18 +29,18 @@ function DimensionInput({ title, value, onChange }) {
   return (
     <div className="relative">
       <label
-        htmlFor={title}
-        className="block text-sm font-medium leading-6 text-gray-900"
+        htmlFor={label}
+        className="block text-sm font-medium leading-6 text-indigo-600"
       >
         {title}
       </label>
-      <div className="mt-2 relative rounded-md shadow-sm">
+      <div className="mt-2 relative rounded-xl shadow-sm">
         <input
-          id={title}
-          name={title}
+          id={label}
+          name={label}
           type="number"
           className={classNames(
-            "form-input rounded-md block w-full py-2 pl-4 pr-12 sm:text-sm sm:leading-5",
+            "form-input border-2 rounded-xl border-transparent focus:outline-none focus:border-indigo-600 block w-full py-2 pl-4 pr-10 sm:text-sm sm:leading-5",
             {
               "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500":
                 !focused,
@@ -53,15 +54,12 @@ function DimensionInput({ title, value, onChange }) {
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <span
-          className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 sm:text-sm"
-          style={{ marginRight: "3rem" }}
-        >
-          cm
+        <span className="absolute inset-y-0 right-0 mr-14 flex items-center text-gray-500 sm:text-sm  pointer-events-none">
+          PLN
         </span>
       </div>
     </div>
   );
 }
 
-export default DimensionInput;
+export default PriceInput;

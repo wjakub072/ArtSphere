@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import classNames from "classnames";
+import { SearchIcon, UserIcon } from "@heroicons/react/solid";
 
-function PriceInput({ title, value, onChange }) {
+function ArtistSearchBox({ value, onChange }) {
   const [focused, setFocused] = useState(false);
   const [val, setVal] = useState(value);
 
@@ -14,35 +15,28 @@ function PriceInput({ title, value, onChange }) {
   };
 
   const handleChange = (event) => {
-    const newValue = parseInt(event.target.value);
-    if (newValue >= 0) {
-      value = newValue;
-      setVal(newValue);
-      onChange(value);
-    } else {
-      onChange(0);
-      setVal(0);
-    }
+    setVal(event.target.value);
+    onChange(event.target.value);
   };
 
   return (
-    <div className="PriceInput relative">
+    <div className="relative">
       <label
         htmlFor="price"
-        className="block text-sm font-medium leading-6 text-gray-900"
+        className="block text-sm font-medium leading-6 text-indigo-600"
       >
-        {title}
+        Wyszukaj artystę
       </label>
-      <div className="mt-2 relative rounded-md shadow-sm">
+      <div className="mt-2 relative rounded-xl shadow-sm">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <span className="text-gray-500 sm:text-sm">$</span>
+          <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>
         <input
-          id="price"
-          name="price"
-          type="number"
+          id="search"
+          name="search"
+          type="text"
           className={classNames(
-            "form-input rounded-md block w-full py-2 px-4 pr-12 sm:text-sm sm:leading-5",
+            "form-input rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 block w-full py-2 pl-10 pr-3 sm:text-sm sm:leading-5",
             {
               "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500":
                 !focused,
@@ -50,15 +44,18 @@ function PriceInput({ title, value, onChange }) {
                 focused,
             }
           )}
-          placeholder="0.00"
+          placeholder="Szukaj"
           value={val}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        <div className="absolute inset-y-0 right-0 pr-14 flex items-center pointer-events-none">
+          <UserIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+        </div>
       </div>
     </div>
   );
 }
 
-export default PriceInput;
+export default ArtistSearchBox;

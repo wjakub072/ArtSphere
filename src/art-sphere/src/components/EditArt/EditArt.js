@@ -1,133 +1,76 @@
-import { useState } from "react";
-import GenericComboImput from "./Inputs/GenericComboInput";
-import PriceInput from "./Inputs/PriceInput";
-import DimensionsInput from "./Inputs/DimentionsInput";
-import TitleInput from "./Inputs/TitleInput";
-import "./editArt.css";
-import EditArtButton from "./Inputs/EditArtButton";
-import AddImage from "./Inputs/AddImage";
-import TagInput from "./Inputs/TagInput";
-import Description from "./Inputs/Description";
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { categories, topics, technics } from "../../data/artStaticData";
+import GenericComboImput from "../Inputs/GenericComboInput";
+import PriceInput from "../Inputs/PriceInput";
+import DimensionsInput from "../Inputs/DimentionsInput";
+import TitleInput from "../Inputs/TitleInput";
+import AddImage from "../Inputs/AddImage";
+import TagInput from "../Inputs/TagInput";
+import Description from "../Inputs/Description";
+import AuthContext from "../../context/AuthContext";
+import axiosInstace from "../../api/axiosInstance";
+import useWebsiteTitle from "../../hooks/useWebsiteTitle";
+import EditArtButton from "../Inputs/EditArtButton";
+import Loading from "../Loading/Loading";
 
 function EditArt() {
+  useWebsiteTitle("Edycja Dzieła");
+  const { errorResponseHandler, responseSuccess, setResponseSuccess } =
+    useContext(AuthContext);
+
+  const { artId } = useParams();
+  const [loading, setLoading] = useState(true);
+
   const [validateError, setValidateError] = useState("");
+  const [loadingButton, setLoadingButton] = useState(false);
+  const [artData, setArtData] = useState(null);
 
-  const [artData, setArtData] = useState({
-    img: "",
-    category: "Obrazy",
-    topic: "Abstrakcja",
-    technic: "Akryl",
-    title: "Jakiś tytuł",
-    description: "Cześć jestem opisem",
-    price: 214,
-    height: 21,
-    width: 21,
-  });
+  useEffect(() => {
+    getOffer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const possible_categories = [
-    {
-      id: 1,
-      name: "-",
-    },
-    {
-      id: 2,
-      name: "Obrazy",
-    },
-    {
-      id: 3,
-      name: "Grafika",
-    },
-    {
-      id: 4,
-      name: "Rzeźba",
-    },
-    {
-      id: 5,
-      name: "Zdjęcie",
-    },
-  ];
-  const possible_topics = [
-    {
-      id: 1,
-      name: "-",
-    },
-    {
-      id: 2,
-      name: "Abstrakcja",
-    },
-    {
-      id: 3,
-      name: "Architektura",
-    },
-    {
-      id: 4,
-      name: "Człowiek",
-    },
-    {
-      id: 5,
-      name: "Fantastyka",
-    },
-    {
-      id: 6,
-      name: "Geometria",
-    },
-    {
-      id: 7,
-      name: "Kwiaty",
-    },
-    {
-      id: 8,
-      name: "Martwa Natura",
-    },
-  ];
-  const possible_technics = [
-    {
-      id: 1,
-      name: "-",
-    },
-    {
-      id: 2,
-      name: "Akryl",
-    },
-    {
-      id: 3,
-      name: "Akwarela",
-    },
-    {
-      id: 4,
-      name: "Pastel",
-    },
-    {
-      id: 5,
-      name: "Węgiel",
-    },
-    {
-      id: 6,
-      name: "Tusz",
-    },
-    {
-      id: 7,
-      name: "Spray",
-    },
-    {
-      id: 8,
-      name: "Sitodruk",
-    },
-    {
-      id: 9,
-      name: "Olej",
-    },
-    {
-      id: 10,
-      name: "Ołówek",
-    },
-  ];
+  useEffect(() => {
+    return () => {
+      setResponseSuccess("");
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getOffer = async () => {
+    try {
+      const offerData = await axiosInstace.get(`offers/${artId}`);
+      console.log(offerData.data);
+      setArtData(offerData.data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const editOffer = async (data) => {
+    try {
+      setLoadingButton(true);
+      const response = await axiosInstace.post(`offers/${artId}`, data, {
+        withCredentials: true,
+      });
+      console.log("respons edycji oferty");
+      console.log(response);
+      setResponseSuccess("Ofera została zakutalizowana");
+    } catch (err) {
+      setLoadingButton(false);
+      errorResponseHandler(err);
+    } finally {
+      setLoadingButton(false);
+    }
+  };
 
   const clickHandle = () => {
     if (
-      !(artData.img === "") &&
-      !(artData.img === null) &&
-      !(artData.img === undefined) &&
+      !(artData.photo === "") &&
+      !(artData.photo === null) &&
+      !(artData.photo === undefined) &&
       !(artData.category === "") &&
       !(artData.topic === "") &&
       !(artData.technic === "") &&
@@ -137,103 +80,143 @@ function EditArt() {
       !(artData.title === "") &&
       !(artData.description === "") &&
       !(artData.price === 0) &&
-      !(artData.height === 0) &&
-      !(artData.width === 0)
+      !(artData.dimensionsY === 0) &&
+      !(artData.dimensionsX === 0)
     ) {
-      console.log(artData);
+      const data = {
+        category: artData.category,
+        technic: artData.technic,
+        topic: artData.topic,
+        title: artData.title,
+        description: artData.description,
+        price: artData.price,
+        DimensionsX: artData.dimensionsX,
+        DimensionsY: artData.dimensionsY,
+        unit: "cm",
+        picture: artData.photo,
+        tags: artData.tags,
+      };
       setValidateError("");
+      editOffer(data);
     } else {
       setValidateError("Wypełnij wszystkie pola");
     }
   };
 
   return (
-    <>
-      <div className={`container`}>
-        <div className="col-sub" style={{ width: "70%" }}>
+    <div className="w-full text-center mx-auto">
+      <h2 className="mb-3 text-4xl text-indigo-600 font-semibold tracking-wider">
+        Edycja dzieła
+      </h2>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div>
           <AddImage
-            value={artData.img}
-            onChange={(val) => setArtData({ ...artData, img: val })}
+            value={artData.photo}
+            onChange={(val) => setArtData({ ...artData, photo: val })}
           />
-        </div>
-        <div className="col">
-          <div className="row">
-            <GenericComboImput
-              title="Kategoria"
-              val={artData.category}
-              list={possible_categories}
-              onChange={(val) => setArtData({ ...artData, category: val.name })}
-            />
-          </div>
-          <div className="row">
-            <GenericComboImput
-              title="Tematyka"
-              val={artData.topic}
-              list={possible_topics}
-              onChange={(val) => setArtData({ ...artData, topic: val.name })}
-            />
-          </div>
-          <div className="row">
-            <GenericComboImput
-              title="Technika"
-              val={artData.technic}
-              list={possible_technics}
-              onChange={(val) => setArtData({ ...artData, technic: val.name })}
-            />
-          </div>
-          <div className="row">
-            <DimensionsInput
-              title="Wysokość"
-              value={artData.height}
-              onChange={(val) => setArtData({ ...artData, height: val })}
-            />
-          </div>
-        </div>
-        <div className="col">
-          <div className="row">
+          <div className="text-left mb-3 p-0.5">
             <TitleInput
               value={artData.title}
               onChange={(val) => setArtData({ ...artData, title: val })}
             />
           </div>
-          <div className="row">
-            <PriceInput
-              title="Cena"
-              value={artData.price}
-              onChange={(val) => setArtData({ ...artData, price: val })}
-            />
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 text-left">
+            <div>
+              <div className="mb-3 p-0.5">
+                <GenericComboImput
+                  title="Kategoria"
+                  list={categories}
+                  value={artData.category}
+                  onChange={(val) =>
+                    setArtData({ ...artData, category: val.name })
+                  }
+                />
+              </div>
+              <div className="mb-3 p-0.5">
+                <GenericComboImput
+                  title="Tematyka"
+                  list={topics}
+                  value={artData.topic}
+                  onChange={(val) =>
+                    setArtData({ ...artData, topic: val.name })
+                  }
+                />
+              </div>
+              <div className="mb-3 p-0.5">
+                <GenericComboImput
+                  title="Technika"
+                  list={technics}
+                  value={artData.technic}
+                  onChange={(val) =>
+                    setArtData({ ...artData, technic: val.name })
+                  }
+                />
+              </div>
+            </div>
+            <div>
+              <div className="mb-3 p-0.5">
+                <PriceInput
+                  title="Cena"
+                  value={artData.price}
+                  onChange={(val) => setArtData({ ...artData, price: val })}
+                />
+              </div>
+              <div className="mb-3 p-0.5">
+                <DimensionsInput
+                  title="Wysokość"
+                  value={artData.dimensionsY}
+                  onChange={(val) =>
+                    setArtData({ ...artData, dimensionsY: val })
+                  }
+                />
+              </div>
+              <div className="mb-3 p-0.5">
+                <DimensionsInput
+                  title="Szerokość"
+                  value={artData.dimensionsX}
+                  onChange={(val) =>
+                    setArtData({ ...artData, dimensionsX: val })
+                  }
+                />
+              </div>
+            </div>
           </div>
-          <div className="row">
-            <DimensionsInput
-              title="Szerokość"
-              value={artData.width}
-              onChange={(val) => setArtData({ ...artData, width: val })}
-            />
+          <div className="p-0.5">
             <Description
+              title="Opis dzieła"
               value={artData.description}
               onChange={(val) => setArtData({ ...artData, description: val })}
             />
           </div>
-        </div>
-        <div className="col">
-          <TagInput />
-        </div>
-        <div style={{ width: "70%", margin: "0 auto" }}>
-          <div
-            className="col-sub mt-3"
-            style={{ width: "70%", margin: "0 auto" }}
-          >
-            {validateError && (
-              <div className="text-danger text-center mb-4">
-                {validateError}
-              </div>
-            )}
-            <EditArtButton title="Dodaj dzieło" onClick={clickHandle} />
+
+          <div className="p-0.5">
+            <TagInput
+              prevTags={artData.tags}
+              actualTags={(val) => setArtData({ ...artData, tags: val })}
+            />
+          </div>
+          {validateError && (
+            <div className="text-red-500 text-center my-3 font-medium">
+              {validateError}
+            </div>
+          )}
+          {responseSuccess && (
+            <p className="text-green-800 text-center my-3 font-medium">
+              {responseSuccess}
+            </p>
+          )}
+          <div className="mx-auto mt-5 text-center p-0.5">
+            <EditArtButton
+              title="Edytuj dzieło"
+              onClick={clickHandle}
+              loading={loadingButton}
+            />
           </div>
         </div>
-        <div className="col"></div>
-      </div>
-    </>
+      )}
+    </div>
   );
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import "./PasswordRecovery.css";
 import { validateEmail } from "../../../helpers/validation";
+import { ExclamationCircleIcon } from "@heroicons/react/outline";
 
 function PasswordRecovery() {
   const [email, setEmail] = useState("");
@@ -24,47 +24,62 @@ function PasswordRecovery() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (!email.length < 1) {
+    if (!email.length < 1 && validateEmail(email)) {
       console.log("git");
     } else {
       if (email.length < 1) {
         setEmailErrors("Pole nie może być puste");
       }
+      if (!validateEmail(email)) {
+        setEmailErrors("Niepoprawny email");
+      }
     }
   };
 
   return (
-    <div className="login-form-container mt-5">
-      <form onSubmit={submitHandler} className="bg-dark-subtle rounded-3 p-3">
-        <h1 className="passwordRecovery text-primary">Odzyskiwanie hasła</h1>
-        <div className="passwordRecovery">
-          <div className="form-group">
+    <div className="mt-20 w-full px-6 sm:w-2/3 md:w-1/2 xl:w-1/3 2xl:w-1/4 mx-auto">
+      <form
+        onSubmit={submitHandler}
+        className="bg-zinc-200 rounded-lg p-6 mx-auto shadow-lg"
+      >
+        <h2 className="text-indigo-700 font-bold mb-4 text-2xl text-center tracking-widest">
+          Odzyskiwanie hasła
+        </h2>
+
+        <div className="mb-4">
+          <div className="relative">
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              className={`form-control loginForm ${
-                emailErrors ? "is-invalid" : ""
+              className={`block appearance-none w-full py-3 px-3 leading-tight rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 ${
+                emailErrors ? "!border-red-500" : ""
               }`}
-              type="email"
+              type="text"
               id="email"
               placeholder="Adres email"
-            ></input>
-            <div className="invalid-feedback">{emailErrors}</div>
+            />
+            {emailErrors && (
+              <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                <ExclamationCircleIcon className="text-red-500 h-2/5" />
+              </div>
+            )}
           </div>
+          <div className="text-red-500 text-sm ml-2 mt-1">{emailErrors}</div>
         </div>
-        <div className="passwordRecovery">
-          <button className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:bg-blue-700 text-white my-3 py-2 px-4 rounded disabled:opacity-50">
-            Wyślij email zmiany hasła
+
+        <div>
+          <button className="w-full p-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors">
+            Wyślij email do zmiany hasła
           </button>
+          <p className="text-base text-center m-2">
+            <NavLink
+              to={"/logowanie/"}
+              className="text-indigo-600 underline m-2 hover:text-indigo-900 focus:text-indigo-900 p-0.5 rounded-md border-2 border-transparent focus:outline-none focus:border-indigo-600 transition-colors"
+            >
+              Wróć do logowania
+            </NavLink>
+          </p>
         </div>
-        <p className="passwordRecovery">
-          <NavLink
-            to={"/logowanie"}
-            className="btn nav-link text-primary text-decoration-underline m-2"
-          >
-            Wróć do logowania
-          </NavLink>
-        </p>
       </form>
     </div>
   );
