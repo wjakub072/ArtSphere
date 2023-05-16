@@ -15,6 +15,7 @@ public class ApplicationDatabaseContext : IdentityDbContext<ApplicationUser, App
     public DbSet<Tag> Tags { get; set; }
     public DbSet<TagDictionary> TagDictionary { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
+    public DbSet<ShoppingCartElement> ShoppingCart { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
