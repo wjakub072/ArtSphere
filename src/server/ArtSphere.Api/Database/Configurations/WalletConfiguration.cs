@@ -11,7 +11,7 @@ public class WalletEntityTypeConfiguration : IEntityTypeConfiguration<Wallet>
         builder.HasKey(w => w.WalletId);
 
         builder.Property(w => w.Balance).HasPrecision(15,4).HasDefaultValue(decimal.Zero);
-        builder.Property(w => w.CreatedAt).HasDefaultValue(DateTime.Now);
+        builder.Property(w => w.CreatedAt).HasDefaultValueSql("GETDATE()");
 
         builder.HasOne(w => w.User)
                .WithOne(u => u.Wallet)
