@@ -66,6 +66,8 @@ public class WalletController : ControllerBase
     [HttpPost("deposit")]
     public async Task<ActionResult<DepositResultResponse>> DepositFundsAsync([FromBody] DepositPayload depositPayload)
     {
+        if(depositPayload.Amount < 10.0m) return BadRequest(new WithdrawResultResponse(false, "Minimalną kwotą wpłaty jest 10.0 PLN."));
+
         ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
 
         if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
@@ -86,9 +88,39 @@ public class WalletController : ControllerBase
                 return BadRequest(new DepositResultResponse(false, "Nieudana próba depozytu, token użytkownika wygasł."));
             }
 
-            var balanceAfterDeposit = await _fundsRepository.ExecuteDepositAsync((int)user?.AccountId!, depositPayload.Amount);
-            lastUserToken.Used = true;
+            var balanceAfterDeposit = await _fundsRepository.ExecuteDepositAsync(lastUserToken, depositPayload.Amount);
+            
             return Ok(new DepositResultResponse(true, "Wpłacono środki.", depositPayload.Amount, balanceAfterDeposit));
+        }
+        return BadRequest("Odnaleziony użytkownik nie posiada przypisanego konta.");
+    }
+
+    [Authorize]
+    [HttpPost("withdraw")]
+    public async Task<ActionResult<WithdrawResultResponse>> WithdrawFundsAsync([FromBody] WithdrawPayload withdrawPayload)
+    {
+        if(withdrawPayload.Amount < 10.0m){
+            return BadRequest(new WithdrawResultResponse(false, "Minimalną kwotą wypłaty jest 10.0 PLN."));
+        } 
+        
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+
+        if(user?.AccountId != null)
+        {
+            if(await _userManager.CheckPasswordAsync(user, withdrawPayload.PasswordConfirmation) == false){
+                return new WithdrawResultResponse(false, "Podano błędne hasło użytkownika, autoryzacja wypłaty odrzucona.");
+            }
+
+            if(await _fundsRepository.CheckWithdrawAmountAsync(user.AccountId, withdrawPayload.Amount))
+            {
+                var balanceAfterWithdraw = await _fundsRepository.ExecuteWithdrawAsync(user.AccountId, withdrawPayload.Amount);    
+
+                return Ok(new WithdrawResultResponse(true, "Środki zostały przekazane do wypłaty na wskazane konto.", withdrawPayload.Amount, balanceAfterWithdraw));
+            }else {
+                return BadRequest(new WithdrawResultResponse(false, "Niewystarczająca ilość środków w portfelu."));
+            }
         }
         return BadRequest("Odnaleziony użytkownik nie posiada przypisanego konta.");
     }

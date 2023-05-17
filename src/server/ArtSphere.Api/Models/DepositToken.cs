@@ -7,5 +7,6 @@ public class DepositToken
     public DateTime CreationTime { get; set; }
     public DateTime ExpirationTime { get; set; }
     public string Value { get; set; }
-    public bool Used { get; set; }
+    public decimal? Amount { get; set; }
+    public DateTime? ExecutionTime { get; set; }
 }
