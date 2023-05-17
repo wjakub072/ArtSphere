@@ -8,14 +8,14 @@ public class ShoppingCartElementConfiguration : IEntityTypeConfiguration<Shoppin
 {
     public void Configure(EntityTypeBuilder<ShoppingCartElement> builder)
     {
-        builder.ToTable("ShoppingCartElement", "Sph").HasKey(c => c.Id);
-        builder.Property(c => c.CreateDate).HasDefaultValue(DateTime.Now);
+        builder.ToTable("ShoppingCartElements", "Sph").HasKey(c => c.Id);
+        builder.Property(c => c.CreateDate).HasDefaultValueSql("GETDATE()");
 
-        builder.HasOne<User>()
+        builder.HasOne<User>(e => e.User)
             .WithMany()
             .HasForeignKey(e => e.UserId);
 
-        builder.HasOne<Offer>()
+        builder.HasOne<Offer>(e => e.Offer)
             .WithMany()
             .HasForeignKey(e => e.OfferId);
 

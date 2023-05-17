@@ -19,6 +19,7 @@ public class ShoppingCartRepository
         var cartElements = await _dbContext.ShoppingCart
                                     .Where(c => c.UserId == userId)
                                     .Include(c => c.Offer)
+                                    .Include(c => c.Offer.Artist)
                                     .Include(c => c.User)
                                     .AsNoTracking()
                                     .ToListAsync();
