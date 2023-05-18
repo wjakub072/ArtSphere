@@ -27,24 +27,47 @@ public class ShoppingCartRepository
         return cartElements;
     }
 
-    public async Task AddOfferToUserShoppingCart(int userId, int offerId)
+    public async Task AddOfferToUserShoppingCartAsync(int userId, int offerId)
     {
         _dbContext.ShoppingCart.Add(new ShoppingCartElement(){
             UserId = userId,
             OfferId = offerId,
             CreateDate = DateTime.Now
         });
-        
+
         await _dbContext.SaveChangesAsync();
     }
 
 
-    public async Task DeleteOfferFromUserShoppingCart(int userId, int offerId)
+    public async Task DeleteOfferFromUserShoppingCartAsync(int userId, int offerId)
     {
         var offerCartElement = await _dbContext.ShoppingCart.FirstOrDefaultAsync(c => c.UserId == userId && c.OfferId == offerId);
         if(offerCartElement == null) throw new Exception("Uzytkownik nie posiadał w koszyku podanej oferty.");
 
         _dbContext.ShoppingCart.Remove(offerCartElement);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<decimal> PlaceShoppingOrderAsync(Order order)
+    {
+        _dbContext.Orders.Add(order);
+        await _dbContext.SaveChangesAsync();
+        
+        await DeleteUserShoppingCartElements(order.UserId);
+        
+        var wallet = await _dbContext.Wallets.FirstOrDefaultAsync(w => w.UserId == order.UserId);
+        if(wallet == null) throw new Exception("Użytkownik nie posiada przypisanego portfela.");
+        wallet.Balance -= order.Amount;
+        
+        wallet.LastUpdated = DateTime.Now;
+        await _dbContext.SaveChangesAsync();
+        
+        return wallet.Balance;
+    }
+
+    private async Task DeleteUserShoppingCartElements(int userId){
+        var cartElements = await _dbContext.ShoppingCart.Where(c => c.UserId == userId).ToListAsync();
+        _dbContext.ShoppingCart.RemoveRange(cartElements);
         await _dbContext.SaveChangesAsync();
     }
 }

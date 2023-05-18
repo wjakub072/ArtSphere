@@ -113,7 +113,7 @@ public class WalletController : ControllerBase
                 return new WithdrawResultResponse(false, "Podano błędne hasło użytkownika, autoryzacja wypłaty odrzucona.");
             }
 
-            if(await _fundsRepository.CheckWithdrawAmountAsync(user.AccountId, withdrawPayload.Amount))
+            if(await _fundsRepository.CheckFundsAmount(user.AccountId, withdrawPayload.Amount))
             {
                 var balanceAfterWithdraw = await _fundsRepository.ExecuteWithdrawAsync(user.AccountId, withdrawPayload.Amount);    
 

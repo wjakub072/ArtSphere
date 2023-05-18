@@ -34,6 +34,8 @@ public class FundsRepository
     }
 
 
+    
+
     public async Task<DepositToken?> GetUserDepositTokenAsync(int userId)
     {
         return await _db.DepositTokens.Where(d => d.UserId == userId && d.ExecutionTime == null).OrderByDescending(c => c.CreationTime).FirstOrDefaultAsync();
@@ -54,7 +56,7 @@ public class FundsRepository
     }
 
 
-    public async Task<bool> CheckWithdrawAmountAsync(int userId, decimal amount)
+    public async Task<bool> CheckFundsAmount(int userId, decimal amount)
     {
         var wallet = await _db.Wallets.AsNoTracking().FirstOrDefaultAsync(c => c.UserId == userId);
         if(wallet == null) throw new Exception("Użytkownik nie posiada przypisanego portfela.");
