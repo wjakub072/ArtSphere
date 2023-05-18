@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { ShoppingCartOutline, ShoppingCart } from "heroicons-react";
 import AuthContext from "../../../context/AuthContext";
 
 function Menu() {
@@ -94,6 +95,20 @@ function Menu() {
             >
               Wyloguj
             </button>
+          </li>
+        )}
+        {user && (
+          <li className="my-2">
+            <NavLink
+              to="/koszyk"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-400 hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 transition-colors"
+                  : "hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 transition-colors"
+              }
+            >
+              <ShoppingCartOutline />
+            </NavLink>
           </li>
         )}
       </ul>

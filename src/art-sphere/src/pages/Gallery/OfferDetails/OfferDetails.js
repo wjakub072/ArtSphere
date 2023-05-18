@@ -29,7 +29,9 @@ function OfferDetails() {
   console.log(offer);
 
   return loading ? (
-    <Loading />
+    <div className="mt-48 w-48 h-48 mx-auto">
+      <Loading />
+    </div>
   ) : (
     <div className="mt-20 w-full md:w-4/5 bg-zinc-200 rounded-lg p-2 md:p-6 mx-auto shadow-2xl">
       <h1 className="text-3xl font-extrabold tracking-widest mb-4 text-center text-indigo-400 rounded-md bg-black p-4 ">

@@ -23,6 +23,8 @@ import PasswordRecovery from "./components/Auth/PasswordRecovery/PasswordRecover
 import ArtistsDetails from "./pages/Artists/ArtistsDetails/ArtistsDetails";
 import OfferDetails from "./pages/Gallery/OfferDetails/OfferDetails";
 import EditArt from "./components/EditArt/EditArt";
+import Carts from "./pages/Carts/Carts";
+import Payment from "./pages/Carts/Payment/Payment";
 
 function App() {
   const content = (
@@ -59,6 +61,22 @@ function App() {
           }
         />
         <Route
+          path="/koszyk"
+          element={
+            <ProtectedRoute accesBy="authenticated" role="klient">
+              <Carts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/koszyk/platnosc"
+          element={
+            <ProtectedRoute accesBy="authenticated" role="klient">
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/profil"
           element={
             <ProtectedRoute accesBy="authenticated" role="klient">
@@ -69,7 +87,7 @@ function App() {
           <Route index element={<Profile />} />
           <Route path="mojeZakupy" element={<ShoppingHistory />} />
           <Route path="ulubione" element={<Favorite />} />
-          <Route path="doladujPortfel" element={<TopUpWallet />} />
+          <Route path="Portfel" element={<TopUpWallet />} />
           <Route path="adresDostawy" element={<DeliveryAddress />} />
           <Route path="daneDoFaktury" element={<InvoiceData />} />
           <Route path="ustawieniaKonta" element={<AccountSettings />} />

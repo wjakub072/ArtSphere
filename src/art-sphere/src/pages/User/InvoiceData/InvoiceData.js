@@ -3,8 +3,6 @@ import { ExclamationCircleIcon } from "@heroicons/react/outline";
 import { validatePostcode } from "../../../helpers/validation";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import AuthContext from "../../../context/AuthContext";
-import GenericComboImput from "../../../components/Inputs/GenericComboInput";
-import { countries } from "../../../data/artStaticData";
 
 const InvoiceData = () => {
   useWebsiteTitle("Dane do faktury");
@@ -373,12 +371,6 @@ const InvoiceData = () => {
         </div>
 
         <div className="mb-3 lg:col-span-2">
-          {/* <GenericComboImput
-            value={country}
-            title="Wybierz kraj"
-            list={countries}
-            onChange={(val) => setCountry(val.name)}
-          /> */}
           <label
             className="text-indigo-600 px-2 pb-1 text-lg font-medium"
             htmlFor="miasto"

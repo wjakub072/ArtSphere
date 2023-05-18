@@ -30,7 +30,9 @@ function Artists(props) {
   };
 
   return loading ? (
-    <Loading />
+    <div className="mt-48 w-48 h-48 mx-auto">
+      <Loading />
+    </div>
   ) : (
     <div className="m-7 lg:mx-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
       {artistList.map((item) => (
@@ -47,7 +49,7 @@ function Artists(props) {
             />
           </div>
           <div className="px-4 py-2">
-            <p className="text-gray-700 text-center text-xl">
+            <p className="text-indigo-700 text-center font-bold text-xl">
               {item.firstName} {item.lastName}
             </p>
           </div>
