@@ -4,6 +4,7 @@ using ArtSphere.Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArtSphere.Api.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    partial class ApplicationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230517153601_ShoppingCart and wallet models")]
+    partial class ShoppingCartandwalletmodels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,42 +25,6 @@ namespace ArtSphere.Api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ArtSphere.Api.Models.DepositToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal?>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<DateTime?>("ExecutionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("DepositTokens", "Sph");
-                });
 
             modelBuilder.Entity("ArtSphere.Api.Models.Offer", b =>
                 {
@@ -126,78 +93,6 @@ namespace ArtSphere.Api.Migrations
                     b.ToTable("Offers", "Sph");
                 });
 
-            modelBuilder.Entity("ArtSphere.Api.Models.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AddressApartment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressBuilding")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressCity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressCountry")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressPostalCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressStreet")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("ExecutionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Orders", "Sph");
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.OrderElement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderELements", "Sph");
-                });
-
             modelBuilder.Entity("ArtSphere.Api.Models.ShoppingCartElement", b =>
                 {
                     b.Property<int>("Id")
@@ -209,7 +104,7 @@ namespace ArtSphere.Api.Migrations
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasDefaultValue(new DateTime(2023, 5, 17, 17, 36, 1, 809, DateTimeKind.Local).AddTicks(455));
 
                     b.Property<int>("OfferId")
                         .HasColumnType("int");
@@ -383,7 +278,7 @@ namespace ArtSphere.Api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasDefaultValue(new DateTime(2023, 5, 17, 17, 36, 1, 810, DateTimeKind.Local).AddTicks(3018));
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime2");
@@ -618,15 +513,6 @@ namespace ArtSphere.Api.Migrations
                     b.Navigation("Artist");
                 });
 
-            modelBuilder.Entity("ArtSphere.Api.Models.OrderElement", b =>
-                {
-                    b.HasOne("ArtSphere.Api.Models.Order", null)
-                        .WithMany("Elements")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ArtSphere.Api.Models.ShoppingCartElement", b =>
                 {
                     b.HasOne("ArtSphere.Api.Models.Offer", "Offer")
@@ -722,11 +608,6 @@ namespace ArtSphere.Api.Migrations
             modelBuilder.Entity("ArtSphere.Api.Models.Offer", b =>
                 {
                     b.Navigation("Tags");
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.Order", b =>
-                {
-                    b.Navigation("Elements");
                 });
 
             modelBuilder.Entity("ArtSphere.Api.Models.User", b =>

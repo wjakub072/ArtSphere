@@ -167,8 +167,11 @@ try
 
     builder.Services.AddMemoryCache();
 
+    builder.Services.AddTransient<ImageCompressionService>();
+    builder.Services.AddScoped<FundsRepository>();
     builder.Services.AddScoped<UsersRepository>();
     builder.Services.AddScoped<OffersRepository>();
+    builder.Services.AddScoped<ShoppingCartRepository>();
     builder.Services.AddScoped<AuthService>();
     builder.Services.AddTransient<EmailSenderService>();
 

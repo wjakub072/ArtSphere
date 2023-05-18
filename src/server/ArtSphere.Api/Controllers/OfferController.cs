@@ -96,7 +96,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
-                    o.Picture))
+                    o.CompressedPicture))
                     .ToArray();
     }
 
@@ -113,7 +113,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
-                    o.Picture))
+                    o.CompressedPicture))
                     .ToArray();
     }
 

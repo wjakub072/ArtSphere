@@ -4,6 +4,7 @@ using ArtSphere.Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArtSphere.Api.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    partial class ApplicationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230511161231_CompressedPicture offer implementation")]
+    partial class CompressedPictureofferimplementation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,42 +25,6 @@ namespace ArtSphere.Api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ArtSphere.Api.Models.DepositToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal?>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<DateTime?>("ExecutionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("DepositTokens", "Sph");
-                });
 
             modelBuilder.Entity("ArtSphere.Api.Models.Offer", b =>
                 {
@@ -124,106 +91,6 @@ namespace ArtSphere.Api.Migrations
                     b.HasIndex("ArtistId");
 
                     b.ToTable("Offers", "Sph");
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AddressApartment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressBuilding")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressCity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressCountry")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressPostalCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressStreet")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("ExecutionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Orders", "Sph");
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.OrderElement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderELements", "Sph");
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.ShoppingCartElement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfferId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ShoppingCartElements", "Sph");
                 });
 
             modelBuilder.Entity("ArtSphere.Api.Models.Tag", b =>
@@ -364,39 +231,6 @@ namespace ArtSphere.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users", "Sph");
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.Wallet", b =>
-                {
-                    b.Property<int>("WalletId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WalletId"));
-
-                    b.Property<decimal>("Balance")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(15, 4)
-                        .HasColumnType("decimal(15,4)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("WalletId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Wallets", "Sph");
                 });
 
             modelBuilder.Entity("ArtSphere.Models.Auth.ApplicationRole", b =>
@@ -618,34 +452,6 @@ namespace ArtSphere.Api.Migrations
                     b.Navigation("Artist");
                 });
 
-            modelBuilder.Entity("ArtSphere.Api.Models.OrderElement", b =>
-                {
-                    b.HasOne("ArtSphere.Api.Models.Order", null)
-                        .WithMany("Elements")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.ShoppingCartElement", b =>
-                {
-                    b.HasOne("ArtSphere.Api.Models.Offer", "Offer")
-                        .WithMany()
-                        .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ArtSphere.Api.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Offer");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ArtSphere.Api.Models.Tag", b =>
                 {
                     b.HasOne("ArtSphere.Api.Models.Offer", "Offer")
@@ -655,17 +461,6 @@ namespace ArtSphere.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Offer");
-                });
-
-            modelBuilder.Entity("ArtSphere.Api.Models.Wallet", b =>
-                {
-                    b.HasOne("ArtSphere.Api.Models.User", "User")
-                        .WithOne("Wallet")
-                        .HasForeignKey("ArtSphere.Api.Models.Wallet", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -724,17 +519,9 @@ namespace ArtSphere.Api.Migrations
                     b.Navigation("Tags");
                 });
 
-            modelBuilder.Entity("ArtSphere.Api.Models.Order", b =>
-                {
-                    b.Navigation("Elements");
-                });
-
             modelBuilder.Entity("ArtSphere.Api.Models.User", b =>
                 {
                     b.Navigation("Offers");
-
-                    b.Navigation("Wallet")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
