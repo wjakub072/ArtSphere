@@ -21,6 +21,18 @@ public class OffersRepository
         return await _db.Offers.Include(c => c.Artist).AsNoTracking().ToListAsync();
     }
 
+    public async Task<Offer> GetOfferAsync(int id)
+    {
+        var offer = await _db.Offers.Include(o => o.Artist).Include(o => o.Tags).AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
+
+        return offer;
+    }
+
+    public async Task<bool> OfferExists(int offerId){
+        return await _db.Offers.AnyAsync(o => o.Id == offerId);
+    }
+
     public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId)
     {
         return await _db.Offers.Where(o => o.ArtistId == artistId).AsNoTracking().ToListAsync();
@@ -130,11 +142,4 @@ public class OffersRepository
         return offer;
     }
 
-    public async Task<Offer> GetOfferAsync(int id)
-    {
-        var offer = await _db.Offers.Include(o => o.Artist).Include(o => o.Tags).AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
-        if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
-
-        return offer;
-    }
 }

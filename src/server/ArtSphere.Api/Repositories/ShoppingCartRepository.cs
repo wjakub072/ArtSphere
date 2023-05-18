@@ -26,4 +26,25 @@ public class ShoppingCartRepository
 
         return cartElements;
     }
+
+    public async Task AddOfferToUserShoppingCart(int userId, int offerId)
+    {
+        _dbContext.ShoppingCart.Add(new ShoppingCartElement(){
+            UserId = userId,
+            OfferId = offerId,
+            CreateDate = DateTime.Now
+        });
+        
+        await _dbContext.SaveChangesAsync();
+    }
+
+
+    public async Task DeleteOfferFromUserShoppingCart(int userId, int offerId)
+    {
+        var offerCartElement = await _dbContext.ShoppingCart.FirstOrDefaultAsync(c => c.UserId == userId && c.OfferId == offerId);
+        if(offerCartElement == null) throw new Exception("Uzytkownik nie posiadał w koszyku podanej oferty.");
+
+        _dbContext.ShoppingCart.Remove(offerCartElement);
+        await _dbContext.SaveChangesAsync();
+    }
 }
