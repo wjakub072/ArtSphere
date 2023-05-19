@@ -85,6 +85,21 @@ public class ShoppingCartController : ControllerBase
         return BadRequest("Do użytkownika nie został przypisany żaden profil.");
     }
 
+    [Authorize]
+    [HttpGet("any")]
+    public async Task<ActionResult> AnyUserShoppingCartElementsAsync()
+    {
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+        
+        if(user?.AccountId != null)
+        {
+            return Ok(new { AnyCartElements = await _shoppingCartRepository.AnyUserShoppingCartElements(user.AccountId)});
+        }
+
+        return BadRequest("Do użytkownika nie został przypisany żaden profil.");
+    }
 
     [Authorize]
     [HttpPost("{offerId}")]
@@ -98,6 +113,10 @@ public class ShoppingCartController : ControllerBase
         {
             if(!(await _offersRepository.OfferExists(offerId))){
                 return BadRequest(new { success = false, message = "Określona oferta nie została odnaleziona."});
+            }
+
+            if(await _shoppingCartRepository.OfferExistsInUserShoppingCart(user.AccountId, offerId)){
+                return BadRequest(new { success = false, message = "Ofera już znajduje się w koszu zakupowym użytkownika."});
             }
 
             await _shoppingCartRepository.AddOfferToUserShoppingCartAsync((int)user?.AccountId, offerId);
