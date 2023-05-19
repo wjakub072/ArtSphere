@@ -27,6 +27,14 @@ public class ShoppingCartRepository
         return cartElements;
     }
 
+    public async Task<decimal> GetUserShoppingCartSum(int userId)
+    {
+        return await _dbContext.ShoppingCart
+                            .Where(c => c.UserId == userId)
+                            .Include(c => c.Offer)
+                            .SumAsync(c => c.Offer.Price);
+    }
+
     public async Task AddOfferToUserShoppingCartAsync(int userId, int offerId)
     {
         _dbContext.ShoppingCart.Add(new ShoppingCartElement(){

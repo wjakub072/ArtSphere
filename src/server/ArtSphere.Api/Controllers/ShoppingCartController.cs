@@ -48,7 +48,10 @@ public class ShoppingCartController : ControllerBase
                         e => new ShoppingCartElementResponse
                                 (   
                                     e.Offer.Title ?? string.Empty,
+                                    e.OfferId,
                                     string.Concat(e.Offer.Artist.FirstName ?? string.Empty, " ", e.Offer.Artist.LastName ?? string.Empty),
+                                    e.Offer.ArtistId,
+                                    e.Offer.Price,
                                     e.Offer.CompressedPicture ?? string.Empty
                                 )
                             )
@@ -60,6 +63,28 @@ public class ShoppingCartController : ControllerBase
 
         return BadRequest("Do użytkownika nie został przypisany żaden profil.");
     }
+
+    [Authorize]
+    [HttpGet("sum")]
+    public async Task<ActionResult> GetUserCartSumAsync()
+    {
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+        
+        if(user?.AccountId != null)
+        {
+            var usersShoppingCartElements = await _shoppingCartRepository.GetUserShoppingCartElements(user.AccountId);
+            if(usersShoppingCartElements.Any()){
+                return Ok(new { NumberOfOffers = usersShoppingCartElements.Count(), SumOfPrices = usersShoppingCartElements.Sum(c => c.Offer.Price)});
+            } else {
+                return Ok(new { NumberOfOffers = 0, SumOfPrices = decimal.Zero});
+            }
+        }
+
+        return BadRequest("Do użytkownika nie został przypisany żaden profil.");
+    }
+
 
     [Authorize]
     [HttpPost("{offerId}")]
