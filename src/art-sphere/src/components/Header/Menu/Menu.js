@@ -4,7 +4,7 @@ import { ShoppingCartOutline, ShoppingCart } from "heroicons-react";
 import AuthContext from "../../../context/AuthContext";
 
 function Menu() {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, isCarts } = useContext(AuthContext);
 
   return (
     <nav className="bg-black text-white relative z-10 p-4">
@@ -103,11 +103,13 @@ function Menu() {
               to="/koszyk"
               className={({ isActive }) =>
                 isActive
-                  ? "text-indigo-400 hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 transition-colors"
-                  : "hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 transition-colors"
+                  ? `text-indigo-400 hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 transition-colors`
+                  : `${
+                      isCarts && "text-red-500"
+                    } hover:text-indigo-400 focus:text-indigo-400 focus:outline-none px-3 py-2 transition-colors`
               }
             >
-              <ShoppingCartOutline />
+              {isCarts ? <ShoppingCart /> : <ShoppingCartOutline />}
             </NavLink>
           </li>
         )}

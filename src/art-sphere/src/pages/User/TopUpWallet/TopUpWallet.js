@@ -168,13 +168,12 @@ const TopUpWallet = () => {
       withdrawFunds > 0 &&
       withdrawFunds &&
       password &&
-      withdrawFunds < actualFunds
+      withdrawFunds <= actualFunds
     ) {
       setWithdrawFundsErrors("");
       setPasswordErrors("");
       try {
         setLoadinWithdrawBtn(true);
-
         const data = {
           IBAN: "",
           SWIFT: "nie jest wymagany jak cos",
@@ -190,10 +189,18 @@ const TopUpWallet = () => {
         );
         console.log("response withdraw");
         console.log(responseWithdraw.data);
-        setWithdrawFundsResponsSuccess("Środki zostały przekazane do wypłaty");
-        // setWithdrawFundsResponsSuccess(responseWithdraw.data.message);
-        setWithdrawFundsResponsError("");
-        setActualFunds(responseWithdraw.data.balanceAfterWithdraw);
+        if (responseWithdraw.data.success === true) {
+          setWithdrawFundsResponsSuccess(
+            "Środki zostały przekazane do wypłaty"
+          );
+          // setWithdrawFundsResponsSuccess(responseWithdraw.data.message);
+          setWithdrawFundsResponsError("");
+          setActualFunds(responseWithdraw.data.balanceAfterWithdraw);
+        }
+        if (responseWithdraw.data.success === false) {
+          setWithdrawFundsResponsError(responseWithdraw.data.message);
+          setWithdrawFundsResponsSuccess("");
+        }
       } catch (err) {
         setWithdrawFundsResponsError(err.response.data.message);
         setWithdrawFundsResponsSuccess("");
@@ -203,6 +210,9 @@ const TopUpWallet = () => {
         setLoadinWithdrawBtn(false);
       }
     } else {
+      setWithdrawFundsResponsSuccess("");
+      setWithdrawFundsResponsError("");
+
       if (!withdrawFunds) {
         setWithdrawFundsErrors("Pole nie może być puste");
       }

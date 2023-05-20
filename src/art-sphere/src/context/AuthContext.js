@@ -13,6 +13,14 @@ export const AuthContextProvider = ({ children }) => {
     return null;
   });
 
+  const [isCarts, setIsCarts] = useState(() => {
+    let carts = localStorage.getItem("carts");
+    if (carts) {
+      return JSON.parse(carts);
+    }
+    return null;
+  });
+
   const [userData, setUserData] = useState(() => {
     let userData = localStorage.getItem("userData");
     if (userData) {
@@ -61,6 +69,7 @@ export const AuthContextProvider = ({ children }) => {
       setUser(response.data.role);
       setResponseError("");
       navigate("/profil/");
+      await isCartsElements();
       await getDeliveryAddressData();
       await getInvoiceData();
     } catch (err) {
@@ -250,6 +259,22 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  const isCartsElements = async () => {
+    try {
+      const isCartsElements = await axiosInstace.get("profile/cart/any", {
+        withCredentials: true,
+      });
+      console.log(isCartsElements.data);
+      localStorage.setItem(
+        "carts",
+        JSON.stringify(isCartsElements.data.anyCartElements)
+      );
+      setIsCarts(isCartsElements.data.anyCartElements);
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
+
   const errorResponseHandler = (err) => {
     console.log(err);
     if (!err.response) {
@@ -299,6 +324,7 @@ export const AuthContextProvider = ({ children }) => {
           userData,
           deliveryAddressData,
           invoiceData,
+          isCarts,
           setResponseSuccess,
           setEmailChangeResponseError,
           setEmailChangeSuccess,
@@ -314,6 +340,7 @@ export const AuthContextProvider = ({ children }) => {
           changeEmail,
           changePassword,
           deleteAccount,
+          isCartsElements,
           errorResponseHandler,
         }}
       >

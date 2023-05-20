@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { ExclamationCircleIcon } from "@heroicons/react/outline";
+import { useNavigate } from "react-router-dom";
 import { XIcon } from "@heroicons/react/solid";
 import Loading from "../../../components/Loading/Loading";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import AuthContext from "../../../context/AuthContext";
 import { validatePostcode } from "../../../helpers/validation";
+import axiosInstace from "../../../api/axiosInstance";
 
 function Payment() {
   useWebsiteTitle("Płatność i Dostawa");
@@ -18,7 +20,13 @@ function Payment() {
     invoiceData,
     updateInvoiceData,
     loadingButton,
+    errorResponseHandler,
+    isCarts,
+    isCartsElements,
   } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState({
     firstName: deliveryAddressData.firstName,
@@ -66,7 +74,21 @@ function Payment() {
   });
   const [invoiceForm, setInvoiceForm] = useState(false);
   const [invoiceTabIndex, setInvoiceTabIndex] = useState(-1);
+  const [wallet, setWallet] = useState({
+    actualFunds: 0,
+    depositFunds: 0,
+  });
+  const [walletErrors, setWalletErrors] = useState({
+    depositFunds: "",
+  });
+  const [walletForm, setWalletForm] = useState(false);
+  const [walletTabIndex, setWalletTabIndex] = useState(-1);
+  const [loadingDepositBtn, setLoadingDepositBtn] = useState(false);
   const [check, setCheck] = useState(false);
+  const [sumPrice, setSumPrice] = useState(0);
+  const [loadingExecuteBtn, setLoadingExecuteBtn] = useState(false);
+  const [executeSuccess, setExecuteSuccess] = useState("");
+  const [executeError, setExecuteError] = useState("");
   const [selectedPayment, setSelectedPayment] = useState("wallet");
 
   useEffect(() => {
@@ -254,6 +276,27 @@ function Payment() {
   }, [invoice.country]);
 
   useEffect(() => {
+    if (!wallet.depositFunds) {
+      setWalletErrors({
+        ...walletErrors,
+        depositFunds: "Pole nie może być puste",
+      });
+    } else if (wallet.depositFunds < 0) {
+      setWalletErrors({
+        ...walletErrors,
+        depositFunds: "Kwota nie może być ujemna",
+      });
+    } else {
+      setWalletErrors({ ...walletErrors, depositFunds: "" });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet.depositFunds]);
+
+  useEffect(() => {
+    if (!isCarts) {
+      navigate("/profil");
+    }
+    getInfo();
     setDeliveryAddressErrors({
       firstName: "",
       lastName: "",
@@ -275,19 +318,44 @@ function Payment() {
       city: "",
       country: "",
     });
+    setWalletErrors({
+      depositFunds: "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     return () => {
       setResponseError("");
       setResponseSuccess("");
+      setExecuteError("");
+      setExecuteSuccess("");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const getInfo = async () => {
+    try {
+      const getOffersSum = await axiosInstace.get("profile/cart/sum", {
+        withCredentials: true,
+      });
+      setSumPrice(getOffersSum.data.sumOfPrices);
+
+      let response = await axiosInstace.get("profile/wallet", {
+        withCredentials: true,
+      });
+      setWallet({ ...wallet, actualFunds: response.data.balance });
+      setLoading(false);
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
+
   const handleDeliveryForm = () => {
     setInvoiceForm(false);
     setInvoiceTabIndex(-1);
+    setWalletForm(false);
+    setWalletTabIndex(-1);
     !deliveryForm ? setDeliveryTabIndex(0) : setDeliveryTabIndex(-1);
     setDeliveryForm(!deliveryForm);
     setDeliveryAddress({
@@ -319,6 +387,8 @@ function Payment() {
   const handleInvoiceForm = () => {
     setDeliveryForm(false);
     setDeliveryTabIndex(-1);
+    setWalletForm(false);
+    setWalletTabIndex(-1);
     !invoiceForm ? setInvoiceTabIndex(0) : setInvoiceTabIndex(-1);
     setInvoiceForm(!invoiceForm);
     setInvoice({
@@ -343,6 +413,86 @@ function Payment() {
     });
     setResponseError("");
     setResponseSuccess("");
+  };
+
+  const handleFocus = (e) => {
+    e.target.select();
+  };
+
+  const handleWalletForm = () => {
+    setDeliveryForm(false);
+    setDeliveryTabIndex(-1);
+    setInvoiceForm(false);
+    setInvoiceTabIndex(-1);
+    !walletForm ? setWalletTabIndex(0) : setWalletTabIndex(-1);
+    setWalletForm(!walletForm);
+    setWallet({
+      ...wallet,
+      depositFunds: 0,
+    });
+    setWalletErrors({
+      depositFunds: "",
+    });
+    setResponseError("");
+    setResponseSuccess("");
+  };
+
+  const depositFundsHandler = async (e) => {
+    e.preventDefault();
+    if (wallet.depositFunds > 0 && wallet.depositFunds) {
+      setWalletErrors({ ...walletErrors, depositFunds: "" });
+      try {
+        setLoadingDepositBtn(true);
+        let responseDepositInfo = await axiosInstace.get(
+          "profile/wallet/deposit",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("response deposit info");
+        setWalletErrors({ ...walletErrors, depositFunds: "" });
+
+        const data = {
+          amount: wallet.depositFunds,
+          token: responseDepositInfo.data.title,
+        };
+        let responseDeposit = await axiosInstace.post(
+          "profile/wallet/deposit",
+          data,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("response deposit");
+        console.log(responseDeposit.data);
+        setResponseSuccess(responseDeposit.data.message);
+        setResponseError("");
+        setWallet({
+          ...wallet,
+          actualFunds: responseDeposit.data.balanceAfterDeposit,
+        });
+      } catch (err) {
+        setResponseError(err.response.data.message);
+        setResponseSuccess("");
+        errorResponseHandler(err);
+        setLoadingDepositBtn(false);
+      } finally {
+        setLoadingDepositBtn(false);
+      }
+    } else {
+      if (!wallet.depositFunds) {
+        setWalletErrors({
+          ...walletErrors,
+          depositFunds: "Pole nie może być puste",
+        });
+      }
+      if (wallet.depositFunds < 0) {
+        setWalletErrors({
+          ...walletErrors,
+          depositFunds: "Kwota nie może być ujemna",
+        });
+      }
+    }
   };
 
   const updateDeliveryData = (e) => {
@@ -425,8 +575,104 @@ function Payment() {
     }
   };
 
-  const handleButton = () => {
-    console.log("click");
+  const handleButton = async () => {
+    if (check) {
+      if (!deliveryAddressData.addressStreet || !invoiceData.companyName) {
+        if (!deliveryAddressData.addressStreet && !invoiceData.companyName) {
+          setExecuteError("Uzupełnij dane do dostawy i faktury");
+        } else if (!deliveryAddressData.addressStreet) {
+          setExecuteError("Uzupełnij dane do dostawy");
+        } else if (!invoiceData.companyName) {
+          setExecuteError("Uzupełnij dane do faktury");
+        }
+      } else {
+        setExecuteError("");
+        console.log("click1");
+        try {
+          setLoadingExecuteBtn(true);
+          const payment = () => (selectedPayment === "wallet" ? 1 : 2);
+          console.log(payment());
+          const data = {
+            paymentMethod: payment(),
+            invoice: check,
+          };
+          const response = await axiosInstace.post(
+            "profile/cart/execute",
+            data,
+            {
+              withCredentials: true,
+            }
+          );
+
+          await isCartsElements();
+          console.log(response.data);
+          setExecuteSuccess(response.data.message);
+          setWallet({
+            ...wallet,
+            actualFunds: response.data.fundsAfterTransaction,
+          });
+
+          const getOffersSum = await axiosInstace.get("profile/cart/sum", {
+            withCredentials: true,
+          });
+          setSumPrice(getOffersSum.data.sumOfPrices);
+          setExecuteError("");
+        } catch (err) {
+          setLoadingExecuteBtn(false);
+          console.log(err);
+          setExecuteSuccess("");
+          setExecuteError(err.response.data.message);
+          errorResponseHandler(err);
+        } finally {
+          setLoadingExecuteBtn(false);
+        }
+      }
+    } else {
+      if (!deliveryAddressData.addressStreet) {
+        setExecuteError("Uzupełnij dane do dostawy");
+      } else {
+        setExecuteError("");
+        console.log("click2");
+        try {
+          setLoadingExecuteBtn(true);
+          const payment = () => (selectedPayment === "wallet" ? 1 : 2);
+          console.log(payment());
+          const data = {
+            paymentMethod: payment(),
+            invoice: check,
+          };
+          const response = await axiosInstace.post(
+            "profile/cart/execute",
+            data,
+            {
+              withCredentials: true,
+            }
+          );
+
+          await isCartsElements();
+          console.log(response.data);
+          setExecuteSuccess(response.data.message);
+          setWallet({
+            ...wallet,
+            actualFunds: response.data.fundsAfterTransaction,
+          });
+
+          const getOffersSum = await axiosInstace.get("profile/cart/sum", {
+            withCredentials: true,
+          });
+          setSumPrice(getOffersSum.data.sumOfPrices);
+          setExecuteError("");
+        } catch (err) {
+          setLoadingExecuteBtn(false);
+          console.log(err);
+          setExecuteSuccess("");
+          setExecuteError(err.response.data.message);
+          errorResponseHandler(err);
+        } finally {
+          setLoadingExecuteBtn(false);
+        }
+      }
+    }
   };
   return (
     <div className="relative">
@@ -442,8 +688,8 @@ function Payment() {
                 <h2 className="text-xl font-bold tracking-wider p-1 text-indigo-600">
                   Sposób płatności
                 </h2>
-                <div className="relative xl:flex justify-between items-center w-full mx-4">
-                  <div className="shadow-xl w-fit p-4 rounded-xl text-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-6">
+                  <div className="shadow-xl w-full p-4 rounded-xl text-lg">
                     <div className="flex items-center">
                       <input
                         className="w-5 h-5 m-2 accent-indigo-600 bg-indigo-600 rounded-md focus:ring-1 focus:ring-indigo-600 border-2 focus:outline-none focus:border-indigo-600 "
@@ -458,8 +704,7 @@ function Payment() {
                         className="text-indigo-600 px-2 pb-1 text-lg font-medium"
                         htmlFor="payment2"
                       >
-                        Za pomocą środków z portfela (bedzia aktualna ilość
-                        środków i moze guzik dodaj środki)
+                        Za pomocą środków z portfela
                       </label>
                     </div>
                     <div className="flex items-center">
@@ -478,6 +723,19 @@ function Payment() {
                       >
                         Przy odbiorze
                       </label>
+                    </div>
+                  </div>
+                  <div className="shadow-xl w-full p-4 rounded-xl text-lg">
+                    <p className="text-indigo-600 px-2 pb-1 text-lg font-medium">
+                      Aktualny stan środków: {wallet.actualFunds} PLN
+                    </p>
+                    <div className="w-fit">
+                      <button
+                        onClick={handleWalletForm}
+                        className="w-full p-2 mt-4 mx-2 font-medium text-sm text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
+                      >
+                        Doładuj
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -608,18 +866,56 @@ function Payment() {
               <div className="flex justify-between font-bold text-indigo-600">
                 <div>Do zapłaty:</div>
                 <div className="text-right">
-                  <p className="leading-3">1232412441 PLN</p>
+                  <p className="leading-3">{sumPrice} PLN</p>
                   <p className="text-sm text-indigo-500 font-semibold">
                     +darmowa dostawa
                   </p>
                 </div>
               </div>
-              <button
-                onClick={handleButton}
-                className="w-full py-2 mt-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
-              >
-                Kupuję
-              </button>
+              <div>
+                {executeError && (
+                  <p className="text-red-500 sm:col-span-2 lg:col-span-3 text-base text-center font-medium">
+                    {executeError}
+                  </p>
+                )}
+                {executeSuccess && (
+                  <p className="text-green-800 sm:col-span-2 lg:col-span-3 text-center font-medium">
+                    {executeSuccess}
+                  </p>
+                )}
+                {loadingExecuteBtn ? (
+                  <button
+                    onClick={handleButton}
+                    className="w-full py-2 mt-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      role="status"
+                      className="inline w-4 h-4 mr-3 text-gray-200 animate-spin dark:text-gray-600"
+                      viewBox="0 0 100 101"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                        fill="currentColor"
+                      />
+                      <path
+                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                        fill="#1C64F2"
+                      />
+                    </svg>
+                    Autoryzowanie...
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleButton}
+                    className="w-full py-2 mt-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
+                  >
+                    Kupuję
+                  </button>
+                )}
+              </div>
             </>
           )}
         </section>
@@ -1333,6 +1629,110 @@ function Payment() {
                   onClick={updateInvoice}
                 >
                   Zapisz dane do faktury
+                </button>
+              )}
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className={`absolute top-0 right-0 mt-20 w-full sm:w-3/5 xl:w-2/5 p-4 bg-gray-100 z-10 shadow-md h-fit rounded-l-xl transition-transform duration-300 ${
+          !walletForm && "translate-x-full"
+        }`}
+      >
+        <div>
+          <div className="text-center mx-auto relative">
+            <button
+              tabIndex={walletTabIndex}
+              onClick={handleWalletForm}
+              className="w-7 absolute top-0 right-0 text-indigo-600 hover:text-indigo-800 focus:text-indigo-800 rounded-md border-2 border-transparent focus:outline-none focus:border-indigo-800 transition-colors"
+            >
+              <XIcon />
+            </button>
+            <div>
+              <h3 className="mb-3 text-2xl text-indigo-600 font-semibold tracking-wide">
+                Aktualny stan środków:{" "}
+                <span className="text-black">{wallet.actualFunds}</span> PLN
+              </h3>
+            </div>
+            <h3 className="mb-3 text-2xl text-indigo-600 font-semibold tracking-wide">
+              Doładuj środki
+            </h3>
+            <form>
+              <div className="mb-3">
+                <div className="relative">
+                  <input
+                    tabIndex={walletTabIndex}
+                    onChange={(e) => {
+                      const newVal = parseInt(e.target.value);
+                      if (newVal >= 0) {
+                        setWallet({ ...wallet, depositFunds: newVal });
+                      } else {
+                        setWallet({ ...wallet, depositFunds: 0 });
+                      }
+                    }}
+                    onFocus={handleFocus}
+                    value={wallet.depositFunds}
+                    className={`block appearance-none w-full py-3 pl-3 pr-8 leading-tight rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 ${
+                      walletErrors.depositFunds ? "!border-red-500" : ""
+                    }`}
+                    type="number"
+                    placeholder="0.00"
+                  />
+                  {walletErrors.depositFunds && (
+                    <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                      <ExclamationCircleIcon className="text-red-500 h-2/5" />
+                    </div>
+                  )}
+                </div>
+                <div className="text-red-500 text-sm ml-2 mt-1">
+                  {walletErrors.depositFunds}
+                </div>
+              </div>
+
+              {responseError && (
+                <p className="text-red-500 text-center my-3 font-medium">
+                  {responseError}
+                </p>
+              )}
+              {responseSuccess && (
+                <p className="text-green-800 text-center my-3 font-medium">
+                  {responseSuccess}
+                </p>
+              )}
+              {loadingDepositBtn ? (
+                <button
+                  type="submit"
+                  className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-70"
+                  disabled
+                >
+                  <svg
+                    aria-hidden="true"
+                    role="status"
+                    className="inline w-4 h-4 mr-3 text-gray-200 animate-spin dark:text-gray-600"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="#1C64F2"
+                    />
+                  </svg>
+                  Doładowywanie...
+                </button>
+              ) : (
+                <button
+                  className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
+                  type="submit"
+                  onClick={depositFundsHandler}
+                >
+                  Doładuj środki
                 </button>
               )}
             </form>
