@@ -172,10 +172,13 @@ public class ShoppingCartController : ControllerBase
             }
 
             var finalCost = usersShoppingCartElements.Sum(c => c.Offer.Price);
-            if(!await _fundsRepository.CheckFundsAmount(user.AccountId, finalCost))
+            if(orderPayload.PaymentMethod == 1)
             {
-                return BadRequest(new OrderResponse(false, "Niewystarczająca ilość środków w portfelu użytkownika."));
-            }
+                if(!await _fundsRepository.CheckFundsAmount(user.AccountId, finalCost))
+                {
+                    return BadRequest(new OrderResponse(false, "Niewystarczająca ilość środków w portfelu użytkownika."));
+                }
+            }    
 
             var account = await _usersRepository.GetUserAsync(user.AccountId);
             var result = PropertyNullOrEmptyValidator.Validate<User>(account, "Address");
