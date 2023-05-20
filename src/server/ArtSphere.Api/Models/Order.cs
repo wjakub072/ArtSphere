@@ -18,4 +18,12 @@ public class Order
     public string AddressBuilding { get; set; }
     public string? AddressApartment { get; set; }
     public string AddressPostalCode { get; set; }
+
+    public bool IsInvoice { get; set; }
+    public string? CompanyAddressStreet { get; set; }
+    public string? CompanyAddressBuilding { get; set; }
+    public string? CompanyAddressApartment { get; set; }
+    public string? CompanyAddressPostalCode { get; set; }
+    public string? CompanyAddressCity { get; set; }
+    public string? CompanyAddressCountry { get; set; }
 }

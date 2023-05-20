@@ -3,6 +3,7 @@ using ArtSphere.Api.Models;
 using ArtSphere.Api.Models.Dto.Payloads;
 using ArtSphere.Api.Models.Dto.Responses;
 using ArtSphere.Api.Repositories;
+using ArtSphere.Api.Validators;
 using ArtSphere.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -20,14 +21,16 @@ public class ShoppingCartController : ControllerBase
     private readonly OffersRepository _offersRepository;
     private readonly FundsRepository _fundsRepository;
     private readonly OffersRepository _offerRepository;
+    private readonly UsersRepository _usersRepository;
 
-    public ShoppingCartController(ShoppingCartRepository shoppingCartRepository, UserManager<ApplicationUser> userManager, OffersRepository offersRepository, FundsRepository fundsRepository, OffersRepository offerRepository)
+    public ShoppingCartController(ShoppingCartRepository shoppingCartRepository, UserManager<ApplicationUser> userManager, OffersRepository offersRepository, FundsRepository fundsRepository, OffersRepository offerRepository, UsersRepository usersRepository)
     {
         _shoppingCartRepository = shoppingCartRepository;
         _userManager = userManager;
         _offersRepository = offersRepository;
         _fundsRepository = fundsRepository;
         _offerRepository = offerRepository;
+        _usersRepository = usersRepository;
     }
 
     [Authorize]
@@ -174,18 +177,52 @@ public class ShoppingCartController : ControllerBase
                 return BadRequest(new OrderResponse(false, "Niewystarczająca ilość środków w portfelu użytkownika."));
             }
 
+            var account = await _usersRepository.GetUserAsync(user.AccountId);
+            var result = PropertyNullOrEmptyValidator.Validate<User>(account, "Address");
+            if(result.Success == false){
+                if(result.InvalidProperties.Contains("AddressApartment")){
+                    result.InvalidProperties.Remove("AddressApartment");
+                }
+                if(result.InvalidProperties.Any()){
+                    return BadRequest(new OrderResponse(false, 
+                    string.Concat("Brak możliwości wykonania zamówienia przez braki w adresie użytkownika: ", 
+                    string.Join(", ", result.InvalidProperties))));
+                }
+            }
+
             var order = new Order(){
                 UserId = user.AccountId,
                 Amount = finalCost,
                 PaymentMethod = orderPayload.PaymentMethod,
-                AddressCity = orderPayload.AddressCity,
-                AddressCountry = orderPayload.AddressCountry,
-                AddressApartment = orderPayload.AddressApartment,
-                AddressBuilding = orderPayload.AddressBuilding,
-                AddressPostalCode = orderPayload.AddressPostalCode,
-                AddressStreet = orderPayload.AddressStreet,
+                AddressCity = account.AddressCity,
+                AddressCountry = account.AddressCountry,
+                AddressApartment = account.AddressApartment,
+                AddressBuilding = account.AddressBuilding,
+                AddressPostalCode = account.AddressPostalCode,
+                AddressStreet = account.AddressStreet,
+                IsInvoice = orderPayload.Invoice,
                 Elements = new Collection<OrderElement>()
             };
+            if(order.IsInvoice){
+                // validate 
+                result = PropertyNullOrEmptyValidator.Validate<User>(account, "CompanyAddress");
+                if(result.Success == false){
+                if(result.InvalidProperties.Contains("CompanyAddressApartment")){
+                    result.InvalidProperties.Remove("CompanyAddressApartment");
+                }
+                if(result.InvalidProperties.Any()){
+                    return BadRequest(new OrderResponse(false, 
+                    string.Concat("Brak możliwości wykonania zamówienia przez braki w adresie firmy: ", 
+                    string.Join(", ", result.InvalidProperties))));
+                }
+            }
+                order.CompanyAddressCity = account.CompanyAddressCity;
+                order.CompanyAddressBuilding = account.CompanyAddressBuilding;
+                order.CompanyAddressApartment = account.CompanyAddressApartment;
+                order.CompanyAddressCountry = account.CompanyAddressCountry;
+                order.CompanyAddressPostalCode = account.CompanyAddressPostalCode;
+                order.CompanyAddressStreet = account.CompanyAddressStreet;
+            }
             foreach(var cartElement in usersShoppingCartElements){
                 order.Elements.Add(new OrderElement(){
                     OfferId = cartElement.OfferId,
