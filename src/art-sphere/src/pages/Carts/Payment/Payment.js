@@ -591,7 +591,6 @@ function Payment() {
         try {
           setLoadingExecuteBtn(true);
           const payment = () => (selectedPayment === "wallet" ? 1 : 2);
-          console.log(payment());
           const data = {
             paymentMethod: payment(),
             invoice: check,
@@ -636,7 +635,6 @@ function Payment() {
         try {
           setLoadingExecuteBtn(true);
           const payment = () => (selectedPayment === "wallet" ? 1 : 2);
-          console.log(payment());
           const data = {
             paymentMethod: payment(),
             invoice: check,
