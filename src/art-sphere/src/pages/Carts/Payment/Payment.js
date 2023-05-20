@@ -431,7 +431,7 @@ function Payment() {
   return (
     <div className="relative">
       <div className="px-5 flex flex-col-reverse lg:flex-row w-full xl:w-5/6 xl:mx-auto lg:gap-6">
-        <section className="mt-5 bg-zinc-200 rounded-lg p-6 shadow-lg lg:w-3/4">
+        <section className="my-5 bg-zinc-200 rounded-lg p-6 shadow-lg lg:w-3/4">
           {loading ? (
             <div className="my-3 w-48 h-48 mx-auto">
               <Loading />
@@ -482,115 +482,119 @@ function Payment() {
                   </div>
                 </div>
               </section>
-              <section className="bg-white p-6 rounded-lg mb-5 shadow-lg">
-                <h2 className="text-2xl font-bold tracking-wider p-1 text-indigo-600">
-                  Dane do dostawy
-                </h2>
-                <div className="relative w-full mx-4 text-indigo-600 font-medium">
-                  {deliveryAddressData.addressStreet ? (
-                    <div className="shadow-xl w-fit p-4 rounded-xl text-lg">
-                      <p>
-                        {deliveryAddressData.firstName}{" "}
-                        {deliveryAddressData.lastName}
-                      </p>
-                      <p>
-                        {deliveryAddressData.phoneNumber &&
-                          "Telefon: " + deliveryAddressData.phoneNumber}
-                      </p>
-                      <p>
-                        {deliveryAddressData.addressStreet}{" "}
-                        {deliveryAddressData.addressBuilding}
-                        {deliveryAddressData.addressApartment &&
-                          "/" + deliveryAddressData.addressApartment}
-                      </p>
-                      <p>
-                        {deliveryAddressData.addressPostalCode}{" "}
-                        {deliveryAddressData.addressCity}
-                      </p>
-                      <p>{deliveryAddressData.addressCountry}</p>
-                      <div className="w-fit">
-                        <button
-                          onClick={handleDeliveryForm}
-                          className="w-full p-2 mt-4 font-medium text-sm text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
-                        >
-                          Edytuj
-                        </button>
-                      </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-6 auto-rows-fr">
+                <section className="bg-white p-6 rounded-lg mb-5 shadow-lg h-full">
+                  <div>
+                    <h2 className="text-2xl font-bold tracking-wider p-1 text-indigo-600">
+                      Dane do dostawy
+                    </h2>
+                    <div className="relative w-full mx-4 text-indigo-600 font-medium">
+                      {deliveryAddressData.addressStreet ? (
+                        <div className="shadow-xl w-fit p-4 rounded-xl text-lg">
+                          <p>
+                            {deliveryAddressData.firstName}{" "}
+                            {deliveryAddressData.lastName}
+                          </p>
+                          <p>
+                            {deliveryAddressData.phoneNumber &&
+                              "Telefon: " + deliveryAddressData.phoneNumber}
+                          </p>
+                          <p>
+                            {deliveryAddressData.addressStreet}{" "}
+                            {deliveryAddressData.addressBuilding}
+                            {deliveryAddressData.addressApartment &&
+                              "/" + deliveryAddressData.addressApartment}
+                          </p>
+                          <p>
+                            {deliveryAddressData.addressPostalCode}{" "}
+                            {deliveryAddressData.addressCity}
+                          </p>
+                          <p>{deliveryAddressData.addressCountry}</p>
+                          <div className="w-fit">
+                            <button
+                              onClick={handleDeliveryForm}
+                              className="w-full p-2 mt-4 font-medium text-sm text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
+                            >
+                              Edytuj
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="w-fit">
+                          <button
+                            onClick={handleDeliveryForm}
+                            className="w-full p-2 mt-4 font-medium text-sm text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
+                          >
+                            Dodaj
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <div className="w-fit">
-                      <button
-                        onClick={handleDeliveryForm}
-                        className="w-full p-2 mt-4 font-medium text-sm text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
-                      >
-                        Dodaj
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </section>
-              <section className="bg-white p-6 rounded-lg shadow-lg">
-                <h2 className="text-xl font-bold tracking-wider p-1 text-indigo-600">
-                  Dane do faktury
-                </h2>
-                <div className="flex items-center">
-                  <input
-                    className="w-5 h-5 m-2 accent-indigo-600 bg-indigo-600 rounded-md focus:ring-1 focus:ring-indigo-600 border-2 focus:outline-none focus:border-indigo-600 "
-                    value={check}
-                    onChange={(e) => setCheck(e.target.checked)}
-                    type="checkbox"
-                    id="invoice"
-                    name="invoice"
-                  />
-                  <label
-                    className="text-indigo-600 px-2 pb-1 text-lg"
-                    htmlFor="invoice"
-                  >
-                    Chcę otrzymać fakturę na inne dane
-                  </label>
-                </div>
-                {check && (
-                  <div className="relative w-full mx-4 text-indigo-600 font-medium">
-                    {invoiceData.companyName ? (
-                      <div className="shadow-xl w-fit p-4 rounded-xl text-lg">
-                        <p>{invoiceData.companyName}</p>
-                        <p>
-                          {invoiceData.companyVatId &&
-                            "NIP: " + invoiceData.companyVatId}
-                        </p>
-                        <p>
-                          {invoiceData.companyAddressStreet}{" "}
-                          {invoiceData.companyAddressBuilding}
-                          {invoiceData.companyAddressApartment &&
-                            "/" + invoiceData.companyAddressApartment}
-                        </p>
-                        <p>
-                          {invoiceData.companyAddressPostalCode}{" "}
-                          {invoiceData.companyAddressCity}
-                        </p>
-                        <p>{invoiceData.companyAddressCountry}</p>
+                  </div>
+                </section>
+                <section className="bg-white p-6 rounded-lg shadow-lg h-full">
+                  <h2 className="text-2xl font-bold tracking-wider p-1 text-indigo-600">
+                    Dane do faktury
+                  </h2>
+                  <div className="flex items-center">
+                    <input
+                      className="w-5 h-5 m-2 accent-indigo-600 bg-indigo-600 rounded-md focus:ring-1 focus:ring-indigo-600 border-2 focus:outline-none focus:border-indigo-600 "
+                      value={check}
+                      onChange={(e) => setCheck(e.target.checked)}
+                      type="checkbox"
+                      id="invoice"
+                      name="invoice"
+                    />
+                    <label
+                      className="text-indigo-600 px-2 pb-1 text-lg"
+                      htmlFor="invoice"
+                    >
+                      Chcę otrzymać fakturę na inne dane
+                    </label>
+                  </div>
+                  {check && (
+                    <div className="relative w-full mx-4 text-indigo-600 font-medium">
+                      {invoiceData.companyName ? (
+                        <div className="shadow-xl w-fit p-4 rounded-xl text-lg">
+                          <p>{invoiceData.companyName}</p>
+                          <p>
+                            {invoiceData.companyVatId &&
+                              "NIP: " + invoiceData.companyVatId}
+                          </p>
+                          <p>
+                            {invoiceData.companyAddressStreet}{" "}
+                            {invoiceData.companyAddressBuilding}
+                            {invoiceData.companyAddressApartment &&
+                              "/" + invoiceData.companyAddressApartment}
+                          </p>
+                          <p>
+                            {invoiceData.companyAddressPostalCode}{" "}
+                            {invoiceData.companyAddressCity}
+                          </p>
+                          <p>{invoiceData.companyAddressCountry}</p>
+                          <div className="w-fit">
+                            <button
+                              onClick={handleInvoiceForm}
+                              className="w-full p-2 mt-4 font-medium text-sm text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
+                            >
+                              Edytuj
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
                         <div className="w-fit">
                           <button
                             onClick={handleInvoiceForm}
                             className="w-full p-2 mt-4 font-medium text-sm text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
                           >
-                            Edytuj
+                            Dodaj
                           </button>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="w-fit">
-                        <button
-                          onClick={handleInvoiceForm}
-                          className="w-full p-2 mt-4 font-medium text-sm text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
-                        >
-                          Dodaj
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </section>
+                      )}
+                    </div>
+                  )}
+                </section>
+              </div>
             </>
           )}
         </section>
@@ -621,7 +625,7 @@ function Payment() {
         </section>
       </div>
       <section
-        className={`absolute top-0 right-0 mt-5 w-full sm:w-3/5 xl:w-2/5 p-4 bg-gray-100 z-10 shadow-md h-fit rounded-l-xl transition-transform duration-300 ${
+        className={`absolute top-0 right-0 mt-20 w-full sm:w-3/5 xl:w-2/5 p-4 bg-gray-100 z-10 shadow-md h-fit rounded-l-xl transition-transform duration-300 ${
           !deliveryForm && "translate-x-full"
         }`}
       >
@@ -1009,7 +1013,7 @@ function Payment() {
       </section>
 
       <section
-        className={`absolute top-0 right-0 mt-5 w-full sm:w-3/5 xl:w-2/5 p-4 bg-gray-100 z-10 shadow-md h-fit rounded-l-xl transition-transform duration-300 ${
+        className={`absolute top-0 right-0 mt-20 w-full sm:w-3/5 xl:w-2/5 p-4 bg-gray-100 z-10 shadow-md h-fit rounded-l-xl transition-transform duration-300 ${
           !invoiceForm && "translate-x-full"
         }`}
       >

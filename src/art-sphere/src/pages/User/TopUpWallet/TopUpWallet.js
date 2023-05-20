@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ExclamationCircleIcon } from "@heroicons/react/outline";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import Loading from "../../../components/Loading/Loading";
+import axiosInstace from "../../../api/axiosInstance";
+import AuthContext from "../../../context/AuthContext";
 
 const TopUpWallet = () => {
   useWebsiteTitle("Portfel");
 
-  const [actualFunds, setActualFunds] = useState(2133123123);
+  const { errorResponseHandler } = useContext(AuthContext);
+
+  const [actualFunds, setActualFunds] = useState(0);
   const [depositFunds, setDepositFunds] = useState(0);
   const [withdrawFunds, setWithdrawFunds] = useState(0);
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [loadinDepositBtn, setLoadinDepositBtn] = useState(false);
   const [loadinWithdrawBtn, setLoadinWithdrawBtn] = useState(false);
   const [depositFundsResponsError, setDepositFundsResponsError] = useState("");
@@ -60,6 +64,8 @@ const TopUpWallet = () => {
     setPasswordErrors("");
     setDepositFundsErrors("");
     setWithdrawFundsErrors("");
+    getFunds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -70,6 +76,20 @@ const TopUpWallet = () => {
       setWithdrawFundsResponsSuccess("");
     };
   }, []);
+
+  const getFunds = async () => {
+    try {
+      let response = await axiosInstace.get("profile/wallet", {
+        withCredentials: true,
+      });
+      console.log("respons funduszy użytkownika");
+      console.log(response.data);
+      setActualFunds(response.data.balance);
+      setLoading(false);
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
 
   const handleFocus = (e) => {
     e.target.select();
@@ -97,7 +117,41 @@ const TopUpWallet = () => {
     e.preventDefault();
     if (depositFunds > 0 && depositFunds) {
       setDepositFundsErrors("");
-      await console.log("depositFunds OK");
+      try {
+        setLoadinDepositBtn(true);
+        let responseDepositInfo = await axiosInstace.get(
+          "profile/wallet/deposit",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("response deposit info");
+        setDepositFundsResponsError("");
+
+        const data = {
+          amount: depositFunds,
+          token: responseDepositInfo.data.title,
+        };
+        let responseDeposit = await axiosInstace.post(
+          "profile/wallet/deposit",
+          data,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("response deposit");
+        console.log(responseDeposit.data);
+        setDepositFundsResponsSuccess(responseDeposit.data.message);
+        setDepositFundsResponsError("");
+        setActualFunds(responseDeposit.data.balanceAfterDeposit);
+      } catch (err) {
+        setDepositFundsResponsError(err.response.data.message);
+        setDepositFundsResponsSuccess("");
+        errorResponseHandler(err);
+        setLoadinDepositBtn(false);
+      } finally {
+        setLoadinDepositBtn(false);
+      }
     } else {
       if (!depositFunds) {
         setDepositFundsErrors("Pole nie może być puste");
@@ -118,7 +172,36 @@ const TopUpWallet = () => {
     ) {
       setWithdrawFundsErrors("");
       setPasswordErrors("");
-      await console.log("withdrawFunds OK");
+      try {
+        setLoadinWithdrawBtn(true);
+
+        const data = {
+          IBAN: "",
+          SWIFT: "nie jest wymagany jak cos",
+          amount: withdrawFunds,
+          passwordConfirmation: password,
+        };
+        let responseWithdraw = await axiosInstace.post(
+          "profile/wallet/withdraw",
+          data,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("response withdraw");
+        console.log(responseWithdraw.data);
+        setWithdrawFundsResponsSuccess("Środki zostały przekazane do wypłaty");
+        // setWithdrawFundsResponsSuccess(responseWithdraw.data.message);
+        setWithdrawFundsResponsError("");
+        setActualFunds(responseWithdraw.data.balanceAfterWithdraw);
+      } catch (err) {
+        setWithdrawFundsResponsError(err.response.data.message);
+        setWithdrawFundsResponsSuccess("");
+        errorResponseHandler(err);
+        setLoadinWithdrawBtn(false);
+      } finally {
+        setLoadinWithdrawBtn(false);
+      }
     } else {
       if (!withdrawFunds) {
         setWithdrawFundsErrors("Pole nie może być puste");
