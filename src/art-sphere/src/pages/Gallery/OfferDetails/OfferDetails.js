@@ -8,7 +8,8 @@ import axios from "axios";
 
 function OfferDetails() {
   useWebsiteTitle("Oferty - Szczegóły");
-  const { user, errorResponseHandler } = useContext(AuthContext);
+  const { user, errorResponseHandler, isCartsElements } =
+    useContext(AuthContext);
 
   const { offerId } = useParams();
   const [loading, setLoading] = useState(true);
@@ -48,22 +49,21 @@ function OfferDetails() {
     if (user) {
       try {
         setLoadingBtn(true);
-        // const addOffer = await axios.post(
-        //   `http://127.0.0.1:5006/api/profile/cart/${offerId}`,
-        //   {
-        //     withCredentials: true,
-        //   }
-        // );
-        const addOffer = await axiosInstace.post(`profile/cart/${offerId}`, {
-          withCredentials: true,
-        });
+        const addOffer = await axiosInstace.post(
+          `profile/cart/${offerId}`,
+          null,
+          {
+            withCredentials: true,
+          }
+        );
         console.log(addOffer.data);
+        await isCartsElements();
         setAddCartSuccess("Dodano do koszyka");
       } catch (err) {
         console.log(err);
         setAddCartError(err.response?.data.message);
         setAddCartError("fikołek");
-        // errorResponseHandler(err);
+        errorResponseHandler(err);
         setLoadingBtn(false);
       } finally {
         setLoadingBtn(false);
