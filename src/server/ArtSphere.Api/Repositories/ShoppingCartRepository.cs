@@ -44,7 +44,7 @@ public class ShoppingCartRepository
 
     public async Task<bool> OfferExistsInUserShoppingCart(int userId, int offerId){
         return await _dbContext.ShoppingCart
-                            .Where(c => c.UserId == userId && offerId == offerId)
+                            .Where(c => c.UserId == userId && c.OfferId == offerId)
                             .AnyAsync();
     }
 
@@ -78,10 +78,11 @@ public class ShoppingCartRepository
         
         var wallet = await _dbContext.Wallets.FirstOrDefaultAsync(w => w.UserId == order.UserId);
         if(wallet == null) throw new Exception("Użytkownik nie posiada przypisanego portfela.");
-        wallet.Balance -= order.Amount;
-        
-        wallet.LastUpdated = DateTime.Now;
-        await _dbContext.SaveChangesAsync();
+        if(order.PaymentMethod == 1){
+            wallet.Balance -= order.Amount;
+            wallet.LastUpdated = DateTime.Now;
+            await _dbContext.SaveChangesAsync();
+        }
         
         return wallet.Balance;
     }
