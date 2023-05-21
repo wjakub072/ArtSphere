@@ -181,7 +181,7 @@ public class ShoppingCartController : ControllerBase
             }    
 
             var account = await _usersRepository.GetUserAsync(user.AccountId);
-            var result = PropertyNullOrEmptyValidator.Validate<User>(account, "Address");
+            var result = PropertyNullOrEmptyValidator.Validate<User>(account, "Address", "Company");
             if(result.Success == false){
                 if(result.InvalidProperties.Contains("AddressApartment")){
                     result.InvalidProperties.Remove("AddressApartment");
