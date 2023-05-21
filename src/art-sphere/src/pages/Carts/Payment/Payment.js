@@ -27,7 +27,7 @@ function Payment() {
 
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [deliveryAddress, setDeliveryAddress] = useState({
     firstName: deliveryAddressData.firstName,
     lastName: deliveryAddressData.lastName,
