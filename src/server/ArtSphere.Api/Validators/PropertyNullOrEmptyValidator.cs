@@ -4,10 +4,15 @@ namespace ArtSphere.Api.Validators;
 
 public static class PropertyNullOrEmptyValidator
 {
-    public static ValidationResult Validate<T>(T subject, string propertySelector){
+    public static ValidationResult Validate<T>(T subject, string propertySelector, string excluding = ""){
         var result = new ValidationResult(true);
         foreach(var prop in subject.GetType().GetProperties()) {
             if(prop.PropertyType == typeof(string) && prop.Name.Contains(propertySelector)){
+                if(string.IsNullOrEmpty(excluding) == false){
+                    if(prop.Name.Contains(excluding)){
+                        continue;
+                    }
+                }
                 if(prop.GetValue(subject) == null)
                 {
                     result.Success = false;
