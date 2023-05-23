@@ -60,6 +60,19 @@ public class OfferController : ControllerBase
             offer.Title);
     }
 
+    [Authorize("IsAdmin")]
+    [HttpPost("{offerId}/validate")]
+    public async Task<ActionResult> ValidateOfferAsync([FromRoute] int offerId)
+    {
+        if(await _offersRepository.OfferExists(offerId)){
+            var offer = await _offersRepository.ValidateOffer(offerId);
+
+            return Ok(new { success = true, message = "Oferta została potwierdzona w procesie walidacji."});
+        }
+        
+        return BadRequest(new { success = false, message = "Oferta nie została odnaleziona."});
+    }
+
     [Authorize]
     [HttpPut("{offerId}/fav")]
     public async Task<ActionResult> AddOfferToFavorites([FromRoute] int offerId)

@@ -14,6 +14,7 @@ public class Offer
     public decimal DimensionsY { get; set; }
     public string Unit { get; set; }
     public bool Archived { get; set; }
+    public bool Validated { get; set; }
     public string? Picture { get; set; }
     public string? CompressedPicture { get; set; }
     public User Artist { get; set; }
