@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { StarOutline, Star } from "heroicons-react";
+import { StarOutline } from "heroicons-react";
 import DisplayFiltersButton from "../../components/Inputs/DisplayFiltersButton";
 import Filters from "../../components/Filters/Filters";
 import useWebsiteTitle from "../../hooks/useWebsiteTitle";
@@ -11,7 +11,7 @@ import "./gallery.css";
 
 function Gallery(props) {
   useWebsiteTitle("Galeria");
-  const { setSesionError } = useContext(AuthContext);
+  const { setSesionError, user } = useContext(AuthContext);
 
   const [showFilters, setShowFilters] = useState(false);
   const [offerList, setOfferList] = useState(null);
@@ -29,12 +29,19 @@ function Gallery(props) {
 
   const getOffers = async () => {
     try {
-      const getOfferList = await axiosInstace.get("offers", {
-        withCredentials: true,
-      });
-      console.log(getOfferList.data);
-      setOfferList(getOfferList.data);
-      setLoading(false);
+      if (!user) {
+        const getOfferList = await axiosInstace.get("offers");
+        console.log(getOfferList.data);
+        setOfferList(getOfferList.data);
+        setLoading(false);
+      } else {
+        const getOfferList = await axiosInstace.get("offers", {
+          withCredentials: true,
+        });
+        console.log(getOfferList.data);
+        setOfferList(getOfferList.data);
+        setLoading(false);
+      }
     } catch (err) {
       console.log(err);
     }
