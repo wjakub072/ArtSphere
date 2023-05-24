@@ -75,7 +75,7 @@ public class OfferController : ControllerBase
 
     [Authorize]
     [HttpPut("{offerId}/fav")]
-    public async Task<ActionResult> AddOfferToFavorites([FromRoute] int offerId)
+    public async Task<ActionResult> AddOfferToFavoritesAsync([FromRoute] int offerId)
     {
         ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
 
@@ -96,8 +96,26 @@ public class OfferController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("{offerId}/isfav")]
+    public async Task<ActionResult> IsOfferUserFavoriteAsync([FromRoute] int offerId)
+    {
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+
+        if(user?.AccountId != null)
+        {
+            if(await _offersRepository.OfferExists(offerId) == false)
+                return BadRequest("Oferta o podanym id nie została odnaleziona.");
+
+            return Ok(await _offersRepository.DoesUserFavorOffer(user.AccountId, offerId));
+        }
+        throw new Exception("Do użytkownika nie został przypisany żaden profil.");
+    }
+
+    [Authorize]
     [HttpDelete("{offerId}/fav")]
-    public async Task<ActionResult> RemoveOfferFromFavorites([FromRoute] int offerId)
+    public async Task<ActionResult> RemoveOfferFromFavoritesAsync([FromRoute] int offerId)
     {
         ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
 
