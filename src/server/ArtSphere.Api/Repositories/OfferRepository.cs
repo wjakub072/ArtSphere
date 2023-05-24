@@ -33,6 +33,30 @@ public class OffersRepository
         return await _db.Offers.AnyAsync(o => o.Id == offerId);
     }
 
+    public async Task<bool> DoesUserFavorOffer(int userId, int offerId)
+    {
+        return await _db.Favorites.Where(c => c.UserId == userId && c.OfferId == offerId).AnyAsync();
+    }
+
+    public async Task AddOfferToFavorites(int offerId, int userId)
+    {
+        _db.Favorites.Add(new Favorite(){ UserId = userId, OfferId = offerId});
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task RemoveOfferFromFavorites(int offerId, int userId)
+    {
+        var toDelete = await _db.Favorites.FirstOrDefaultAsync(c => c.UserId == userId && c.OfferId == offerId);
+        _db.Favorites.Remove(toDelete);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<Offer>> GetUserFavoriteOffers (int userId)
+    {
+        var userFavorites = await _db.Favorites.Where(c => c.UserId == userId).ToListAsync();
+        return await _db.Offers.Where(o => userFavorites.Select(c => c.OfferId).Contains(o.Id)).AsNoTracking().ToListAsync();
+    }
+
     public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId)
     {
         return await _db.Offers.Where(o => o.ArtistId == artistId).AsNoTracking().ToListAsync();
@@ -131,6 +155,15 @@ public class OffersRepository
         await _db.SaveChangesAsync();
     }
 
+    public async Task<Offer> ValidateOffer(int id){
+        var offer = await _db.Offers.FirstOrDefaultAsync(c => c.Id == id);
+        if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
+
+        offer.Validated = true;
+        
+        await _db.SaveChangesAsync();
+        return offer;
+    }
     public async Task<Offer> ArchiveOffer(int id)
     {
         var offer = await _db.Offers.FirstOrDefaultAsync(c => c.Id == id);

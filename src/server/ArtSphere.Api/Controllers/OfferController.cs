@@ -60,6 +60,63 @@ public class OfferController : ControllerBase
             offer.Title);
     }
 
+    [Authorize("IsAdmin")]
+    [HttpPost("{offerId}/validate")]
+    public async Task<ActionResult> ValidateOfferAsync([FromRoute] int offerId)
+    {
+        if(await _offersRepository.OfferExists(offerId)){
+            var offer = await _offersRepository.ValidateOffer(offerId);
+
+            return Ok(new { success = true, message = "Oferta została potwierdzona w procesie walidacji."});
+        }
+        
+        return BadRequest(new { success = false, message = "Oferta nie została odnaleziona."});
+    }
+
+    [Authorize]
+    [HttpPut("{offerId}/fav")]
+    public async Task<ActionResult> AddOfferToFavorites([FromRoute] int offerId)
+    {
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+
+        if(user?.AccountId != null)
+        {
+            if(await _offersRepository.OfferExists(offerId) == false)
+                return BadRequest("Oferta o podanym id nie została odnaleziona.");
+
+            if(await _offersRepository.DoesUserFavorOffer(user.AccountId, offerId) == false){
+                await _offersRepository.AddOfferToFavorites(offerId, user.AccountId);
+                return Ok("Dodano");
+            }
+        }
+        
+        throw new Exception("Do użytkownika nie został przypisany żaden profil.");
+    }
+
+    [Authorize]
+    [HttpDelete("{offerId}/fav")]
+    public async Task<ActionResult> RemoveOfferFromFavorites([FromRoute] int offerId)
+    {
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+
+        if(user?.AccountId != null)
+        {
+            if(await _offersRepository.OfferExists(offerId) == false)
+                return BadRequest("Oferta o podanym id nie została odnaleziona.");
+
+            if(await _offersRepository.DoesUserFavorOffer(user.AccountId, offerId)){
+                await _offersRepository.RemoveOfferFromFavorites(offerId, user.AccountId);
+                return Ok("Usunieto");
+            }
+        }
+        
+        throw new Exception("Do użytkownika nie został przypisany żaden profil.");
+    }
+
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult<DeleteOfferResponse>> DeleteOfferAsync([FromBody] DeleteOfferPayload deleteOfferPayload)
@@ -78,6 +135,26 @@ public class OfferController : ControllerBase
             await _offersRepository.DeleteOffer(deleteOfferPayload.OfferId);
             return new DeleteOfferResponse(true, "Pomyślnie usunięto ofertę.");
         }
+    }
+
+    [Authorize]
+    [HttpGet("fav")]
+    public async Task<ActionResult<OfferListResponse[]>> GetMyFavoriteOffersAsync()
+    {
+        var user = await _usersRepository.GetArtistAsync(User.Identity.Name);
+
+        var offers = await _offersRepository.GetUserFavoriteOffers(user.Id);
+        return 
+            offers.Select(o => 
+                new OfferListResponse(
+                    o.Id, 
+                    o.ArtistId, 
+                    string.Concat(user.FirstName ?? string.Empty, " ", user.LastName ?? string.Empty),
+                    o.Title, 
+                    o.Price, 
+                    o.Archived,
+                    o.CompressedPicture))
+                    .ToArray();
     }
 
     [Authorize]

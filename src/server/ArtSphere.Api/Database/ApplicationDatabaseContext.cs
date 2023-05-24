@@ -19,6 +19,7 @@ public class ApplicationDatabaseContext : IdentityDbContext<ApplicationUser, App
     public DbSet<DepositToken> DepositTokens { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderElement> OrderELements { get; set; }
+    public DbSet<Favorite> Favorites { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
