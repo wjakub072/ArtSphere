@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { StarOutline, Star } from "heroicons-react";
+import { StarOutline } from "heroicons-react";
 import AuthContext from "../../../context/AuthContext";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import Loading from "../../../components/Loading/Loading";
@@ -153,7 +153,7 @@ function OfferDetails() {
                 onClick={removeFromFav}
                 className=" absolute right-0 top-4 text-yellow-400 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600"
               >
-                <Star className="w-10 h-auto" />
+                <StarOutline className="w-10 h-auto fill-yellow-400" />
               </button>
             ) : (
               <button

@@ -41,7 +41,6 @@ const Favorite = () => {
       });
       const actualFavorites = offerList.filter((item) => item.id !== offerId);
       setOfferList(actualFavorites);
-      getFavOffers();
       console.log(removeOffer);
     } catch (err) {
       errorResponseHandler(err);
@@ -74,16 +73,16 @@ const Favorite = () => {
                       src={item.photo}
                       alt={item.title}
                     />
+                  </div>
+                  <div className="px-4 py-2 relative">
+                    <h2 className="text-lg font-bold">{item.title}</h2>
+                    <p className="text-lg font-bold mt-2">{item.price} PLN</p>
                     <button
                       onClick={(e) => removeFromFav(e, item.id)}
-                      className="absolute right-4 top-4 text-yellow-400 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600"
+                      className="absolute right-3 top-3 text-yellow-400 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600"
                     >
                       <Star className="w-10 h-auto" />
                     </button>
-                  </div>
-                  <div className="px-4 py-2">
-                    <h2 className="text-lg font-bold">{item.title}</h2>
-                    <p className="text-lg font-bold mt-2">{item.price} PLN</p>
                   </div>
                 </Link>
               ))}

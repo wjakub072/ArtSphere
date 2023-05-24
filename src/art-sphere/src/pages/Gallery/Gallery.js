@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { StarOutline, Star } from "heroicons-react";
 import DisplayFiltersButton from "../../components/Inputs/DisplayFiltersButton";
 import Filters from "../../components/Filters/Filters";
 import useWebsiteTitle from "../../hooks/useWebsiteTitle";
@@ -28,7 +29,9 @@ function Gallery(props) {
 
   const getOffers = async () => {
     try {
-      const getOfferList = await axiosInstace.get("offers");
+      const getOfferList = await axiosInstace.get("offers", {
+        withCredentials: true,
+      });
       console.log(getOfferList.data);
       setOfferList(getOfferList.data);
       setLoading(false);
@@ -64,14 +67,14 @@ function Gallery(props) {
               key={item.id}
               className="bg-white rounded-lg shadow-xl w-auto h-fit sm:h-96 hover:opacity-75 transition-opacity border-transparent border-2 focus:outline-none focus:border-indigo-600"
             >
-              <div className="w-full h-2/3">
+              <div className="w-full h-2/3 relative">
                 <img
                   className="w-full max-w-full max-h-full h-full object-contain object-center block pt-1"
                   src={item.photo}
                   alt={item.title}
                 />
               </div>
-              <div className="px-4 py-2 ">
+              <div className="px-4 py-2 relative">
                 <h2 className="text-lg font-bold text-indigo-700">
                   {item.title}
                 </h2>
@@ -81,6 +84,15 @@ function Gallery(props) {
                 <p className="text-lg font-bold mt-2 text-indigo-700">
                   {item.price} PLN
                 </p>
+                {item.userFavorite ? (
+                  <div className="absolute right-3 top-3 text-yellow-400 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600">
+                    <StarOutline className="w-8 h-auto fill-yellow-400" />
+                  </div>
+                ) : (
+                  <div className="absolute right-3 top-3 text-yellow-400 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600">
+                    <StarOutline className="w-8 h-auto" />
+                  </div>
+                )}
               </div>
             </Link>
           ))}
