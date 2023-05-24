@@ -57,6 +57,10 @@ public class OffersRepository
         return await _db.Offers.Where(o => userFavorites.Select(c => c.OfferId).Contains(o.Id)).AsNoTracking().ToListAsync();
     }
 
+    public async Task<int[]> GetUserFavoriteOffersId(int userId){
+        return await _db.Favorites.Where(c => c.UserId == userId).Select(c => c.OfferId).ToArrayAsync();
+    }
+
     public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId)
     {
         return await _db.Offers.Where(o => o.ArtistId == artistId).AsNoTracking().ToListAsync();

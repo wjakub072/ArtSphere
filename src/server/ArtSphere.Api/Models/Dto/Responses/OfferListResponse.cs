@@ -8,5 +8,6 @@ public record OfferListResponse
     string Title, 
     decimal Price,
     bool Archived,
-    string? Photo
+    string? Photo,
+    bool UserFavorite = false
 );
