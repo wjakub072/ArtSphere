@@ -15,6 +15,7 @@ const UserArts = () => {
 
   useEffect(() => {
     getUserOffers();
+    console.log("render");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -48,16 +49,28 @@ const UserArts = () => {
             <div className="m-7 grid grid-cols-1 auto-rows-min lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {offerList.map((item) => (
                 <Link
-                  to={`/profil/twojeDziela/edycja/${item.id}`}
+                  tabIndex={item.archived ? -1 : 0}
+                  to={
+                    item.archived ? `` : `/profil/twojeDziela/edycja/${item.id}`
+                  }
                   key={item.id}
-                  className="bg-white rounded-lg overflow-hidden h-fit lg:h-96 shadow-md w-auto hover:opacity-75 transition-opacity border-2 border-transparent focus:outline-none focus:border-indigo-600"
+                  className={
+                    item.archived
+                      ? `bg-white rounded-lg overflow-hidden h-fit lg:h-96 shadow-md w-auto border-2 border-transparent cursor-default focus:outline-none`
+                      : `bg-white rounded-lg overflow-hidden h-fit lg:h-96 shadow-md w-auto hover:opacity-75 transition-opacity border-2 border-transparent focus:outline-none focus:border-indigo-600`
+                  }
                 >
-                  <div className="w-full h-3/4">
+                  <div className="w-full h-3/4 relative">
                     <img
                       className="w-full max-w-full max-h-full h-full object-contain object-center block p-1"
                       src={item.photo}
                       alt={item.title}
                     />
+                    {item.archived && (
+                      <div className="bg-white opacity-80 shadow-xl p-2 rounded-md absolute top-0 left-1/2 -translate-x-1/2 font-extrabold text-indigo-600 text-3xl">
+                        <p>SPRZEDANE</p>
+                      </div>
+                    )}
                   </div>
                   <div className="px-4 py-2">
                     <h2 className="text-lg font-bold">{item.title}</h2>

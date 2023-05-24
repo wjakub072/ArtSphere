@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { categories, topics, technics } from "../../data/artStaticData";
+import { TrashOutline } from "heroicons-react";
 import GenericComboImput from "../Inputs/GenericComboInput";
 import PriceInput from "../Inputs/PriceInput";
 import DimensionsInput from "../Inputs/DimentionsInput";
@@ -26,6 +27,8 @@ function EditArt() {
   const [loadingButton, setLoadingButton] = useState(false);
   const [artData, setArtData] = useState(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     getOffer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,6 +45,9 @@ function EditArt() {
     try {
       const offerData = await axiosInstace.get(`offers/${artId}`);
       console.log(offerData.data);
+      if (offerData.data.archived) {
+        navigate("/profil/twojeDziela");
+      }
       setArtData(offerData.data);
       setLoading(false);
     } catch (err) {
@@ -103,8 +109,38 @@ function EditArt() {
     }
   };
 
+  const deleteArt = async () => {
+    if (!artData.archived) {
+      navigate("/profil/twojeDziela");
+      try {
+        const data = {
+          OfferId: artId,
+          archive: false, // If true - archive, false - delete
+        };
+        const response = await axiosInstace.delete(`offers/${artId}`, {
+          data,
+          withCredentials: true,
+        });
+        console.log("respons usuwania oferty");
+        console.log(response);
+        navigate("/profil/");
+        // navigate("/profil/twojeDziela");
+      } catch (err) {
+        errorResponseHandler(err);
+      }
+    }
+  };
+
   return (
-    <div className="w-full text-center mx-auto">
+    <div className="relative w-full text-center mx-auto">
+      <div className="absolute top-2 right-0  sm:right-2">
+        <button
+          onClick={deleteArt}
+          className="border-2 border-transparent rounded-md text-indigo-600 hover:text-red-500 focus:outline-none focus:text-red-500 focus:border-red-500"
+        >
+          <TrashOutline />
+        </button>
+      </div>
       <h2 className="mb-3 text-4xl text-indigo-600 font-semibold tracking-wider">
         Edycja dzieła
       </h2>

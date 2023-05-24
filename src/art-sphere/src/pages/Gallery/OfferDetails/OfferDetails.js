@@ -4,7 +4,6 @@ import AuthContext from "../../../context/AuthContext";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import Loading from "../../../components/Loading/Loading";
 import axiosInstace from "../../../api/axiosInstance";
-import axios from "axios";
 
 function OfferDetails() {
   useWebsiteTitle("Oferty - Szczegóły");
@@ -58,10 +57,36 @@ function OfferDetails() {
         );
         console.log(addOffer.data);
         await isCartsElements();
+        setAddCartError("");
         setAddCartSuccess("Dodano do koszyka");
       } catch (err) {
         console.log(err);
+        setAddCartSuccess("");
         setAddCartError(err.response?.data.message);
+        errorResponseHandler(err);
+        setLoadingBtn(false);
+      } finally {
+        setLoadingBtn(false);
+      }
+    }
+  };
+
+  const addToFav = async () => {
+    if (!user) {
+      setAddCartError("Nie jesteś zalogowany");
+      return;
+    }
+    if (user) {
+      try {
+        setLoadingBtn(true);
+        const addOffer = await axiosInstace.put(`offers/${offerId}/fav`, null, {
+          withCredentials: true,
+        });
+        console.log(addOffer);
+        console.log("Dodano do Uluionych");
+      } catch (err) {
+        console.log(err);
+        setAddCartError(err.response?.data?.message);
         errorResponseHandler(err);
         setLoadingBtn(false);
       } finally {
@@ -79,6 +104,9 @@ function OfferDetails() {
       <h1 className="text-3xl font-extrabold tracking-widest mb-4 text-center text-indigo-400 rounded-md bg-black p-4 ">
         {offer.title}
       </h1>
+      <div>
+        <button onClick={addToFav}>Dodaj do ulubionych</button>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 m-2">
         <div className="pr-0 md:pr-8">
           <div className="w-full md:h-96">
