@@ -62,7 +62,6 @@ function OfferDetails() {
       } catch (err) {
         console.log(err);
         setAddCartError(err.response?.data.message);
-        setAddCartError("fikołek");
         errorResponseHandler(err);
         setLoadingBtn(false);
       } finally {
