@@ -171,7 +171,8 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
-                    o.CompressedPicture))
+                    o.CompressedPicture,
+                    true))
                     .ToArray();
     }
 
@@ -199,6 +200,17 @@ public class OfferController : ControllerBase
     public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync()
     {
         var offers = await _offersRepository.GetOffersAsync();
+
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+        int[] userFavorites = Array.Empty<int>();
+        if (user != null){
+
+            if(user?.AccountId != null) {
+
+                userFavorites = await _offersRepository.GetUserFavoriteOffersId(user.AccountId);
+            }
+        }
+
         return 
             offers.Select(o => 
                 new OfferListResponse(
@@ -208,7 +220,8 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
-                    o.CompressedPicture))
+                    o.CompressedPicture,
+                    userFavorites.Contains(o.Id)))
                     .ToArray();
     }
 
