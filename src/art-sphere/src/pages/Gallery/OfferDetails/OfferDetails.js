@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { StarOutline, Star } from "heroicons-react";
 import AuthContext from "../../../context/AuthContext";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import Loading from "../../../components/Loading/Loading";
@@ -16,6 +17,7 @@ function OfferDetails() {
   const [addCartSuccess, setAddCartSuccess] = useState("");
   const [addCartError, setAddCartError] = useState("");
   const [loadingBtn, setLoadingBtn] = useState(false);
+  const [isFav, setIsFav] = useState(false);
 
   useEffect(() => {
     getOffer();
@@ -32,6 +34,7 @@ function OfferDetails() {
   const getOffer = async () => {
     try {
       const offerData = await axiosInstace.get(`offers/${offerId}`);
+      await isFavorite();
       console.log(offerData.data);
       setOffer(offerData.data);
       setLoading(false);
@@ -71,26 +74,55 @@ function OfferDetails() {
     }
   };
 
-  const addToFav = async () => {
+  const isFavorite = async () => {
     if (!user) {
-      setAddCartError("Nie jesteś zalogowany");
+      // setAddCartError("Nie jesteś zalogowany");
       return;
     }
     if (user) {
       try {
-        setLoadingBtn(true);
+        const isFav = await axiosInstace.get(`offers/${offerId}/isfav`, {
+          withCredentials: true,
+        });
+        console.log(isFav.data);
+        setIsFav(isFav.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const addToFav = async () => {
+    if (!user) {
+      return;
+    }
+    if (user) {
+      try {
         const addOffer = await axiosInstace.put(`offers/${offerId}/fav`, null, {
           withCredentials: true,
         });
+        await isFavorite();
         console.log(addOffer);
         console.log("Dodano do Uluionych");
       } catch (err) {
         console.log(err);
-        setAddCartError(err.response?.data?.message);
-        errorResponseHandler(err);
-        setLoadingBtn(false);
-      } finally {
-        setLoadingBtn(false);
+      }
+    }
+  };
+
+  const removeFromFav = async () => {
+    if (!user) {
+      return;
+    }
+    if (user) {
+      try {
+        const removeOffer = await axiosInstace.delete(`offers/${offerId}/fav`, {
+          withCredentials: true,
+        });
+        await isFavorite();
+        console.log(removeOffer);
+      } catch (err) {
+        console.log(err);
       }
     }
   };
@@ -104,9 +136,6 @@ function OfferDetails() {
       <h1 className="text-3xl font-extrabold tracking-widest mb-4 text-center text-indigo-400 rounded-md bg-black p-4 ">
         {offer.title}
       </h1>
-      <div>
-        <button onClick={addToFav}>Dodaj do ulubionych</button>
-      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 m-2">
         <div className="pr-0 md:pr-8">
           <div className="w-full md:h-96">
@@ -118,6 +147,23 @@ function OfferDetails() {
           </div>
         </div>
         <div>
+          <div className="relative">
+            {isFav ? (
+              <button
+                onClick={removeFromFav}
+                className=" absolute right-0 top-4 text-yellow-400 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600"
+              >
+                <Star className="w-10 h-auto" />
+              </button>
+            ) : (
+              <button
+                onClick={addToFav}
+                className="absolute right-0 top-4 text-yellow-400 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600"
+              >
+                <StarOutline className="w-10 h-auto" />
+              </button>
+            )}
+          </div>
           <div className="mb-4 mt-4 md:mt-0">
             <p className="text-indigo-800 font-bold">Autor:</p>
             <Link

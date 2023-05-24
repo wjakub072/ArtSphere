@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Star } from "heroicons-react";
 import Loading from "../../../components/Loading/Loading";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import AuthContext from "../../../context/AuthContext";
@@ -31,6 +32,22 @@ const Favorite = () => {
     }
     setLoading(false);
   };
+
+  const removeFromFav = async (e, offerId) => {
+    e.preventDefault();
+    try {
+      const removeOffer = await axiosInstace.delete(`offers/${offerId}/fav`, {
+        withCredentials: true,
+      });
+      const actualFavorites = offerList.filter((item) => item.id !== offerId);
+      setOfferList(actualFavorites);
+      getFavOffers();
+      console.log(removeOffer);
+    } catch (err) {
+      errorResponseHandler(err);
+    }
+  };
+
   return (
     <div className="w-full text-center mx-auto">
       <h2 className="mb-3 text-4xl text-indigo-600 font-semibold tracking-wider">
@@ -57,11 +74,12 @@ const Favorite = () => {
                       src={item.photo}
                       alt={item.title}
                     />
-                    {item.archived && (
-                      <div className="bg-white opacity-80 shadow-xl p-2 rounded-md absolute top-0 left-1/2 -translate-x-1/2 font-extrabold text-indigo-600 text-3xl">
-                        <p>SPRZEDANE</p>
-                      </div>
-                    )}
+                    <button
+                      onClick={(e) => removeFromFav(e, item.id)}
+                      className="absolute right-4 top-4 text-yellow-400 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600"
+                    >
+                      <Star className="w-10 h-auto" />
+                    </button>
                   </div>
                   <div className="px-4 py-2">
                     <h2 className="text-lg font-bold">{item.title}</h2>
