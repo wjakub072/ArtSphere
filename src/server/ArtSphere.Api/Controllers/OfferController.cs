@@ -201,13 +201,17 @@ public class OfferController : ControllerBase
     {
         var offers = await _offersRepository.GetOffersAsync();
 
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
         int[] userFavorites = Array.Empty<int>();
-        if (user != null){
 
-            if(user?.AccountId != null) {
+        if(!string.IsNullOrEmpty(User.Identity.Name))
+        {
+            ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user != null){
 
-                userFavorites = await _offersRepository.GetUserFavoriteOffersId(user.AccountId);
+                if(user?.AccountId != null) {
+
+                    userFavorites = await _offersRepository.GetUserFavoriteOffersId(user.AccountId);
+                }
             }
         }
 
