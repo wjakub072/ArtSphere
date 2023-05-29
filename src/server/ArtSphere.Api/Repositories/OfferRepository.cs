@@ -159,14 +159,16 @@ public class OffersRepository
         await _db.SaveChangesAsync();
     }
 
-    public async Task<Offer> ValidateOffer(int id){
+    public async Task<bool> ValidateOffer(int id){
         var offer = await _db.Offers.FirstOrDefaultAsync(c => c.Id == id);
         if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
-
+        if(offer.Validated){
+            return false;
+        }
         offer.Validated = true;
         
         await _db.SaveChangesAsync();
-        return offer;
+        return true;
     }
     public async Task<Offer> ArchiveOffer(int id)
     {

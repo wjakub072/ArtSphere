@@ -64,13 +64,24 @@ public class OfferController : ControllerBase
     [HttpPost("{offerId}/validate")]
     public async Task<ActionResult> ValidateOfferAsync([FromRoute] int offerId)
     {
-        if(await _offersRepository.OfferExists(offerId)){
-            var offer = await _offersRepository.ValidateOffer(offerId);
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            return Ok(new { success = true, message = "Oferta została potwierdzona w procesie walidacji."});
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+
+        if(await _userManager.IsInRoleAsync(user, "administrator")){
+            if(await _offersRepository.OfferExists(offerId)){
+                if(await _offersRepository.ValidateOffer(offerId)){
+
+                    return Ok(new { success = true, message = "Oferta została potwierdzona w procesie walidacji."});
+                }
+
+                return Ok(new { success = false, message = "Oferta jest już zwalidowana."});
+            }
+            
+            return BadRequest(new { success = false, message = "Oferta nie została odnaleziona."});       
         }
-        
-        return BadRequest(new { success = false, message = "Oferta nie została odnaleziona."});
+
+        return BadRequest(new { success = false, message = "Błąd autoryzacji użytkownika."});       
     }
 
     [Authorize]
