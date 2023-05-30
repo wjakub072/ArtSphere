@@ -208,6 +208,39 @@ public class OfferController : ControllerBase
     }
 
     [HttpGet()]
+    public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync([FromBody] OfferFiltersPayload filtersPayload)
+    {
+        var offers = await _offersRepository.GetOffersAsync(filtersPayload);
+
+        int[] userFavorites = Array.Empty<int>();
+
+        if(!string.IsNullOrEmpty(User.Identity.Name))
+        {
+            ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user != null){
+
+                if(user?.AccountId != null) {
+
+                    userFavorites = await _offersRepository.GetUserFavoriteOffersId(user.AccountId);
+                }
+            }
+        }
+
+        return 
+            offers.Select(o => 
+                new OfferListResponse(
+                    o.Id, 
+                    o.ArtistId, 
+                    string.Concat(o.Artist?.FirstName ?? string.Empty, " ", o.Artist?.LastName ?? string.Empty),
+                    o.Title, 
+                    o.Price, 
+                    o.Archived,
+                    o.CompressedPicture,
+                    userFavorites.Contains(o.Id)))
+                    .ToArray();
+    }
+
+    [HttpGet("all")]
     public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync()
     {
         var offers = await _offersRepository.GetOffersAsync();
@@ -235,7 +268,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
-                    o.CompressedPicture,
+                    "Not included - we value your scrolling time :-)",
                     userFavorites.Contains(o.Id)))
                     .ToArray();
     }

@@ -16,6 +16,48 @@ public class OffersRepository
         _compressionService = compressionService;
     }
 
+    public async Task<IEnumerable<Offer>> GetOffersAsync(OfferFiltersPayload filtersPayload)
+    {
+        IQueryable<Offer> offers = _db.Offers.Include(c => c.Artist).Where(o => o.Validated);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Category))
+            offers = offers.Where(c => c.Category == filtersPayload.Category);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Technic))
+            offers = offers.Where(c => c.Technic == filtersPayload.Technic);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Title))
+            offers = offers.Where(c => c.Title == filtersPayload.Title);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Topic))
+            offers = offers.Where(c => c.Topic == filtersPayload.Topic);
+        
+
+        if(filtersPayload.PriceBottom > decimal.Zero)
+            offers = offers.Where(c => c.Price > filtersPayload.PriceBottom);
+
+        if(filtersPayload.PriceTop > decimal.Zero)
+            offers = offers.Where(c => c.Price < filtersPayload.PriceTop);
+        
+        if(filtersPayload.DimensionsXBottom > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsX > filtersPayload.DimensionsXBottom);
+
+        if(filtersPayload.DimensionsXTop > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsX < filtersPayload.DimensionsXTop);
+
+        if(filtersPayload.DimensionsYBottom > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsY > filtersPayload.DimensionsYBottom);
+
+        if(filtersPayload.DimensionsYTop > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsY < filtersPayload.DimensionsYTop);
+
+        return await offers
+                        .Skip(filtersPayload.PageSize * (filtersPayload.Page - 1))
+                        .Take(filtersPayload.PageSize)
+                        .AsNoTracking()
+                        .ToListAsync();
+    }
+
     public async Task<IEnumerable<Offer>> GetOffersAsync()
     {
         return await _db.Offers.Include(c => c.Artist).AsNoTracking().ToListAsync();
