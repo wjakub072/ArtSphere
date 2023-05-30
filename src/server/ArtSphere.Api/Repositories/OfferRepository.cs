@@ -18,7 +18,7 @@ public class OffersRepository
 
     public async Task<IEnumerable<Offer>> GetOffersAsync(OfferFiltersPayload filtersPayload)
     {
-        IQueryable<Offer> offers = _db.Offers.Include(c => c.Artist).Where(o => o.Validated);
+        IQueryable<Offer> offers = _db.Offers.Include(c => c.Artist).Where(o => o.Approved);
 
         if(!string.IsNullOrEmpty(filtersPayload.Category))
             offers = offers.Where(c => c.Category == filtersPayload.Category);
@@ -207,17 +207,20 @@ public class OffersRepository
         await _db.SaveChangesAsync();
     }
 
-    public async Task<bool> ValidateOffer(int id){
+    public async Task<bool> ValidateOffer(int id, bool result)
+    {
         var offer = await _db.Offers.FirstOrDefaultAsync(c => c.Id == id);
         if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
         if(offer.Validated){
             return false;
         }
         offer.Validated = true;
-        
+        offer.Approved = result;
+
         await _db.SaveChangesAsync();
         return true;
     }
+    
     public async Task<Offer> ArchiveOffer(int id)
     {
         var offer = await _db.Offers.FirstOrDefaultAsync(c => c.Id == id);
@@ -229,4 +232,8 @@ public class OffersRepository
         return offer;
     }
 
+    internal async Task<Offer?> GetOfferToValidateAsync()
+    {
+        return await _db.Offers.OrderBy(o => o.CreationTime).FirstOrDefaultAsync(o => o.Validated == false);
+    }
 }

@@ -15,6 +15,8 @@ public class Offer
     public string Unit { get; set; }
     public bool Archived { get; set; }
     public bool Validated { get; set; }
+    public bool Approved { get; set; }
+    public DateTime CreationTime { get; set; }
     public string? Picture { get; set; }
     public string? CompressedPicture { get; set; }
     public User Artist { get; set; }

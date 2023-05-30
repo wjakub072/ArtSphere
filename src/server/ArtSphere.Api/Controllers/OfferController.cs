@@ -60,30 +60,6 @@ public class OfferController : ControllerBase
             offer.Title);
     }
 
-    [Authorize("IsAdmin")]
-    [HttpPost("{offerId}/validate")]
-    public async Task<ActionResult> ValidateOfferAsync([FromRoute] int offerId)
-    {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
-
-        if(await _userManager.IsInRoleAsync(user, "administrator")){
-            if(await _offersRepository.OfferExists(offerId)){
-                if(await _offersRepository.ValidateOffer(offerId)){
-
-                    return Ok(new { success = true, message = "Oferta została potwierdzona w procesie walidacji."});
-                }
-
-                return Ok(new { success = false, message = "Oferta jest już zwalidowana."});
-            }
-            
-            return BadRequest(new { success = false, message = "Oferta nie została odnaleziona."});       
-        }
-
-        return BadRequest(new { success = false, message = "Błąd autoryzacji użytkownika."});       
-    }
-
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult<DeleteOfferResponse>> DeleteOfferAsync([FromBody] DeleteOfferPayload deleteOfferPayload)
