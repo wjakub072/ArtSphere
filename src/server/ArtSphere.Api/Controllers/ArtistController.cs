@@ -1,4 +1,5 @@
 
+using ArtSphere.Api.Models.Dto.Payloads;
 using ArtSphere.Api.Models.Dto.Responses;
 using ArtSphere.Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ public class ArtistController : ControllerBase
                 c.Id, 
                 c.FirstName ?? string.Empty, 
                 c.LastName ?? string.Empty,
-                c.ProfilePicture))
+                c.ProfilePicture ?? string.Empty))
                  .ToArray());
         } 
         else { return BadRequest("Brak artystów w bazie."); }
@@ -40,23 +41,21 @@ public class ArtistController : ControllerBase
     {
         var artist = await _usersRepository.GetArtistAsync(id);
 
-        var artistsOffers = await _offersRepository.GetArtistsOffers(artist.Id);
-
         return Ok(new ArtistResponse(
             artist.Id,
             artist.FirstName ?? string.Empty,
             artist.LastName ?? string.Empty,
             artist.Description ?? string.Empty,
             artist.AddressCountry ?? string.Empty,
-            artist.ProfilePicture));
+            artist.ProfilePicture ?? string.Empty));
     }
 
     [HttpGet(("{id}/offers"))]
-    public async Task<ActionResult<OfferListResponse[]>> GetArtistOffersAsync(int id)
+    public async Task<ActionResult<OfferListResponse[]>> GetArtistOffersAsync(int id, [FromBody] OfferPaginationPayload paginationPayload)
     {
         var artist = await _usersRepository.GetArtistAsync(id);
 
-        var artistsOffers = await _offersRepository.GetArtistsOffers(artist.Id);
+        var artistsOffers = await _offersRepository.GetArtistsOffers(artist.Id, paginationPayload);
 
         return Ok(artistsOffers.Select(o => new OfferListResponse(
                 o.Id, 

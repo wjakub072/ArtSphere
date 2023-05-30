@@ -52,7 +52,8 @@ public class OffersRepository
             offers = offers.Where(c => c.DimensionsY < filtersPayload.DimensionsYTop);
 
         return await offers
-                        .Skip(filtersPayload.PageSize * (filtersPayload.Page - 1))
+                        .OrderByDescending(c => c.Id)
+                        .Skip((filtersPayload.Page - 1) * filtersPayload.PageSize)
                         .Take(filtersPayload.PageSize)
                         .AsNoTracking()
                         .ToListAsync();
@@ -103,9 +104,14 @@ public class OffersRepository
         return await _db.Favorites.Where(c => c.UserId == userId).Select(c => c.OfferId).ToArrayAsync();
     }
 
-    public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId)
+    public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId, OfferPaginationPayload paginationPayload)
     {
-        return await _db.Offers.Where(o => o.ArtistId == artistId).AsNoTracking().ToListAsync();
+        return await _db.Offers.Where(o => o.ArtistId == artistId)
+                            .OrderByDescending(c => c.Id)
+                            .Skip((paginationPayload.Page - 1) * paginationPayload.PageSize)
+                            .Take(paginationPayload.PageSize)
+                            .AsNoTracking()
+                            .ToListAsync();
     }
 
     public async Task<Offer> AddOffer(int artistId, OfferPayload offerPayload)
