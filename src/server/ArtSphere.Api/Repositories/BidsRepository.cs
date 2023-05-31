@@ -12,7 +12,21 @@ public class BidsRepository
     {
         _db = db;
     }
+    public async Task<bool> CheckIfHigherBid(int offerId, decimal amount)
+    {
+        var offer = await _db.Offers.Where(o => o.Id == offerId).Include(c => c.Bids).FirstOrDefaultAsync();
 
+        if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym Id.");
+        
+        if(offer.IsAuction == false) throw new Exception("Określona oferta nie jest aukcją!");
+
+        if(offer.Bids != null && offer.Bids.Any())
+        {
+            return offer.Bids.Max(c => c.Value) < amount;
+        } else {
+            return true;
+        }
+    }
 
     public async Task PlaceBid(int offerId, int userId, decimal amount)
     {

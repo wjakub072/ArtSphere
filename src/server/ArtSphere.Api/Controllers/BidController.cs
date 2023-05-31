@@ -28,6 +28,8 @@ public class BidController : ControllerBase
         _fundsRepository = fundsRepository;
     }
 
+    //TODO IMPLEMENT HIGHEST BID IN SELECTING ANY AUCTIONS, CREATE REMOVE BID REQUEST
+
     [Authorize]
     [HttpPost("{offerId}/bid")]
     public async Task<ActionResult> BidOfferAsync([FromRoute] int offerId, [FromBody] BidOfferPayload bidPayload)
@@ -42,11 +44,16 @@ public class BidController : ControllerBase
                 return BadRequest(new { success = false, message = "Oferta o podanym id nie została odnaleziona."});
 
             if(await _fundsRepository.CheckFundsAmount(user.AccountId, bidPayload.Amount) == false)
-            {
                 return BadRequest(new { success = false, message = "Niewystarczająca ilość środków w portfelu!"});
+
+            if(await _bidsRepository.CheckIfHigherBid(offerId, bidPayload.Amount)){
+                
+                await _bidsRepository.PlaceBid(offerId, user!.AccountId, bidPayload.Amount);
+
+                return Ok(new { success = true, message = "Dodano licytacje danej oferty."});
+            } else {
+                return BadRequest(new { success = false, message = "Kwota nie przewyższa najwyższej licytacji oferty."});
             }
-            await _offersRepository.RemoveOfferFromFavorites(offerId, user.AccountId);
-            return Ok(new { success = true, message = "Dodano licytacje danej oferty."});
         }
         
         throw new Exception("Do użytkownika nie został przypisany żaden profil.");
