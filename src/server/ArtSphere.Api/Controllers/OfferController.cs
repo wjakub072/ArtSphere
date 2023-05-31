@@ -83,7 +83,7 @@ public class OfferController : ControllerBase
 
     [Authorize]
     [HttpGet("my")]
-    public async Task<ActionResult<OfferListResponse[]>> GetMyOffersAsync([FromBody] OfferPaginationPayload paginationPayload)
+    public async Task<ActionResult<OfferListResponse[]>> GetMyOffersAsync(int PageSize, int Page)
     {
         if(User.Identity == null){
             return BadRequest(new { success = false, message = "Brak sesji użytkownika."});
@@ -91,7 +91,7 @@ public class OfferController : ControllerBase
 
         var artist = await _usersRepository.GetArtistAsync(User.Identity!.Name!);
 
-        var offers = await _offersRepository.GetArtistsOffers(artist.Id, paginationPayload);
+        var offers = await _offersRepository.GetArtistsOffers(artist.Id, PageSize, Page);
         return 
             offers.Select(o => 
                 new OfferListResponse(
@@ -106,8 +106,36 @@ public class OfferController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync([FromBody] OfferFiltersPayload filtersPayload)
+    public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync(
+        string? Category,
+        string? Technic,
+        string? Title,
+        string? Topic,
+        decimal? PriceBottom,
+        decimal? PriceTop,
+        decimal? DimensionsXBottom,
+        decimal? DimensionsXTop,
+        decimal? DimensionsYBottom,
+        decimal? DimensionsYTop,
+        string[]? Tags,
+        int PageSize,
+        int Page)
     {
+        var filtersPayload = new OfferFiltersPayload(){
+            Category = Category,
+            Technic = Technic,
+            Title = Title,
+            Topic = Topic,
+            PriceBottom = PriceBottom,
+            PriceTop = PriceTop,
+            DimensionsXBottom = DimensionsXBottom,
+            DimensionsXTop = DimensionsXTop,
+            DimensionsYBottom = DimensionsYBottom,
+            DimensionsYTop = DimensionsYTop,
+            Tags = Tags, 
+            PageSize = PageSize, 
+            Page = Page
+        };
         var offers = await _offersRepository.GetOffersAsync(filtersPayload);
 
         int[] userFavorites = Array.Empty<int>();

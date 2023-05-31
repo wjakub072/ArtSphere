@@ -104,12 +104,12 @@ public class OffersRepository
         return await _db.Favorites.Where(c => c.UserId == userId).Select(c => c.OfferId).ToArrayAsync();
     }
 
-    public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId, OfferPaginationPayload paginationPayload)
+    public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId, int pageSize, int page)
     {
         return await _db.Offers.Where(o => o.ArtistId == artistId)
                             .OrderByDescending(c => c.Id)
-                            .Skip((paginationPayload.Page - 1) * paginationPayload.PageSize)
-                            .Take(paginationPayload.PageSize)
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
                             .AsNoTracking()
                             .ToListAsync();
     }
