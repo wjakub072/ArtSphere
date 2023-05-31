@@ -53,7 +53,9 @@ function Gallery(props) {
       </div>
 
       {loading ? (
-        <Loading />
+        <div className="mt-48 w-48 h-48 mx-auto">
+          <Loading />
+        </div>
       ) : (
         <div className="m-7 lg:mx-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
           {offerList.map((item) => (
@@ -70,11 +72,15 @@ function Gallery(props) {
                 />
               </div>
               <div className="px-4 py-2 ">
-                <h2 className="text-lg font-bold">{item.title}</h2>
-                <p className="text-gray-700 text-sm">
+                <h2 className="text-lg font-bold text-indigo-700">
+                  {item.title}
+                </h2>
+                <p className="text-sm text-indigo-600">
                   Autor: {item.artistName}
                 </p>
-                <p className="text-lg font-bold mt-2">{item.price} PLN</p>
+                <p className="text-lg font-bold mt-2 text-indigo-700">
+                  {item.price} PLN
+                </p>
               </div>
             </Link>
           ))}

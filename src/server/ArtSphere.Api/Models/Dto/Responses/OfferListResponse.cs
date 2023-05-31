@@ -4,6 +4,9 @@ public record OfferListResponse
 (
     int Id, 
     int ArtistId, 
+    string ArtistName,
     string Title, 
-    decimal Price
+    decimal Price,
+    bool Archived,
+    string? Photo
 );

@@ -1,11 +1,11 @@
 import React from "react";
 
-function Loading({ size = 48 }) {
+function Loading() {
   return (
-    <div className="text-center mt-48" role="status">
+    <div className="text-center" role="status">
       <svg
         aria-hidden="true"
-        className={`inline w-48 h-48 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-indigo-600`}
+        className={`inline w-full h-full mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-indigo-600`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

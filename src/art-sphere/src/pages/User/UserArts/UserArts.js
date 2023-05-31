@@ -41,7 +41,7 @@ const UserArts = () => {
       <div className="text-left">
         <div className="w-full">
           {loading ? (
-            <div className="mx-auto text-center">
+            <div className="mt-16 w-48 h-48 mx-auto">
               <Loading />
             </div>
           ) : (

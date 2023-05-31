@@ -21,7 +21,14 @@ public class UsersRepository
         return user;
     }
 
-//TODO IMPLEMENT ProfilePicture AND PAGINATION
+    public async Task<User> GetUserWithWalletAsync(int id)
+    {
+        var user = await _db.ASUsers.Include(u => u.Wallet).FirstOrDefaultAsync(u => u.Id == id);
+        if(user == null) throw new Exception("Użytkownik o podanym Id nie został odnaleziony.");
+        if(user.Wallet == null) throw new Exception("Użytkownik o podanym Id nie posiada określnego portfela.");
+        return user;
+    }
+
     public async Task<IEnumerable<User>> GetArtistsAsync(){ 
         return await _db.ASUsers.FromSqlRaw(@"SELECT TOP (1000) u.[Id]
                     ,u.[Email]
@@ -85,12 +92,46 @@ public class UsersRepository
         return user;    
     }
 
+    public async Task<User> GetArtistAsync(string email)
+    { 
+        var user = await _db.ASUsers.FromSqlRaw(@$"SELECT TOP (1) u.[Id]
+                    ,u.[Email]
+                    ,u.[FirstName]
+                    ,u.[LastName]
+                    ,u.[Description]
+                    ,u.[PhoneNumber]
+                    ,u.[AddressCountry]
+                    ,u.[AddressCity]
+                    ,u.[AddressStreet]
+                    ,u.[AddressBuilding]
+                    ,u.[AddressApartment]
+                    ,u.[AddressPostalCode]
+                    ,u.[CompanyName]
+                    ,u.[CompanyVatId]
+                    ,u.[CompanyAddressStreet]
+                    ,u.[CompanyAddressBuilding]
+                    ,u.[CompanyAddressApartment]
+                    ,u.[CompanyAddressPostalCode]
+                    ,u.[CompanyAddressCity]
+                    ,u.[CompanyAddressCountry]
+                    ,u.[ProfilePicture]
+                FROM [ArtSphere].[Sph].[Users] u
+                INNER JOIN AUTH.IdentityUsers io on AccountId = u.Id
+                INNER JOIN auth.UserRoles on io.Id = UserId
+                INNER JOIN auth.IdentityRoles ir on RoleId = ir.Id
+                WHERE NormalizedName = 'ARTYSTA' and u.Email = '{email}'")
+                .FirstOrDefaultAsync();
+        if(user == null) throw new Exception($"Nie odnaleziono artysty o emailu: {email}.");
+        return user;    
+    }
+
     public async Task<User> CreateBlankUserAsync(string email)
     {
         User appUser = new User() 
         { 
             Email = email
         };
+        appUser.Wallet = new Wallet();
         _db.Add(appUser);
         await _db.SaveChangesAsync();
         return appUser;
@@ -152,7 +193,8 @@ public class UsersRepository
         user.FirstName = payload.FirstName;
         user.LastName = payload.LastName;
         user.Description = payload.Description??string.Empty;
-
+        user.ProfilePicture = payload.Picture??string.Empty;
+        
         await _db.SaveChangesAsync();
         return user;
     }

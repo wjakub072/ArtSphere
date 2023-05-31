@@ -109,7 +109,9 @@ function EditArt() {
         Edycja dzieła
       </h2>
       {loading ? (
-        <Loading />
+        <div className="mt-16 w-48 h-48 mx-auto">
+          <Loading />
+        </div>
       ) : (
         <div>
           <AddImage

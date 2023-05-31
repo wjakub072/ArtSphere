@@ -23,6 +23,42 @@ namespace ArtSphere.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ArtSphere.Api.Models.DepositToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<DateTime?>("ExecutionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DepositTokens", "Sph");
+                });
+
             modelBuilder.Entity("ArtSphere.Api.Models.Offer", b =>
                 {
                     b.Property<int>("Id")
@@ -30,6 +66,11 @@ namespace ArtSphere.Api.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Archived")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("ArtistId")
                         .HasColumnType("int");
@@ -39,15 +80,21 @@ namespace ArtSphere.Api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("CompressedPicture")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
                     b.Property<decimal>("DimensionsX")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(11,4)");
 
                     b.Property<decimal>("DimensionsY")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(11,4)");
+
+                    b.Property<string>("Picture")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(17,4)");
@@ -62,6 +109,11 @@ namespace ArtSphere.Api.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -69,7 +121,130 @@ namespace ArtSphere.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ArtistId");
+
                     b.ToTable("Offers", "Sph");
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AddressApartment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressBuilding")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressCity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressCountry")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressPostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressStreet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CompanyAddressApartment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyAddressBuilding")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyAddressCity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyAddressCountry")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyAddressPostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyAddressStreet")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExecutionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsInvoice")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders", "Sph");
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.OrderElement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("OfferId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderELements", "Sph");
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.ShoppingCartElement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<int>("OfferId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfferId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ShoppingCartElements", "Sph");
                 });
 
             modelBuilder.Entity("ArtSphere.Api.Models.Tag", b =>
@@ -95,6 +270,8 @@ namespace ArtSphere.Api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OfferId");
 
                     b.ToTable("Tags", "Sph");
                 });
@@ -202,12 +379,45 @@ namespace ArtSphere.Api.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users", "Sph");
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.Wallet", b =>
+                {
+                    b.Property<int>("WalletId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WalletId"));
+
+                    b.Property<decimal>("Balance")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(15, 4)
+                        .HasColumnType("decimal(15,4)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WalletId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Wallets", "Sph");
                 });
 
             modelBuilder.Entity("ArtSphere.Models.Auth.ApplicationRole", b =>
@@ -418,6 +628,67 @@ namespace ArtSphere.Api.Migrations
                     b.ToTable("UserTokens", "auth");
                 });
 
+            modelBuilder.Entity("ArtSphere.Api.Models.Offer", b =>
+                {
+                    b.HasOne("ArtSphere.Api.Models.User", "Artist")
+                        .WithMany("Offers")
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.OrderElement", b =>
+                {
+                    b.HasOne("ArtSphere.Api.Models.Order", null)
+                        .WithMany("Elements")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.ShoppingCartElement", b =>
+                {
+                    b.HasOne("ArtSphere.Api.Models.Offer", "Offer")
+                        .WithMany()
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ArtSphere.Api.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Offer");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.Tag", b =>
+                {
+                    b.HasOne("ArtSphere.Api.Models.Offer", "Offer")
+                        .WithMany("Tags")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Offer");
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.Wallet", b =>
+                {
+                    b.HasOne("ArtSphere.Api.Models.User", "User")
+                        .WithOne("Wallet")
+                        .HasForeignKey("ArtSphere.Api.Models.Wallet", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("ArtSphere.Models.Auth.ApplicationRole", null)
@@ -466,6 +737,24 @@ namespace ArtSphere.Api.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.Offer", b =>
+                {
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.Order", b =>
+                {
+                    b.Navigation("Elements");
+                });
+
+            modelBuilder.Entity("ArtSphere.Api.Models.User", b =>
+                {
+                    b.Navigation("Offers");
+
+                    b.Navigation("Wallet")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

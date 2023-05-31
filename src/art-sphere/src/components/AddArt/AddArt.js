@@ -109,8 +109,8 @@ function AddArt() {
         >
           Dodaj Dzieło
           <div
-            className={`w-4 fill-white transition-transform duration-500 ${
-              showAddForm && "rotate-180"
+            className={`w-4 fill-white transition-transform duration-700 rotate-180 ${
+              showAddForm && "rotate-0"
             }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">

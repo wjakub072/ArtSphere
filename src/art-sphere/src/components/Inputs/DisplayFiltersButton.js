@@ -7,8 +7,8 @@ function DisplayFiltersButton({ onClick, show }) {
       >
         Pokaż filtry
         <div
-          className={`w-4 fill-indigo-600 duration-700 transition-transform ${
-            show && "rotate-180"
+          className={`w-4 fill-indigo-600 duration-700 transition-transform rotate-180 ${
+            show && "rotate-0"
           }`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">

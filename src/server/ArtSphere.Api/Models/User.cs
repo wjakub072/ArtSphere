@@ -22,5 +22,8 @@ public class User
     public string? CompanyAddressPostalCode { get; set; }
     public string? CompanyAddressCity { get; set; }
     public string? CompanyAddressCountry { get; set; }
-    public byte[]? ProfilePicture { get; set; }
+    public string? ProfilePicture { get; set; }
+
+    public ICollection<Offer> Offers { get; set; }
+    public Wallet Wallet { get; set; }
 }

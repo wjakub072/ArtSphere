@@ -125,7 +125,7 @@ const Profile = () => {
   };
 
   return loading ? (
-    <div className="mx-auto text-center">
+    <div className="mt-24 w-48 h-48 mx-auto">
       <Loading />
     </div>
   ) : (

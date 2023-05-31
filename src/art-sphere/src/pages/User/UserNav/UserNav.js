@@ -46,14 +46,14 @@ const UserViewNav = (props) => {
         </li>
         <li className="md:py-2 md:px-3">
           <NavLink
-            to={`${url}/doladujPortfel`}
+            to={`${url}/Portfel`}
             className={({ isActive }) =>
               isActive
                 ? "text-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
                 : "hover:text-indigo-800 focus:text-indigo-800 focus:outline-none focus:underline text-2xl font-medium transition-colors"
             }
           >
-            Doładuj portfel
+            Portfel
           </NavLink>
         </li>
         <li className="md:py-2 md:px-3">
