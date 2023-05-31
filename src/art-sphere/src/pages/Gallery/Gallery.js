@@ -29,13 +29,31 @@ function Gallery(props) {
 
   const getOffers = async () => {
     try {
+      const data = {
+        Category: "",
+        Technic: "",
+        Title: "",
+        Topic: "",
+        PriceBottom: 0.0,
+        PriceTop: 0.0, // 0 equal to "Not include in filtering"
+        DimensionsXBottom: 0.0,
+        DimensionsXTop: 0.0, // 0 equal to "Not include in filtering"
+        DimensionsYBottom: 0.0,
+        DimensionsYTop: 0.0, // 0 equal to "Not include in filtering"
+        Unit: "cm",
+        PageSize: 25,
+        Page: 1,
+      };
       if (!user) {
-        const getOfferList = await axiosInstace.get("offers");
+        const getOfferList = await axiosInstace.get("offers", {
+          params: data,
+        });
         console.log(getOfferList.data);
         setOfferList(getOfferList.data);
         setLoading(false);
       } else {
         const getOfferList = await axiosInstace.get("offers", {
+          params: data,
           withCredentials: true,
         });
         console.log(getOfferList.data);
