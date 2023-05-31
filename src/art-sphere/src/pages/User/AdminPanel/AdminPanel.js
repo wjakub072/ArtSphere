@@ -11,6 +11,7 @@ function AdminPanel(props) {
   const [offerToValidate, setOfferToValidate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingButton, setLoadingButton] = useState(false);
+  const [isOffer, setIsOffer] = useState(true);
 
   useEffect(() => {
     getOfferToValidate();
@@ -25,6 +26,9 @@ function AdminPanel(props) {
       console.log("respons ofert do walidacji");
       console.log(response.data);
       setOfferToValidate(response.data);
+      if (response?.data?.message === "Brak ofert do walidacji.") {
+        setIsOffer(false);
+      }
     } catch (err) {
       errorResponseHandler(err);
     }
@@ -63,15 +67,19 @@ function AdminPanel(props) {
         <div className="mt-16 w-48 h-48 mx-auto">
           <Loading />
         </div>
+      ) : !isOffer ? (
+        <h3 className="mt-10 text-2xl text-indigo-600 font-semibold tracking-wide">
+          Brak ofert do zatwierdzenia
+        </h3>
       ) : (
         <>
           <div className="w-full mx-auto">
             <h1 className="text-3xl font-extrabold tracking-widest mb-4 text-center text-indigo-400 rounded-md bg-black p-4 ">
               {offerToValidate.title}
             </h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 m-2">
-              <div className="pr-0 md:pr-8">
-                <div className="w-full md:h-96">
+            <div className="grid grid-cols-1 lg:grid-cols-2 m-2">
+              <div className="pr-0 lg:pr-8">
+                <div className="w-full md:h-72">
                   <img
                     src={offerToValidate.photo}
                     alt="Zdjęcie produktu"
@@ -79,26 +87,19 @@ function AdminPanel(props) {
                   />
                 </div>
               </div>
-              <div>
-                <div className="mb-4 mt-4 md:mt-0">
-                  <p className="text-indigo-800 font-bold">Autor:</p>
-                  <p className="text-indigo-600 font-semibold underline hover:text-indigo-900 focus:text-indigo-900 p-0.5 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600 transition-colors ">
-                    {offerToValidate.artistName}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="mt-2 lg:mt-0">
+                <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
+                  <div className="mb-4 mt-4 md:mt-0">
+                    <p className="text-indigo-800 font-bold">Autor:</p>
+                    <p className="text-indigo-600 font-semibold hover:text-indigo-900 focus:text-indigo-900 p-0.5 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600 transition-colors ">
+                      {offerToValidate.artistName}
+                    </p>
+                  </div>
                   <div>
                     <p className="text-indigo-800 font-bold">Wymiary:</p>
                     <p className="text-indigo-600 font-semibold">
                       {offerToValidate?.dimensionsY}cm x{" "}
                       {offerToValidate?.dimensionsX}cm
-                    </p>
-                  </div>
-                  <div className="col-span-2">
-                    <p className="text-indigo-800 font-bold">Tagi:</p>
-                    <p className="text-indigo-600 font-semibold">
-                      {offerToValidate?.tags?.join(", ")}
                     </p>
                   </div>
                 </div>
@@ -118,11 +119,11 @@ function AdminPanel(props) {
               </div>
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex md:gap-4 mt-4 flex-col md:flex-row">
             {loadingButton ? (
               <button
                 type="button"
-                className="w-1/2 p-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-70"
+                className="w-full md:w-1/2 p-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-70"
                 disabled
               >
                 <svg
@@ -142,11 +143,11 @@ function AdminPanel(props) {
                     fill="#1C64F2"
                   />
                 </svg>
-                Aktualizowanie...
+                Przetwarzanie...
               </button>
             ) : (
               <button
-                className="w-1/2 p-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
+                className="w-full md:w-1/2 p-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
                 type="button"
                 onClick={() => validateOffer(offerToValidate.id, true)}
               >
@@ -156,7 +157,7 @@ function AdminPanel(props) {
             {loadingButton ? (
               <button
                 type="button"
-                className="w-1/2 p-2 mb-4 font-medium text-white bg-red-500 rounded-md shadow-sm opacity-70"
+                className="w-full md:w-1/2 p-2 mb-4 font-medium text-white bg-red-500 rounded-md shadow-sm opacity-70"
                 disabled
               >
                 <svg
@@ -176,11 +177,11 @@ function AdminPanel(props) {
                     fill="#1C64F2"
                   />
                 </svg>
-                Aktualizowanie...
+                Przetwarzanie...
               </button>
             ) : (
               <button
-                className="w-1/2 p-2 mb-4 font-medium text-white bg-red-500 rounded-md shadow-sm hover:bg-red-600 focus:bg-red-600 border-2 border-transparent focus:outline-none focus:border-red-400 transition-colors"
+                className="w-full md:w-1/2 p-2 mb-4 font-medium text-white bg-red-500 rounded-md shadow-sm hover:bg-red-600 focus:bg-red-600 border-2 border-transparent focus:outline-none focus:border-red-400 transition-colors"
                 type="button"
                 onClick={() => validateOffer(offerToValidate.id, false)}
               >
