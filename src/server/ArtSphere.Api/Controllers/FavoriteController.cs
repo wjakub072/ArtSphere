@@ -102,6 +102,7 @@ public class FavoriteController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.IsAuction,
                     o.CompressedPicture,
                     true))
                     .ToArray();

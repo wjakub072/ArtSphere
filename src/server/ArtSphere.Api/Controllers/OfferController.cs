@@ -101,6 +101,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.IsAuction,
                     o.CompressedPicture))
                     .ToArray();
     }
@@ -163,6 +164,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.IsAuction,
                     o.CompressedPicture,
                     userFavorites.Contains(o.Id)))
                     .ToArray();
@@ -196,6 +198,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.IsAuction,
                     "Not included - we value your scrolling time :-)",
                     userFavorites.Contains(o.Id)))
                     .ToArray();

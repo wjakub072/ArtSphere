@@ -20,6 +20,7 @@ public class ApplicationDatabaseContext : IdentityDbContext<ApplicationUser, App
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderElement> OrderELements { get; set; }
     public DbSet<Favorite> Favorites { get; set; }
+    public DbSet<Bid> Bids { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
