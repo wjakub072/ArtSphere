@@ -32,7 +32,7 @@ public class OfferController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var artist = await _usersRepository.GetArtistAsync(User.Identity.Name);
+        var artist = await _usersRepository.GetArtistAsync(User.Identity!.Name!);
 
         var createdOffer = await _offersRepository.AddOffer(artist.Id, offerPayload);
         return new AddOfferResponse(
@@ -49,7 +49,7 @@ public class OfferController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var artists = await _usersRepository.GetArtistAsync(User.Identity.Name);
+        var artists = await _usersRepository.GetArtistAsync(User.Identity!.Name!);
 
         var offer = await _offersRepository.EditOffer(id, offerPayload);
         return new AddOfferResponse(
@@ -58,81 +58,6 @@ public class OfferController : ControllerBase
             offer.Id,
             offer.ArtistId,
             offer.Title);
-    }
-
-    [Authorize("IsAdmin")]
-    [HttpPost("{offerId}/validate")]
-    public async Task<ActionResult> ValidateOfferAsync([FromRoute] int offerId)
-    {
-        if(await _offersRepository.OfferExists(offerId)){
-            var offer = await _offersRepository.ValidateOffer(offerId);
-
-            return Ok(new { success = true, message = "Oferta została potwierdzona w procesie walidacji."});
-        }
-        
-        return BadRequest(new { success = false, message = "Oferta nie została odnaleziona."});
-    }
-
-    [Authorize]
-    [HttpPut("{offerId}/fav")]
-    public async Task<ActionResult> AddOfferToFavoritesAsync([FromRoute] int offerId)
-    {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
-
-        if(user?.AccountId != null)
-        {
-            if(await _offersRepository.OfferExists(offerId) == false)
-                return BadRequest("Oferta o podanym id nie została odnaleziona.");
-
-            if(await _offersRepository.DoesUserFavorOffer(user.AccountId, offerId) == false){
-                await _offersRepository.AddOfferToFavorites(offerId, user.AccountId);
-                return Ok("Dodano");
-            }
-        }
-        
-        throw new Exception("Do użytkownika nie został przypisany żaden profil.");
-    }
-
-    [Authorize]
-    [HttpGet("{offerId}/isfav")]
-    public async Task<ActionResult> IsOfferUserFavoriteAsync([FromRoute] int offerId)
-    {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
-
-        if(user?.AccountId != null)
-        {
-            if(await _offersRepository.OfferExists(offerId) == false)
-                return BadRequest("Oferta o podanym id nie została odnaleziona.");
-
-            return Ok(await _offersRepository.DoesUserFavorOffer(user.AccountId, offerId));
-        }
-        throw new Exception("Do użytkownika nie został przypisany żaden profil.");
-    }
-
-    [Authorize]
-    [HttpDelete("{offerId}/fav")]
-    public async Task<ActionResult> RemoveOfferFromFavoritesAsync([FromRoute] int offerId)
-    {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
-
-        if(user?.AccountId != null)
-        {
-            if(await _offersRepository.OfferExists(offerId) == false)
-                return BadRequest("Oferta o podanym id nie została odnaleziona.");
-
-            if(await _offersRepository.DoesUserFavorOffer(user.AccountId, offerId)){
-                await _offersRepository.RemoveOfferFromFavorites(offerId, user.AccountId);
-                return Ok("Usunieto");
-            }
-        }
-        
-        throw new Exception("Do użytkownika nie został przypisany żaden profil.");
     }
 
     [Authorize]
@@ -155,34 +80,18 @@ public class OfferController : ControllerBase
         }
     }
 
-    [Authorize]
-    [HttpGet("fav")]
-    public async Task<ActionResult<OfferListResponse[]>> GetMyFavoriteOffersAsync()
-    {
-        var user = await _usersRepository.GetArtistAsync(User.Identity.Name);
-
-        var offers = await _offersRepository.GetUserFavoriteOffers(user.Id);
-        return 
-            offers.Select(o => 
-                new OfferListResponse(
-                    o.Id, 
-                    o.ArtistId, 
-                    string.Concat(user.FirstName ?? string.Empty, " ", user.LastName ?? string.Empty),
-                    o.Title, 
-                    o.Price, 
-                    o.Archived,
-                    o.CompressedPicture,
-                    true))
-                    .ToArray();
-    }
 
     [Authorize]
     [HttpGet("my")]
-    public async Task<ActionResult<OfferListResponse[]>> GetMyOffersAsync()
+    public async Task<ActionResult<OfferListResponse[]>> GetMyOffersAsync([FromBody] OfferPaginationPayload paginationPayload)
     {
-        var artist = await _usersRepository.GetArtistAsync(User.Identity.Name);
+        if(User.Identity == null){
+            return BadRequest(new { success = false, message = "Brak sesji użytkownika."});
+        }
 
-        var offers = await _offersRepository.GetArtistsOffers(artist.Id);
+        var artist = await _usersRepository.GetArtistAsync(User.Identity!.Name!);
+
+        var offers = await _offersRepository.GetArtistsOffers(artist.Id, paginationPayload);
         return 
             offers.Select(o => 
                 new OfferListResponse(
@@ -197,13 +106,13 @@ public class OfferController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync()
+    public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync([FromBody] OfferFiltersPayload filtersPayload)
     {
-        var offers = await _offersRepository.GetOffersAsync();
+        var offers = await _offersRepository.GetOffersAsync(filtersPayload);
 
         int[] userFavorites = Array.Empty<int>();
 
-        if(!string.IsNullOrEmpty(User.Identity.Name))
+        if(User.Identity != null && !string.IsNullOrEmpty(User.Identity.Name))
         {
             ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user != null){
@@ -225,6 +134,39 @@ public class OfferController : ControllerBase
                     o.Price, 
                     o.Archived,
                     o.CompressedPicture,
+                    userFavorites.Contains(o.Id)))
+                    .ToArray();
+    }
+
+    [HttpGet("all")]
+    public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync()
+    {
+        var offers = await _offersRepository.GetOffersAsync();
+
+        int[] userFavorites = Array.Empty<int>();
+
+        if(User.Identity != null && !string.IsNullOrEmpty(User.Identity.Name))
+        {
+            ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user != null){
+
+                if(user?.AccountId != null) {
+
+                    userFavorites = await _offersRepository.GetUserFavoriteOffersId(user.AccountId);
+                }
+            }
+        }
+
+        return 
+            offers.Select(o => 
+                new OfferListResponse(
+                    o.Id, 
+                    o.ArtistId, 
+                    string.Concat(o.Artist?.FirstName ?? string.Empty, " ", o.Artist?.LastName ?? string.Empty),
+                    o.Title, 
+                    o.Price, 
+                    o.Archived,
+                    "Not included - we value your scrolling time :-)",
                     userFavorites.Contains(o.Id)))
                     .ToArray();
     }

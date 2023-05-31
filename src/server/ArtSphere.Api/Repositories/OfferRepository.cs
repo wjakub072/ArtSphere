@@ -16,6 +16,49 @@ public class OffersRepository
         _compressionService = compressionService;
     }
 
+    public async Task<IEnumerable<Offer>> GetOffersAsync(OfferFiltersPayload filtersPayload)
+    {
+        IQueryable<Offer> offers = _db.Offers.Include(c => c.Artist).Where(o => o.Approved);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Category))
+            offers = offers.Where(c => c.Category == filtersPayload.Category);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Technic))
+            offers = offers.Where(c => c.Technic == filtersPayload.Technic);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Title))
+            offers = offers.Where(c => c.Title == filtersPayload.Title);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Topic))
+            offers = offers.Where(c => c.Topic == filtersPayload.Topic);
+        
+
+        if(filtersPayload.PriceBottom > decimal.Zero)
+            offers = offers.Where(c => c.Price > filtersPayload.PriceBottom);
+
+        if(filtersPayload.PriceTop > decimal.Zero)
+            offers = offers.Where(c => c.Price < filtersPayload.PriceTop);
+        
+        if(filtersPayload.DimensionsXBottom > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsX > filtersPayload.DimensionsXBottom);
+
+        if(filtersPayload.DimensionsXTop > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsX < filtersPayload.DimensionsXTop);
+
+        if(filtersPayload.DimensionsYBottom > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsY > filtersPayload.DimensionsYBottom);
+
+        if(filtersPayload.DimensionsYTop > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsY < filtersPayload.DimensionsYTop);
+
+        return await offers
+                        .OrderByDescending(c => c.Id)
+                        .Skip((filtersPayload.Page - 1) * filtersPayload.PageSize)
+                        .Take(filtersPayload.PageSize)
+                        .AsNoTracking()
+                        .ToListAsync();
+    }
+
     public async Task<IEnumerable<Offer>> GetOffersAsync()
     {
         return await _db.Offers.Include(c => c.Artist).AsNoTracking().ToListAsync();
@@ -61,9 +104,14 @@ public class OffersRepository
         return await _db.Favorites.Where(c => c.UserId == userId).Select(c => c.OfferId).ToArrayAsync();
     }
 
-    public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId)
+    public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId, OfferPaginationPayload paginationPayload)
     {
-        return await _db.Offers.Where(o => o.ArtistId == artistId).AsNoTracking().ToListAsync();
+        return await _db.Offers.Where(o => o.ArtistId == artistId)
+                            .OrderByDescending(c => c.Id)
+                            .Skip((paginationPayload.Page - 1) * paginationPayload.PageSize)
+                            .Take(paginationPayload.PageSize)
+                            .AsNoTracking()
+                            .ToListAsync();
     }
 
     public async Task<Offer> AddOffer(int artistId, OfferPayload offerPayload)
@@ -159,15 +207,20 @@ public class OffersRepository
         await _db.SaveChangesAsync();
     }
 
-    public async Task<Offer> ValidateOffer(int id){
+    public async Task<bool> ValidateOffer(int id, bool result)
+    {
         var offer = await _db.Offers.FirstOrDefaultAsync(c => c.Id == id);
         if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
-
+        if(offer.Validated){
+            return false;
+        }
         offer.Validated = true;
-        
+        offer.Approved = result;
+
         await _db.SaveChangesAsync();
-        return offer;
+        return true;
     }
+    
     public async Task<Offer> ArchiveOffer(int id)
     {
         var offer = await _db.Offers.FirstOrDefaultAsync(c => c.Id == id);
@@ -179,4 +232,8 @@ public class OffersRepository
         return offer;
     }
 
+    internal async Task<Offer?> GetOfferToValidateAsync()
+    {
+        return await _db.Offers.OrderBy(o => o.CreationTime).FirstOrDefaultAsync(o => o.Validated == false);
+    }
 }

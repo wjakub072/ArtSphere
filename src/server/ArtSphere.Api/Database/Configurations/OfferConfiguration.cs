@@ -22,6 +22,7 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
         builder.Property(o => o.DimensionsY).HasColumnType("decimal(11,4)").IsRequired();
         builder.Property(o => o.Unit).HasMaxLength(50).IsRequired();
         builder.Property(o => o.Archived).HasDefaultValue(false);
+        builder.Property(o => o.CreationTime).HasDefaultValueSql("GETDATE()");
 
         builder.HasOne(o => o.Artist)
             .WithMany(c => c.Offers)
