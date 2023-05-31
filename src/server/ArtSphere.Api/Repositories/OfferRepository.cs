@@ -32,6 +32,8 @@ public class OffersRepository
         if(!string.IsNullOrEmpty(filtersPayload.Topic))
             offers = offers.Where(c => c.Topic == filtersPayload.Topic);
         
+        if(!string.IsNullOrEmpty(filtersPayload.Artist))
+            offers = offers.Where(c => string.Concat(c.Artist.FirstName, " ", c.Artist.LastName) == filtersPayload.Artist);
 
         if(filtersPayload.PriceBottom > decimal.Zero)
             offers = offers.Where(c => c.Price > filtersPayload.PriceBottom);
@@ -104,12 +106,12 @@ public class OffersRepository
         return await _db.Favorites.Where(c => c.UserId == userId).Select(c => c.OfferId).ToArrayAsync();
     }
 
-    public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId, OfferPaginationPayload paginationPayload)
+    public async Task<IEnumerable<Offer>> GetArtistsOffers(int artistId, int pageSize, int page)
     {
         return await _db.Offers.Where(o => o.ArtistId == artistId)
                             .OrderByDescending(c => c.Id)
-                            .Skip((paginationPayload.Page - 1) * paginationPayload.PageSize)
-                            .Take(paginationPayload.PageSize)
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
                             .AsNoTracking()
                             .ToListAsync();
     }

@@ -51,13 +51,14 @@ public class ArtistController : ControllerBase
     }
 
     [HttpGet(("{id}/offers"))]
-    public async Task<ActionResult<OfferListResponse[]>> GetArtistOffersAsync(int id, [FromBody] OfferPaginationPayload paginationPayload)
+    public async Task<ActionResult<OfferListResponse[]>> GetArtistOffersAsync(int id, int pageSize, int page)
     {
         var artist = await _usersRepository.GetArtistAsync(id);
 
-        var artistsOffers = await _offersRepository.GetArtistsOffers(artist.Id, paginationPayload);
+        var artistsOffers = await _offersRepository.GetArtistsOffers(artist.Id, pageSize, page);
 
-        return Ok(artistsOffers.Select(o => new OfferListResponse(
+        return Ok(artistsOffers.Where(c => c.Approved)
+            .Select(o => new OfferListResponse(
                 o.Id, 
                 o.ArtistId, 
                 string.Concat(artist.FirstName ?? string.Empty, artist.LastName ?? string.Empty),
