@@ -234,6 +234,6 @@ public class OffersRepository
 
     internal async Task<Offer?> GetOfferToValidateAsync()
     {
-        return await _db.Offers.OrderBy(o => o.CreationTime).FirstOrDefaultAsync(o => o.Validated == false);
+        return await _db.Offers.Include(c => c.Artist).Include(c => c.Tags).OrderBy(o => o.CreationTime).FirstOrDefaultAsync(o => o.Validated == false);
     }
 }

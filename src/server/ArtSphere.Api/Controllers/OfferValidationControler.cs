@@ -54,7 +54,7 @@ public class OfferValidationController : ControllerBase
 
     [Authorize("IsAdmin")]
     [HttpGet("validate")]
-    public async Task<ActionResult<OfferListResponse>> GetLastToValidation()
+    public async Task<ActionResult<OfferToValidateResponse>> GetLastToValidation()
     {
         if(User.Identity == null) {
             return BadRequest(new { success = false, message = "Błąd sesji użytkownika."});
@@ -72,15 +72,18 @@ public class OfferValidationController : ControllerBase
                 return Ok(new {success = true, message = "Brak ofert do walidacji."});
             }
 
-            return Ok(new OfferListResponse(
+            return Ok(new OfferToValidateResponse(
                     lastOffer.Id, 
                     lastOffer.ArtistId, 
                     string.Concat(lastOffer.Artist?.FirstName ?? string.Empty, " ", lastOffer.Artist?.LastName ?? string.Empty),
                     lastOffer.Title, 
+                    lastOffer.Description ?? string.Empty,
                     lastOffer.Price, 
+                    lastOffer.DimensionsX, 
+                    lastOffer.DimensionsY,
                     lastOffer.Archived,
                     lastOffer.CompressedPicture,
-                    false));
+                    lastOffer.Tags.Select(t => t.Name).ToArray()));
         }
 
         return BadRequest(new { success = false, message = "Błąd autoryzacji użytkownika."});   
