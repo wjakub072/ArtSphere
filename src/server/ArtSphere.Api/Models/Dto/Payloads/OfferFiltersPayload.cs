@@ -6,6 +6,7 @@ public class OfferFiltersPayload
     public string? Technic { get; set; }
     public string? Title { get; set; }
     public string? Topic { get; set; }
+    public string? Artist { get; set; }
     public decimal? PriceBottom { get; set; }
     public decimal? PriceTop { get; set; }
     public decimal? DimensionsXBottom { get; set; }
