@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtSphere.Api.Controllers;
 
-[AllowAnonymous]
 [ApiController]
 [Route("api/offers")]
 public class BidController : ControllerBase
@@ -28,7 +27,34 @@ public class BidController : ControllerBase
         _fundsRepository = fundsRepository;
     }
 
-    //TODO IMPLEMENT HIGHEST BID IN SELECTING ANY AUCTIONS, CREATE REMOVE BID REQUEST
+    [Authorize]
+    [HttpDelete("{offerId}/bid")]
+    public async Task<ActionResult> RemoveOfferBidsAsync([FromRoute] int offerId)
+    {
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity!.Name!);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+
+        if(user?.AccountId != null)
+        {
+            if(await _offersRepository.OfferExists(offerId) == false)
+                return BadRequest(new { success = false, message = "Oferta o podanym id nie została odnaleziona."});
+
+            if(await _bidsRepository.DoesUserBidThisOffer(offerId, user.AccountId))
+            {
+                await _bidsRepository.CancelUserBids(offerId, user.AccountId);
+
+                return Ok(new { success = true, message = "Anulowano licytacje oferty."});
+            } 
+            else 
+            {
+                return BadRequest(new { success = false, message = "Użytkownik nie licytuje podanej oferty."});
+            }
+        }
+        
+        throw new Exception("Do użytkownika nie został przypisany żaden profil.");
+    }
+
 
     [Authorize]
     [HttpPost("{offerId}/bid")]
@@ -40,20 +66,41 @@ public class BidController : ControllerBase
 
         if(user?.AccountId != null)
         {
-            if(await _offersRepository.OfferExists(offerId) == false)
+            var offer = await _offersRepository.GetNullableOfferAsync(offerId);
+            if(offer == null)
                 return BadRequest(new { success = false, message = "Oferta o podanym id nie została odnaleziona."});
+
+            if(offer.IsAuction == false)
+                return BadRequest(new { success = false, message = "Oferta nie podlega licytacji."});
+
+            if(offer.AuctionEndTime != null && offer.AuctionEndTime < DateTime.Now)
+                return BadRequest(new { success = false, message = "Licytacja oferty została zakończona."});
 
             if(await _fundsRepository.CheckFundsAmount(user.AccountId, bidPayload.Amount) == false)
                 return BadRequest(new { success = false, message = "Niewystarczająca ilość środków w portfelu!"});
 
-            if(await _bidsRepository.CheckIfHigherBid(offerId, bidPayload.Amount)){
-                
-                await _bidsRepository.PlaceBid(offerId, user!.AccountId, bidPayload.Amount);
+            if(offer.Bids != null && offer.Bids.Any()){
+                if(await _bidsRepository.CheckIfHigherBid(offerId, bidPayload.Amount)){
+                    await _bidsRepository.AddBid(offerId, user!.AccountId, bidPayload.Amount);
 
-                return Ok(new { success = true, message = "Dodano licytacje danej oferty."});
-            } else {
-                return BadRequest(new { success = false, message = "Kwota nie przewyższa najwyższej licytacji oferty."});
+                    return Ok(new { success = true, message = "Dodano licytacje danej oferty."});
+                } else {
+                    return BadRequest(new { success = false, message = "Kwota nie przewyższa najwyższej licytacji oferty."});
+                }
+            } 
+            else
+            {
+                if(offer.Price >= bidPayload.Amount)
+                {
+                    return BadRequest(new { success = false, message = "Kwota nie przewyższa ceny wywoławczej licytacji."});
+                }else 
+                {
+                    await _bidsRepository.AddBid(offerId, user!.AccountId, bidPayload.Amount);
+                    return Ok(new { success = true, message = "Dodano licytacje danej oferty."});
+                }
             }
+
+
         }
         
         throw new Exception("Do użytkownika nie został przypisany żaden profil.");

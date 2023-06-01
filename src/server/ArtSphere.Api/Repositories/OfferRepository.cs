@@ -114,6 +114,11 @@ public class OffersRepository
         return offer;
     }
 
+    public async Task<Offer?> GetNullableOfferAsync(int id)
+    {
+        return await _db.Offers.Include(o => o.Artist).Include(o => o.Tags).Include(c => c.Bids).AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+    }
+
     public async Task<bool> OfferExists(int offerId){
         return await _db.Offers.AnyAsync(o => o.Id == offerId);
     }
@@ -167,6 +172,8 @@ public class OffersRepository
             Topic = offerPayload.Topic,
             Description = offerPayload.Description,
             Price = offerPayload.Price,
+            IsAuction = offerPayload.IsAuction,
+            AuctionEndTime = offerPayload.AuctionEndTime,
             DimensionsX = offerPayload.DimensionsX, 
             DimensionsY = offerPayload.DimensionsY,
             Unit = offerPayload.Unit,

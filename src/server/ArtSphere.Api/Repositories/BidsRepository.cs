@@ -59,7 +59,20 @@ public class BidsRepository
                 }
             };
         }
+    }
 
+    public async Task AddBid(int offerId, int userId, decimal amount){
+        _db.Bids.Add(new Bid(){ BidderId = userId, OfferId = offerId, Value = amount });
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task<bool> DoesUserBidThisOffer(int offerId, int userId)
+    {
+        var offer = await _db.Offers.Where(o => o.Id == offerId).Include(c => c.Bids).AsNoTracking().FirstOrDefaultAsync();
+
+        if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym Id.");
+
+        return await _db.Bids.AnyAsync(c => c.BidderId == userId && c.OfferId == offerId);
     }
 
     public async Task CancelUserBids(int offerId, int userId)
