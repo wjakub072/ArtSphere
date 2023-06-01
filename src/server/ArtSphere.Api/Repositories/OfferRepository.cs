@@ -61,6 +61,46 @@ public class OffersRepository
                         .ToListAsync();
     }
 
+    public async Task<int> GetOffersCountAsync(OfferFiltersPayload filtersPayload)
+    {
+        IQueryable<Offer> offers = _db.Offers.Include(c => c.Artist).Where(o => o.Approved);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Category))
+            offers = offers.Where(c => c.Category == filtersPayload.Category);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Technic))
+            offers = offers.Where(c => c.Technic == filtersPayload.Technic);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Title))
+            offers = offers.Where(c => c.Title == filtersPayload.Title);
+
+        if(!string.IsNullOrEmpty(filtersPayload.Topic))
+            offers = offers.Where(c => c.Topic == filtersPayload.Topic);
+        
+        if(!string.IsNullOrEmpty(filtersPayload.Artist))
+            offers = offers.Where(c => string.Concat(c.Artist.FirstName, " ", c.Artist.LastName) == filtersPayload.Artist);
+
+        if(filtersPayload.PriceBottom > decimal.Zero)
+            offers = offers.Where(c => c.Price > filtersPayload.PriceBottom);
+
+        if(filtersPayload.PriceTop > decimal.Zero)
+            offers = offers.Where(c => c.Price < filtersPayload.PriceTop);
+        
+        if(filtersPayload.DimensionsXBottom > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsX > filtersPayload.DimensionsXBottom);
+
+        if(filtersPayload.DimensionsXTop > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsX < filtersPayload.DimensionsXTop);
+
+        if(filtersPayload.DimensionsYBottom > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsY > filtersPayload.DimensionsYBottom);
+
+        if(filtersPayload.DimensionsYTop > decimal.Zero)
+            offers = offers.Where(c => c.DimensionsY < filtersPayload.DimensionsYTop);
+
+        return await offers.CountAsync();
+    }
+
     public async Task<IEnumerable<Offer>> GetOffersAsync()
     {
         return await _db.Offers.Include(c => c.Artist).AsNoTracking().ToListAsync();
@@ -99,7 +139,7 @@ public class OffersRepository
     public async Task<IEnumerable<Offer>> GetUserFavoriteOffers (int userId)
     {
         var userFavorites = await _db.Favorites.Where(c => c.UserId == userId).ToListAsync();
-        return await _db.Offers.Where(o => userFavorites.Select(c => c.OfferId).Contains(o.Id)).AsNoTracking().ToListAsync();
+        return await _db.Offers.Include(o => o.Artist).Where(o => userFavorites.Select(c => c.OfferId).Contains(o.Id)).AsNoTracking().ToListAsync();
     }
 
     public async Task<int[]> GetUserFavoriteOffersId(int userId){

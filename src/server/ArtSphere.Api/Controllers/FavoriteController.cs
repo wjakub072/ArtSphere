@@ -90,22 +90,29 @@ public class FavoriteController : ControllerBase
     [HttpGet("fav")]
     public async Task<ActionResult<OfferListResponse[]>> GetMyFavoriteOffersAsync()
     {
-        var user = await _usersRepository.GetArtistAsync(User.Identity!.Name!);
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity!.Name!);
 
-        var offers = await _offersRepository.GetUserFavoriteOffers(user.Id);
-        return 
-            offers.Select(o => 
-                new OfferListResponse(
-                    o.Id, 
-                    o.ArtistId, 
-                    string.Concat(user.FirstName ?? string.Empty, " ", user.LastName ?? string.Empty),
-                    o.Title, 
-                    o.Price, 
-                    o.Archived,
-                    o.IsAuction,
-                    o.CompressedPicture,
-                    true))
-                    .ToArray();
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+
+        if(user?.AccountId != null)
+        {
+            var offers = await _offersRepository.GetUserFavoriteOffers(user.AccountId);
+            return 
+                offers.Select(o => 
+                    new OfferListResponse(
+                        o.Id, 
+                        o.ArtistId, 
+                        string.Concat(o.Artist.FirstName ?? string.Empty, " ", o.Artist.LastName ?? string.Empty),
+                        o.Title, 
+                        o.Price, 
+                        o.Archived,
+                        o.IsAuction,
+                        o.CompressedPicture,
+                        true))
+                        .ToArray();
+        }
+        
+        throw new Exception("Do użytkownika nie został przypisany żaden profil.");
     }
 
 }

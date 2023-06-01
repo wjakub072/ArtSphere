@@ -106,6 +106,44 @@ public class OfferController : ControllerBase
                     .ToArray();
     }
 
+    [HttpGet("count")]
+    public async Task<ActionResult<int>> GetOffersPageCountAsync(
+        string? Category,
+        string? Technic,
+        string? Title,
+        string? Topic,
+        string? Artist,
+        decimal? PriceBottom,
+        decimal? PriceTop,
+        decimal? DimensionsXBottom,
+        decimal? DimensionsXTop,
+        decimal? DimensionsYBottom,
+        decimal? DimensionsYTop,
+        string[]? Tags,
+        int PageSize,
+        int Page)
+    {
+        var filtersPayload = new OfferFiltersPayload(){
+            Category = Category,
+            Technic = Technic,
+            Title = Title,
+            Topic = Topic,
+            Artist = Artist,
+            PriceBottom = PriceBottom,
+            PriceTop = PriceTop,
+            DimensionsXBottom = DimensionsXBottom,
+            DimensionsXTop = DimensionsXTop,
+            DimensionsYBottom = DimensionsYBottom,
+            DimensionsYTop = DimensionsYTop,
+            Tags = Tags, 
+            PageSize = PageSize, 
+            Page = Page
+        };
+        var items = await _offersRepository.GetOffersCountAsync(filtersPayload);
+        return Ok(new { pageCount = (items/PageSize)+1});
+    }
+
+
     [HttpGet()]
     public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync(
         string? Category,
