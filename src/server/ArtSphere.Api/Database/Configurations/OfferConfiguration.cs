@@ -33,5 +33,10 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
             .WithOne(t => t.Offer)
             .HasForeignKey(t => t.OfferId)
             .HasPrincipalKey(o => o.Id);
+
+        builder.HasMany(o => o.Bids)
+            .WithOne(t => t.Offer)
+            .HasForeignKey(t => t.OfferId)
+            .HasPrincipalKey(o => o.Id);
     }
 }

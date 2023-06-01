@@ -17,13 +17,15 @@ public class OfferController : ControllerBase
     private readonly OffersRepository _offersRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly UsersRepository _usersRepository;
+    private readonly BidsRepository _bidsRepository;
 
 
-    public OfferController(OffersRepository offersRepository, UsersRepository usersRepository, UserManager<ApplicationUser> userManager)
+    public OfferController(OffersRepository offersRepository, UsersRepository usersRepository, UserManager<ApplicationUser> userManager, BidsRepository bidsRepository)
     {
         _offersRepository = offersRepository;
         _usersRepository = usersRepository;
         _userManager = userManager;
+        _bidsRepository = bidsRepository;
     }
 
     [Authorize]
@@ -92,6 +94,11 @@ public class OfferController : ControllerBase
         var artist = await _usersRepository.GetArtistAsync(User.Identity!.Name!);
 
         var offers = await _offersRepository.GetArtistsOffers(artist.Id, PageSize, Page);
+
+        foreach(var offer in offers.Where(o => o.IsAuction)){
+            offer.Price =  await _bidsRepository.GetHighestOfferBid(offer.Id);
+        }
+
         return 
             offers.Select(o => 
                 new OfferListResponse(
@@ -101,9 +108,48 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.IsAuction,
                     o.CompressedPicture))
                     .ToArray();
     }
+
+    [HttpGet("count")]
+    public async Task<ActionResult<int>> GetOffersPageCountAsync(
+        string? Category,
+        string? Technic,
+        string? Title,
+        string? Topic,
+        string? Artist,
+        decimal? PriceBottom,
+        decimal? PriceTop,
+        decimal? DimensionsXBottom,
+        decimal? DimensionsXTop,
+        decimal? DimensionsYBottom,
+        decimal? DimensionsYTop,
+        string[]? Tags,
+        int PageSize,
+        int Page)
+    {
+        var filtersPayload = new OfferFiltersPayload(){
+            Category = Category,
+            Technic = Technic,
+            Title = Title,
+            Topic = Topic,
+            Artist = Artist,
+            PriceBottom = PriceBottom,
+            PriceTop = PriceTop,
+            DimensionsXBottom = DimensionsXBottom,
+            DimensionsXTop = DimensionsXTop,
+            DimensionsYBottom = DimensionsYBottom,
+            DimensionsYTop = DimensionsYTop,
+            Tags = Tags, 
+            PageSize = PageSize, 
+            Page = Page
+        };
+        var items = await _offersRepository.GetOffersCountAsync(filtersPayload);
+        return Ok(new { pageCount = (items/PageSize)+1});
+    }
+
 
     [HttpGet()]
     public async Task<ActionResult<OfferListResponse[]>> GetOffersAsync(
@@ -154,6 +200,10 @@ public class OfferController : ControllerBase
             }
         }
 
+        foreach(var offer in offers.Where(o => o.IsAuction)){
+            offer.Price =  await _bidsRepository.GetHighestOfferBid(offer.Id);
+        }
+
         return 
             offers.Select(o => 
                 new OfferListResponse(
@@ -163,6 +213,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.IsAuction,
                     o.CompressedPicture,
                     userFavorites.Contains(o.Id)))
                     .ToArray();
@@ -187,6 +238,10 @@ public class OfferController : ControllerBase
             }
         }
 
+        foreach(var offer in offers.Where(o => o.IsAuction)){
+            offer.Price =  await _bidsRepository.GetHighestOfferBid(offer.Id);
+        }
+
         return 
             offers.Select(o => 
                 new OfferListResponse(
@@ -196,6 +251,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.IsAuction,
                     "Not included - we value your scrolling time :-)",
                     userFavorites.Contains(o.Id)))
                     .ToArray();
@@ -205,6 +261,12 @@ public class OfferController : ControllerBase
     public async Task<ActionResult<OfferDetailsResponse>> GetOfferDescriptionAsync(int id)
     {
         var offer = await _offersRepository.GetOfferAsync(id);
+
+        if(offer.IsAuction)
+        {
+            offer.Price = await _bidsRepository.GetHighestOfferBid(offer.Id);
+        }
+
         return new OfferDetailsResponse(
             offer.Id,
             offer.ArtistId,
@@ -218,7 +280,9 @@ public class OfferController : ControllerBase
             offer.Unit,
             offer.Title,
             offer.Price,
+            offer.IsAuction,
             offer.Archived,
+            offer.AuctionEndTime,
             offer.Picture,
             offer.Tags?.Select(o => o.Name).ToArray()
         );

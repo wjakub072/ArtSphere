@@ -21,6 +21,8 @@ public class OfferPayload
     public decimal DimensionsY { get; set; }
     [Required]
     public string Unit { get; set; }
+    public bool IsAuction { get; set; }
+    public DateTime? AuctionEndTime { get; set; }
     public string? Picture { get; set; }
     public string[]? Tags { get; set; }
 }

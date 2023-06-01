@@ -8,6 +8,7 @@ public record OfferListResponse
     string Title, 
     decimal Price,
     bool Archived,
+    bool IsAuction,
     string? Photo,
     bool UserFavorite = false
 );
