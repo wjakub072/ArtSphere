@@ -14,6 +14,7 @@ public record OfferDetailsResponse
     string Unit, 
     string Title, 
     decimal Price,
+    bool IsAuction,
     bool Archived,
     string? Photo,
     string[]? Tags

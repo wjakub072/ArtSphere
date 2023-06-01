@@ -259,6 +259,7 @@ public class OfferController : ControllerBase
             offer.Unit,
             offer.Title,
             offer.Price,
+            offer.IsAuction,
             offer.Archived,
             offer.Picture,
             offer.Tags?.Select(o => o.Name).ToArray()
