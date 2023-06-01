@@ -17,13 +17,15 @@ public class OfferController : ControllerBase
     private readonly OffersRepository _offersRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly UsersRepository _usersRepository;
+    private readonly BidsRepository _bidsRepository;
 
 
-    public OfferController(OffersRepository offersRepository, UsersRepository usersRepository, UserManager<ApplicationUser> userManager)
+    public OfferController(OffersRepository offersRepository, UsersRepository usersRepository, UserManager<ApplicationUser> userManager, BidsRepository bidsRepository)
     {
         _offersRepository = offersRepository;
         _usersRepository = usersRepository;
         _userManager = userManager;
+        _bidsRepository = bidsRepository;
     }
 
     [Authorize]
@@ -92,6 +94,11 @@ public class OfferController : ControllerBase
         var artist = await _usersRepository.GetArtistAsync(User.Identity!.Name!);
 
         var offers = await _offersRepository.GetArtistsOffers(artist.Id, PageSize, Page);
+
+        foreach(var offer in offers.Where(o => o.IsAuction)){
+            offer.Price =  await _bidsRepository.GetHighestOfferBid(offer.Id);
+        }
+
         return 
             offers.Select(o => 
                 new OfferListResponse(
@@ -193,6 +200,10 @@ public class OfferController : ControllerBase
             }
         }
 
+        foreach(var offer in offers.Where(o => o.IsAuction)){
+            offer.Price =  await _bidsRepository.GetHighestOfferBid(offer.Id);
+        }
+
         return 
             offers.Select(o => 
                 new OfferListResponse(
@@ -227,6 +238,10 @@ public class OfferController : ControllerBase
             }
         }
 
+        foreach(var offer in offers.Where(o => o.IsAuction)){
+            offer.Price =  await _bidsRepository.GetHighestOfferBid(offer.Id);
+        }
+
         return 
             offers.Select(o => 
                 new OfferListResponse(
@@ -246,6 +261,12 @@ public class OfferController : ControllerBase
     public async Task<ActionResult<OfferDetailsResponse>> GetOfferDescriptionAsync(int id)
     {
         var offer = await _offersRepository.GetOfferAsync(id);
+
+        if(offer.IsAuction)
+        {
+            offer.Price = await _bidsRepository.GetHighestOfferBid(offer.Id);
+        }
+
         return new OfferDetailsResponse(
             offer.Id,
             offer.ArtistId,

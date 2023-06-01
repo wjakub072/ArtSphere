@@ -67,7 +67,7 @@ public class BidController : ControllerBase
         if(user?.AccountId != null)
         {
             var offer = await _offersRepository.GetNullableOfferAsync(offerId);
-            if(offer == null)
+            if(offer == null || offer.Approved == false)
                 return BadRequest(new { success = false, message = "Oferta o podanym id nie została odnaleziona."});
 
             if(offer.IsAuction == false)
