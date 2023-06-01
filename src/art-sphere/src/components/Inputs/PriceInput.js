@@ -3,7 +3,6 @@ import classNames from "classnames";
 
 function PriceInput({ title, value, onChange, label = title }) {
   const [focused, setFocused] = useState(false);
-  const [val, setVal] = useState(value);
 
   const handleFocus = (e) => {
     e.target.select();
@@ -18,11 +17,9 @@ function PriceInput({ title, value, onChange, label = title }) {
     const newValue = parseFloat(event.target.value);
     if (newValue >= 0) {
       value = newValue;
-      setVal(newValue);
       onChange(value);
     } else {
       onChange(0);
-      setVal(0);
     }
   };
 
@@ -49,7 +46,7 @@ function PriceInput({ title, value, onChange, label = title }) {
             }
           )}
           placeholder="0.00"
-          value={val}
+          value={value}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

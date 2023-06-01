@@ -2,9 +2,8 @@ import { useState } from "react";
 import classNames from "classnames";
 import { SearchIcon } from "@heroicons/react/solid";
 
-function TitleSearchbox({ value, onChange }) {
+function TitleSearchbox(props) {
   const [focused, setFocused] = useState(false);
-  const [val, setVal] = useState(value);
 
   const handleFocus = () => {
     setFocused(true);
@@ -15,8 +14,7 @@ function TitleSearchbox({ value, onChange }) {
   };
 
   const handleChange = (event) => {
-    setVal(event.target.value);
-    onChange(event.target.value);
+    props.onChange(event.target.value);
   };
 
   return (
@@ -45,7 +43,7 @@ function TitleSearchbox({ value, onChange }) {
             }
           )}
           placeholder="Szukaj"
-          value={val}
+          value={props.value}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

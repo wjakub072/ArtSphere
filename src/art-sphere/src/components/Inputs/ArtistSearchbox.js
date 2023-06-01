@@ -4,7 +4,6 @@ import { SearchIcon, UserIcon } from "@heroicons/react/solid";
 
 function ArtistSearchBox({ value, onChange }) {
   const [focused, setFocused] = useState(false);
-  const [val, setVal] = useState(value);
 
   const handleFocus = () => {
     setFocused(true);
@@ -15,7 +14,6 @@ function ArtistSearchBox({ value, onChange }) {
   };
 
   const handleChange = (event) => {
-    setVal(event.target.value);
     onChange(event.target.value);
   };
 
@@ -45,7 +43,7 @@ function ArtistSearchBox({ value, onChange }) {
             }
           )}
           placeholder="Szukaj"
-          value={val}
+          value={value}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
