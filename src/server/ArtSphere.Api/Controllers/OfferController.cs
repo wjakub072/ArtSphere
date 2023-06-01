@@ -261,6 +261,7 @@ public class OfferController : ControllerBase
             offer.Price,
             offer.IsAuction,
             offer.Archived,
+            offer.AuctionEndTime,
             offer.Picture,
             offer.Tags?.Select(o => o.Name).ToArray()
         );
