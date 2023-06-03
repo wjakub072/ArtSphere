@@ -66,7 +66,7 @@ public class OrderController : ControllerBase
                                     o.ExecutionDate,
                                     o.Elements.Count, 
                                     o.Amount, 
-                                    Enum.GetName(typeof(OrderStatus), o.Status) ?? "Unrecognised"
+                                    o.GetStatus()
                                 )
                             )
                     .ToArray());
@@ -77,6 +77,52 @@ public class OrderController : ControllerBase
 
         return BadRequest("Do użytkownika nie został przypisany żaden profil.");
     }
+
+    [Authorize]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OrderDescriptionResponse>> GetUserOrderAsync(int id)
+    {
+        ApplicationUser? user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+        
+        if(user?.AccountId != null)
+        {
+            var order = await _ordersRepository.GetUserOrderAsync(user.AccountId, id);
+            
+            if(order == null)
+                return BadRequest(new { success = false, message = "Określone zamówienie nie zostało odnalezione."});
+
+            if(order.Status != OrderStatus.Canceled)
+            {
+                if(DateTime.Now.AddHours(-4) > order.ExecutionDate)
+                    order.Status = OrderStatus.InRealization;
+                
+                if(DateTime.Now.AddDays(-2) > order.ExecutionDate)
+                    order.Status = OrderStatus.Shipped;
+                
+                if(DateTime.Now.AddDays(-4) > order.ExecutionDate)
+                    order.Status = OrderStatus.Received;
+            }
+            
+            return Ok(new OrderDescriptionResponse(
+                order.Id, 
+                order.ExecutionDate,
+                order.Elements.Count,
+                order.Amount,
+                order.GetStatus(),
+                    order.Elements.Select(
+                        new OrderElementResponse
+                        (
+                        
+                        )
+                    )
+            ));
+        }
+
+        return BadRequest("Do użytkownika nie został przypisany żaden profil.");
+    }
+
 
     [Authorize]
     [HttpDelete("{id}")]

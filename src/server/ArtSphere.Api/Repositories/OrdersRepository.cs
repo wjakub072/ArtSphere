@@ -24,6 +24,14 @@ public class OrdersRepository
                                 .ToListAsync();
     }
 
+    public async Task<Order?> GetUserOrderAsync(int userId, int orderId)
+    {
+        return await _db.Orders.Where(c => c.UserId == userId && c.Id == orderId)
+                                .Include(c => c.Elements)
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync();
+    }
+
     public async Task<Order?> GetOrderAsync(int orderId)
     {
         return await _db.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == orderId);
