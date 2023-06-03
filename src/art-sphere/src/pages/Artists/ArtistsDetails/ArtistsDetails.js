@@ -12,6 +12,8 @@ function ArtistsDetails(props) {
   const [loadingOffers, setLoadingOffers] = useState(true);
   const [artist, setArtist] = useState(null);
   const [artistOffers, setArtistOffers] = useState(null);
+  const [pagesInfo, setPagesInfo] = useState({ pageSize: 200, page: 1 });
+  const [pageCount, setPageCount] = useState(0);
 
   useEffect(() => {
     getArtist();
@@ -33,7 +35,10 @@ function ArtistsDetails(props) {
   const getArtisOffers = async () => {
     try {
       const artistOffersData = await axiosInstace.get(
-        `artists/${artistId}/offers`
+        `artists/${artistId}/offers`,
+        {
+          params: pagesInfo,
+        }
       );
       console.log(artistOffersData.data);
       setArtistOffers(artistOffersData.data);

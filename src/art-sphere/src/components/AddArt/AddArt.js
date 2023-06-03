@@ -10,6 +10,9 @@ import Description from "../Inputs/Description";
 import AuthContext from "../../context/AuthContext";
 import axiosInstace from "../../api/axiosInstance";
 import { categories, topics, technics } from "../../data/artStaticData";
+import DatePicker from "react-datepicker";
+import pl from "date-fns/locale/pl";
+import "react-datepicker/dist/react-datepicker.css";
 import "./addArt.css";
 
 function AddArt() {
@@ -39,6 +42,10 @@ function AddArt() {
     width: 0,
     tags: [],
   });
+  const [isAuction, setIsAuction] = useState(false);
+  const [date, setDate] = useState(
+    new Date(Date.now() + 1000 * 60 * 60 * 24 * 14)
+  );
 
   const addArt = async (data) => {
     try {
@@ -86,6 +93,8 @@ function AddArt() {
         title: artData.title,
         description: artData.description,
         price: artData.price,
+        isauction: isAuction,
+        auctionEndTime: date.toISOString().split("T")[0],
         DimensionsX: artData.width,
         DimensionsY: artData.height,
         unit: "cm",
@@ -124,6 +133,38 @@ function AddArt() {
           value={artData.img}
           onChange={(val) => setArtData({ ...artData, img: val })}
         />
+        <div className="text-center mb-2 mt-4 p-0.5">
+          <input
+            className="w-4 h-4 accent-indigo-600 bg-indigo-600 rounded-md focus:ring-1 focus:ring-indigo-600 border-2 focus:outline-none focus:border-indigo-600 "
+            value={isAuction}
+            onChange={(e) => setIsAuction(e.target.checked)}
+            type="checkbox"
+            id="auction"
+            name="auction"
+          />
+          <label
+            className="text-indigo-600 px-2 pb-1 text-base font-medium"
+            htmlFor="auction"
+          >
+            Czy wystawić na aukcję?
+          </label>
+        </div>
+        {isAuction && (
+          <div className="text-left mx-auto mb-3 p-0.5">
+            <label>
+              <p className="text-sm mb-1 font-medium leading-6 text-indigo-600">
+                Data zakończenia aukcji
+              </p>
+              <DatePicker
+                locale={pl}
+                selected={date}
+                onChange={(date) => setDate(date)}
+                minDate={new Date(Date.now() + 1000 * 60 * 60 * 24 * 14)}
+                dateFormat="yyyy/MM/dd"
+              />
+            </label>
+          </div>
+        )}
         <div className="text-left mb-3 p-0.5">
           <TitleInput
             value={artData.title}
@@ -161,7 +202,7 @@ function AddArt() {
           <div>
             <div className="mb-3 p-0.5">
               <PriceInput
-                title="Cena"
+                title={`Cena ${isAuction ? "wywoławcza" : ""}`}
                 value={artData.price}
                 onChange={(val) => setArtData({ ...artData, price: val })}
               />

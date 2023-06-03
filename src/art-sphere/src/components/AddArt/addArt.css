@@ -6,3 +6,82 @@
 .add-art.show {
   max-height: 100%;
 }
+
+.react-datepicker {
+  @apply border-indigo-800 rounded-lg text-base;
+}
+.react-datepicker__header {
+  @apply border-indigo-800 !rounded-t-lg bg-zinc-200;
+}
+.react-datepicker__current-month {
+  @apply text-indigo-600;
+}
+.react-datepicker__day-name {
+  @apply text-indigo-600;
+}
+.react-datepicker__input-container input {
+  @apply w-full rounded-xl py-1.5 pl-4 pr-3 border-2 border-transparent focus:outline-none focus:border-indigo-600;
+}
+
+.react-datepicker-popper {
+  @apply left-1/2 -translate-x-1/2;
+}
+
+.react-datepicker-popper[data-placement^="top"]
+  .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^="bottom"]
+  .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^="top"]
+  .react-datepicker__triangle::after,
+.react-datepicker-popper[data-placement^="bottom"]
+  .react-datepicker__triangle::after {
+  left: -20px;
+}
+
+.react-datepicker-popper[data-placement^="bottom"]
+  .react-datepicker__triangle::before {
+  @apply border-b-indigo-800;
+}
+.react-datepicker-popper[data-placement^="bottom"]
+  .react-datepicker__triangle::after {
+  @apply border-b-zinc-200;
+}
+
+.react-datepicker-popper[data-placement^="top"]
+  .react-datepicker__triangle::before {
+  @apply !border-t-indigo-800;
+}
+
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow,
+.react-datepicker__navigation-icon::before {
+  @apply border-indigo-600 hover:border-indigo-800;
+}
+
+.react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+  @apply border-indigo-800;
+}
+.react-datepicker__navigation:focus .react-datepicker__navigation-icon::before {
+  @apply border-indigo-800;
+}
+
+.react-datepicker__navigation {
+  @apply focus-visible:outline-none rounded-md focus-visible:ring-2 focus-visible:ring-indigo-800;
+}
+
+.react-datepicker__navigation-icon {
+  @apply text-base;
+}
+
+.react-datepicker__day--keyboard-selected {
+  @apply bg-indigo-400 hover:!bg-indigo-600 hover:!text-white focus-visible:bg-indigo-600 focus-visible:text-white focus-visible:outline-indigo-800;
+}
+
+.react-datepicker__day:hover {
+  @apply bg-zinc-200;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-indigo-600 text-white hover:!bg-indigo-800 focus-visible:bg-indigo-800 focus-visible:outline-indigo-600;
+}
