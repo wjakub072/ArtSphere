@@ -32,6 +32,7 @@ function OfferDetails() {
     } else {
       setBidValueErrors("");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bidValue]);
 
   useEffect(() => {
@@ -281,8 +282,24 @@ function OfferDetails() {
             <p className="text-indigo-800 font-bold">
               {offer.isAuction ? "Aktualna cena licytacji:" : "Cena:"}
             </p>
-            <p className="text-indigo-600 font-semibold">{offer.price} zł</p>
+
+            <p className="text-indigo-600 font-semibold">{offer.price} PLN</p>
           </div>
+          {offer.isAuction && (
+            <div className="mb-4">
+              <p className="text-indigo-800 font-bold">
+                Data zakończenia licytacji:
+              </p>
+
+              <p className="text-indigo-600 font-semibold">
+                {new Date(offer.auctionEndTime).toLocaleString("pl-PL", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
+          )}
 
           {offer.archived && (
             <button

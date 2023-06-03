@@ -75,8 +75,15 @@ const Favorite = () => {
                     />
                   </div>
                   <div className="px-4 py-2 relative">
-                    <h2 className="text-lg font-bold">{item.title}</h2>
-                    <p className="text-lg font-bold mt-2">{item.price} PLN</p>
+                    <h2 className="text-lg font-bold text-indigo-600">
+                      {item.title}
+                    </h2>
+                    <p className="text-sm text-indigo-600">
+                      Autor: {item.artistName}
+                    </p>
+                    <p className="text-lg font-bold mt-2 text-indigo-600">
+                      {item.price} PLN
+                    </p>
                     <button
                       onClick={(e) => removeFromFav(e, item.id)}
                       className="absolute right-3 top-3 text-yellow-400 rounded-md border-transparent border-2 focus:outline-none focus:border-indigo-600"

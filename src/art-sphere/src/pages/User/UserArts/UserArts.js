@@ -83,8 +83,12 @@ const UserArts = () => {
                     )}
                   </div>
                   <div className="px-4 py-2">
-                    <h2 className="text-lg font-bold">{item.title}</h2>
-                    <p className="text-lg font-bold mt-2">{item.price} PLN</p>
+                    <h2 className="text-lg font-bold text-indigo-600">
+                      {item.title}
+                    </h2>
+                    <p className="text-lg font-bold mt-2 text-indigo-600">
+                      {item.price} PLN
+                    </p>
                   </div>
                 </Link>
               ))}
