@@ -165,6 +165,17 @@ public class OffersRepository
                             .ToListAsync();
     }
 
+    public async Task<IEnumerable<Offer>> GetLatestOffers(bool auctions, int pageSize, int page)
+    {
+        return await _db.Offers.Where(o => o.IsAuction == auctions && o.Approved == true)
+                            .Include(c => c.Artist)
+                            .OrderByDescending(c => c.Id)
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
+                            .AsNoTracking()
+                            .ToListAsync();
+    }
+
     public async Task<Offer> AddOffer(int artistId, OfferPayload offerPayload)
     {
         var offer = new Offer()

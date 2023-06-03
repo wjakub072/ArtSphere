@@ -113,6 +113,37 @@ public class OfferController : ControllerBase
                     .ToArray();
     }
 
+    [HttpGet("latest")]
+    public async Task<ActionResult<OfferListResponse[]>> GetLatestOffersAsync(string? type, int PageSize, int Page)
+    {
+        if(User.Identity == null){
+            return BadRequest(new { success = false, message = "Brak sesji użytkownika."});
+        }
+
+        bool onlyAuctions = type == "auction";
+        var offers = await _offersRepository.GetLatestOffers(onlyAuctions, PageSize, Page);
+
+        if(onlyAuctions)
+        {
+            foreach(var offer in offers.Where(o => o.IsAuction)){
+                offer.Price =  await _bidsRepository.GetHighestOfferBid(offer.Id);
+            }
+        }
+
+        return 
+            offers.Select(o => 
+                new OfferListResponse(
+                    o.Id, 
+                    o.ArtistId, 
+                    string.Concat(o.Artist.FirstName ?? string.Empty, " ", o.Artist.LastName ?? string.Empty),
+                    o.Title, 
+                    o.Price, 
+                    o.Archived,
+                    o.IsAuction,
+                    o.CompressedPicture))
+                    .ToArray();
+    }
+
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetOffersPageCountAsync(
         string? Category,
