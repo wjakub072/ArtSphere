@@ -59,7 +59,7 @@ const Favorite = () => {
             <div className="mt-16 w-48 h-48 mx-auto">
               <Loading />
             </div>
-          ) : (
+          ) : offerList[0] ? (
             <div className="m-7 grid grid-cols-1 auto-rows-min lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {offerList.map((item) => (
                 <Link
@@ -94,6 +94,10 @@ const Favorite = () => {
                 </Link>
               ))}
             </div>
+          ) : (
+            <h3 className="text-center text-2xl font-bold text-indigo-600 tracking-wider">
+              Nie dodano jeszcze żadnych ofert do ulubionych
+            </h3>
           )}
         </div>
       </div>
