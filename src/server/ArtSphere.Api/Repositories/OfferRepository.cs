@@ -123,6 +123,10 @@ public class OffersRepository
         return await _db.Offers.AnyAsync(o => o.Id == offerId);
     }
 
+    public async Task<bool> IsOfferAnAuction(int offerId){
+        return await _db.Offers.AnyAsync(o => o.Id == offerId && o.IsAuction == true);
+    }
+
     public async Task<bool> DoesUserFavorOffer(int userId, int offerId)
     {
         return await _db.Favorites.Where(c => c.UserId == userId && c.OfferId == offerId).AnyAsync();

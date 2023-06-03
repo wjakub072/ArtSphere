@@ -79,6 +79,8 @@ public class OfferValidationController : ControllerBase
                     lastOffer.Title, 
                     lastOffer.Description ?? string.Empty,
                     lastOffer.Price, 
+                    lastOffer.IsAuction,
+                    lastOffer.AuctionEndTime,
                     lastOffer.DimensionsX, 
                     lastOffer.DimensionsY,
                     lastOffer.Archived,

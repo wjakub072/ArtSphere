@@ -8,6 +8,8 @@ public record OfferToValidateResponse
     string Title, 
     string? Description,
     decimal Price,
+    bool IsAuction, 
+    DateTime? AuctionEndTime,
     decimal DimensionsX,
     decimal DimensionsY,
     bool Archived,

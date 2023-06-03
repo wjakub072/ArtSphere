@@ -20,12 +20,14 @@ public class OrderController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly UsersRepository _usersRepository;
     private readonly OrdersRepository _ordersRepository;
+    private readonly BidsRepository _bidsRepository;
 
-    public OrderController(UserManager<ApplicationUser> userManager, UsersRepository usersRepository, OrdersRepository ordersRepository)
+    public OrderController(UserManager<ApplicationUser> userManager, UsersRepository usersRepository, OrdersRepository ordersRepository, BidsRepository bidsRepository)
     {
         _userManager = userManager;
         _usersRepository = usersRepository;
         _ordersRepository = ordersRepository;
+        _bidsRepository = bidsRepository;
     }
 
     [Authorize]
@@ -66,7 +68,7 @@ public class OrderController : ControllerBase
                                     o.ExecutionDate,
                                     o.Elements.Count, 
                                     o.Amount, 
-                                    Enum.GetName(typeof(OrderStatus), o.Status) ?? "Unrecognised"
+                                    o.GetStatus()
                                 )
                             )
                     .ToArray());
@@ -77,6 +79,64 @@ public class OrderController : ControllerBase
 
         return BadRequest("Do użytkownika nie został przypisany żaden profil.");
     }
+
+    [Authorize]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OrderDescriptionResponse>> GetUserOrderAsync(int id)
+    {
+        ApplicationUser? user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+        
+        if(user?.AccountId != null)
+        {
+            var order = await _ordersRepository.GetUserOrderAsync(user.AccountId, id);
+            
+            if(order == null)
+                return BadRequest(new { success = false, message = "Określone zamówienie nie zostało odnalezione."});
+
+            if(order.Status != OrderStatus.Canceled)
+            {
+                if(DateTime.Now.AddHours(-4) > order.ExecutionDate)
+                    order.Status = OrderStatus.InRealization;
+                
+                if(DateTime.Now.AddDays(-2) > order.ExecutionDate)
+                    order.Status = OrderStatus.Shipped;
+                
+                if(DateTime.Now.AddDays(-4) > order.ExecutionDate)
+                    order.Status = OrderStatus.Received;
+            }
+
+            foreach(var offer in order.Elements.Select(e => e.Offer).Where(c => c.IsAuction))
+            {
+                offer.Price =  await _bidsRepository.GetHighestOfferBid(offer.Id);
+            }
+            
+            return Ok(new OrderDescriptionResponse(
+                order.Id, 
+                order.ExecutionDate,
+                order.Elements.Count,
+                order.Amount,
+                order.GetStatus(),
+                    order.Elements.Select(o => 
+                        new OrderElementResponse
+                        (
+                            o.Id, 
+                            o.Offer.ArtistId,
+                            string.Concat(o.Offer.Artist?.FirstName ?? string.Empty, " ", o.Offer.Artist?.LastName ?? string.Empty),
+                            o.Offer.Title, 
+                            o.Offer.IsAuction,
+                            o.Offer.AuctionEndTime,
+                            o.Offer.Price, 
+                            o.Offer.CompressedPicture
+                        )
+                    ).ToArray()
+            ));
+        }
+
+        return BadRequest("Do użytkownika nie został przypisany żaden profil.");
+    }
+
 
     [Authorize]
     [HttpDelete("{id}")]

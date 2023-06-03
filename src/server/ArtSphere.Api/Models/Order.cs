@@ -28,6 +28,23 @@ public class Order
     public string? CompanyAddressPostalCode { get; set; }
     public string? CompanyAddressCity { get; set; }
     public string? CompanyAddressCountry { get; set; }
+
+    public string GetStatus(){
+        switch (this.Status){
+            case OrderStatus.Created: 
+                return "Utworzone";
+            case OrderStatus.InRealization:
+                return "W realizacji";
+            case OrderStatus.Shipped: 
+                return "Nadane";
+            case OrderStatus.Received: 
+                return "Odebrane";
+            case OrderStatus.Canceled:
+                return "Anulowane";
+            default:
+                return "Nieznany status";
+        }
+    }
 }
 
 public enum OrderStatus {
