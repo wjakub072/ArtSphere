@@ -4,8 +4,10 @@ public record OrderElementResponse
 (
     int OfferId, 
     int ArtistId,
-    int ArtistName,
+    string ArtistName,
     string Title, 
+    bool IsAuction,
+    DateTime? AuctionEndTime,
     decimal Price,
     string? Photo
 );

@@ -114,10 +114,12 @@ public class ShoppingCartController : ControllerBase
         
         if(user?.AccountId != null)
         {
-            if(!(await _offersRepository.OfferExists(offerId))){
+            if(await _offersRepository.OfferExists(offerId) == false)
                 return BadRequest(new { success = false, message = "Określona oferta nie została odnaleziona."});
-            }
-
+            
+            if(await _offersRepository.IsOfferAnAuction(offerId) == false)
+                return BadRequest(new { success = false, message = "Określona oferta jest licytacją."});
+            
             if(await _shoppingCartRepository.OfferExistsInUserShoppingCart(user.AccountId, offerId)){
                 return BadRequest(new { success = false, message = "Ofera już znajduje się w koszu zakupowym użytkownika."});
             }

@@ -20,12 +20,14 @@ public class OrderController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly UsersRepository _usersRepository;
     private readonly OrdersRepository _ordersRepository;
+    private readonly BidsRepository _bidsRepository;
 
-    public OrderController(UserManager<ApplicationUser> userManager, UsersRepository usersRepository, OrdersRepository ordersRepository)
+    public OrderController(UserManager<ApplicationUser> userManager, UsersRepository usersRepository, OrdersRepository ordersRepository, BidsRepository bidsRepository)
     {
         _userManager = userManager;
         _usersRepository = usersRepository;
         _ordersRepository = ordersRepository;
+        _bidsRepository = bidsRepository;
     }
 
     [Authorize]
@@ -104,6 +106,11 @@ public class OrderController : ControllerBase
                 if(DateTime.Now.AddDays(-4) > order.ExecutionDate)
                     order.Status = OrderStatus.Received;
             }
+
+            foreach(var offer in order.Elements.Select(e => e.Offer).Where(c => c.IsAuction))
+            {
+                offer.Price =  await _bidsRepository.GetHighestOfferBid(offer.Id);
+            }
             
             return Ok(new OrderDescriptionResponse(
                 order.Id, 
@@ -111,12 +118,19 @@ public class OrderController : ControllerBase
                 order.Elements.Count,
                 order.Amount,
                 order.GetStatus(),
-                    order.Elements.Select(
+                    order.Elements.Select(o => 
                         new OrderElementResponse
                         (
-                        
+                            o.Id, 
+                            o.Offer.ArtistId,
+                            string.Concat(o.Offer.Artist?.FirstName ?? string.Empty, " ", o.Offer.Artist?.LastName ?? string.Empty),
+                            o.Offer.Title, 
+                            o.Offer.IsAuction,
+                            o.Offer.AuctionEndTime,
+                            o.Offer.Price, 
+                            o.Offer.CompressedPicture
                         )
-                    )
+                    ).ToArray()
             ));
         }
 

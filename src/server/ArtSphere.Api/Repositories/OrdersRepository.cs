@@ -28,6 +28,8 @@ public class OrdersRepository
     {
         return await _db.Orders.Where(c => c.UserId == userId && c.Id == orderId)
                                 .Include(c => c.Elements)
+                                .ThenInclude(c => c.Offer)
+                                .ThenInclude(c => c.Artist)
                                 .AsNoTracking()
                                 .FirstOrDefaultAsync();
     }
