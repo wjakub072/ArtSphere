@@ -32,9 +32,9 @@ function AddArt() {
   const [loadingButton, setLoadingButton] = useState(false);
   const [artData, setArtData] = useState({
     img: "",
-    category: "",
-    topic: "",
-    technic: "",
+    category: "-",
+    topic: "-",
+    technic: "-",
     title: "",
     description: "",
     price: 0,
@@ -177,6 +177,7 @@ function AddArt() {
               <GenericComboImput
                 title="Kategoria"
                 list={categories}
+                value={artData.category}
                 onChange={(val) =>
                   setArtData({ ...artData, category: val.name })
                 }
@@ -186,6 +187,7 @@ function AddArt() {
               <GenericComboImput
                 title="Tematyka"
                 list={topics}
+                value={artData.topic}
                 onChange={(val) => setArtData({ ...artData, topic: val.name })}
               />
             </div>
@@ -193,6 +195,7 @@ function AddArt() {
               <GenericComboImput
                 title="Technika"
                 list={technics}
+                value={artData.technic}
                 onChange={(val) =>
                   setArtData({ ...artData, technic: val.name })
                 }

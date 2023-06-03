@@ -25,6 +25,7 @@ import OfferDetails from "./pages/Gallery/OfferDetails/OfferDetails";
 import EditArt from "./components/EditArt/EditArt";
 import Carts from "./pages/Carts/Carts";
 import Payment from "./pages/Carts/Payment/Payment";
+import OrderDetails from "./pages/User/ShoppingHistory/OrderDetails.js/OrderDetails";
 
 function App() {
   const content = (
@@ -86,6 +87,7 @@ function App() {
         >
           <Route index element={<Profile />} />
           <Route path="mojeZakupy" element={<ShoppingHistory />} />
+          <Route path="mojeZakupy/:orderId" element={<OrderDetails />} />
           <Route path="ulubione" element={<Favorite />} />
           <Route path="Portfel" element={<TopUpWallet />} />
           <Route path="adresDostawy" element={<DeliveryAddress />} />

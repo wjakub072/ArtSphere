@@ -67,7 +67,7 @@ const ShoppingHistory = () => {
           >
             <div className="w-2/12 text-indigo-600 font-bold justify-center md:flex items-center">
               <Link
-                to={`mojeZakupy/${item.orderId}`}
+                to={`${item.orderId}`}
                 className="flex underline border-2 border-transparent rounded-md focus:border-indigo-800 hover:text-indigo-800 focus:outline-none focus:text-indigo-800 p-0.5"
               >
                 ID: <p>{item.orderId}</p>

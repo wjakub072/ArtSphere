@@ -33,25 +33,6 @@ const OrderDetails = () => {
     }
   };
 
-  const handleDeleteButton = async (id) => {
-    console.log(id);
-    try {
-      const deleteOffer = await axiosInstace.delete(`profile/cart/${id}`, {
-        withCredentials: true,
-      });
-
-      const getOfferList = await axiosInstace.get("profile/cart", {
-        withCredentials: true,
-      });
-      console.log(getOfferList.data);
-      setOfferList(getOfferList.data);
-      console.log(deleteOffer.data);
-    } catch (err) {
-      console.log(err);
-      errorResponseHandler(err);
-    }
-  };
-
   return (
     <div className="w-full lg:px-16 mx-auto">
       <h2 className="mb-5 text-4xl text-center text-indigo-600 font-semibold tracking-wider">
@@ -99,22 +80,6 @@ const OrderDetails = () => {
                 <div className="border-2 border-transparent">
                   Cena: {item.price} PLN
                 </div>
-                <div className="hidden xl:block absolute top-0 right-0 px-2 translate-x-full">
-                  <button
-                    onClick={() => handleDeleteButton(item.offerId)}
-                    className="hover:text-indigo-800 focus:outline-none focus:text-indigo-800 border-2 rounded-md border-transparent focus:border-indigo-800"
-                  >
-                    <TrashOutline />
-                  </button>
-                </div>
-              </div>
-              <div className="xl:hidden absolute top-0 right-5">
-                <button
-                  onClick={() => handleDeleteButton(item.offerId)}
-                  className="translate-x-full text-indigo-600 hover:text-indigo-800 focus:outline-none focus:text-indigo-800 border-2 rounded-md border-transparent focus:border-indigo-800"
-                >
-                  <TrashOutline />
-                </button>
               </div>
             </div>
           </div>

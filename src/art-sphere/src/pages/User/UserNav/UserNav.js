@@ -6,7 +6,7 @@ const UserViewNav = (props) => {
   const { logout, user } = useContext(AuthContext);
   const url = "/profil";
   return (
-    <div className="mb-4 md:mb-0">
+    <div className="mb-4 md:mb-0 shadow-xl p-3 md:p-0 rounded-lg md:shadow-none">
       <ul className="text-xl tracking-wider rounded-lg text-indigo-500 inline-flex flex-wrap justify-center gap-3 md:block md:w-max">
         <li className="md:py-2 md:px-3">
           <NavLink
