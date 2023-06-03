@@ -173,6 +173,7 @@ try
     builder.Services.AddScoped<OffersRepository>();
     builder.Services.AddScoped<ShoppingCartRepository>();
     builder.Services.AddScoped<BidsRepository>();
+    builder.Services.AddScoped<OrdersRepository>();
     builder.Services.AddScoped<AuthService>();
     builder.Services.AddTransient<EmailSenderService>();
 

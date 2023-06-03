@@ -37,13 +37,13 @@ public class ShoppingCartController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<ShoppingCartElementResponse[]>> GetUserCartAsync()
     {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+        ApplicationUser? user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
 
         if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
         
         if(user?.AccountId != null)
         {
-            var usersShoppingCartElements = await _shoppingCartRepository.GetUserShoppingCartElements((int)user?.AccountId);
+            var usersShoppingCartElements = await _shoppingCartRepository.GetUserShoppingCartElements((int)user!.AccountId);
 
             if(usersShoppingCartElements.Any()){
                 return Ok(usersShoppingCartElements
@@ -71,7 +71,7 @@ public class ShoppingCartController : ControllerBase
     [HttpGet("sum")]
     public async Task<ActionResult> GetUserCartSumAsync()
     {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity!.Name!);
 
         if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
         
@@ -92,7 +92,7 @@ public class ShoppingCartController : ControllerBase
     [HttpGet("any")]
     public async Task<ActionResult> AnyUserShoppingCartElementsAsync()
     {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity!.Name!);
 
         if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
         
@@ -108,7 +108,7 @@ public class ShoppingCartController : ControllerBase
     [HttpPost("{offerId}")]
     public async Task<ActionResult> AddOfferToUserShoppingCart([FromRoute] int offerId)
     {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity!.Name!);
 
         if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
         
@@ -122,7 +122,7 @@ public class ShoppingCartController : ControllerBase
                 return BadRequest(new { success = false, message = "Ofera już znajduje się w koszu zakupowym użytkownika."});
             }
 
-            await _shoppingCartRepository.AddOfferToUserShoppingCartAsync((int)user?.AccountId, offerId);
+            await _shoppingCartRepository.AddOfferToUserShoppingCartAsync((int)user!.AccountId, offerId);
 
             return Ok(new {
                 success = true,
@@ -137,13 +137,13 @@ public class ShoppingCartController : ControllerBase
     [HttpDelete("{offerId}")]
     public async Task<ActionResult<DeleteOfferResponse>> DeleteOfferFromUserCart(int offerId)
     {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity!.Name!);
 
         if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
         
         if(user?.AccountId != null)
         {
-            await _shoppingCartRepository.DeleteOfferFromUserShoppingCartAsync((int)user?.AccountId, offerId);
+            await _shoppingCartRepository.DeleteOfferFromUserShoppingCartAsync((int)user!.AccountId, offerId);
 
             return Ok(new DeleteOfferResponse(
                 true,
@@ -158,13 +158,13 @@ public class ShoppingCartController : ControllerBase
     [HttpPost("execute")]
     public async Task<ActionResult<OrderResponse>> ExecuteShoppingCartOrderAsync([FromBody] OrderPayload orderPayload)
     {
-        ApplicationUser? user = await _userManager.FindByNameAsync(User.Identity.Name);
+        ApplicationUser? user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
 
         if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
         
         if(user?.AccountId != null)
         {
-            var usersShoppingCartElements = await _shoppingCartRepository.GetUserShoppingCartElements((int)user?.AccountId);
+            var usersShoppingCartElements = await _shoppingCartRepository.GetUserShoppingCartElements((int)user!.AccountId);
 
             if(!usersShoppingCartElements.Any())
             {
@@ -196,13 +196,15 @@ public class ShoppingCartController : ControllerBase
             var order = new Order(){
                 UserId = user.AccountId,
                 Amount = finalCost,
+
                 PaymentMethod = orderPayload.PaymentMethod,
-                AddressCity = account.AddressCity,
-                AddressCountry = account.AddressCountry,
-                AddressApartment = account.AddressApartment,
-                AddressBuilding = account.AddressBuilding,
-                AddressPostalCode = account.AddressPostalCode,
-                AddressStreet = account.AddressStreet,
+                AddressCity = account.AddressCity ?? string.Empty,
+                AddressCountry = account.AddressCountry ?? string.Empty,
+                AddressApartment = account.AddressApartment ?? string.Empty,
+                AddressBuilding = account.AddressBuilding ?? string.Empty,
+                AddressPostalCode = account.AddressPostalCode ?? string.Empty,
+                AddressStreet = account.AddressStreet ?? string.Empty,
+                ExecutionDate = DateTime.Now,
                 IsInvoice = orderPayload.Invoice,
                 Elements = new Collection<OrderElement>()
             };
