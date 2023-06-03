@@ -10,6 +10,8 @@ public class Order
     public int PaymentMethod { get; set; }
     public DateTime ExecutionDate { get; set; }
 
+    public OrderStatus Status { get; set; }
+
     public Collection<OrderElement> Elements { get; set; }
 
     public string AddressCountry { get; set; }
@@ -26,4 +28,12 @@ public class Order
     public string? CompanyAddressPostalCode { get; set; }
     public string? CompanyAddressCity { get; set; }
     public string? CompanyAddressCountry { get; set; }
+}
+
+public enum OrderStatus {
+    Created, 
+    InRealization, 
+    Shipped, 
+    Received,
+    Canceled
 }
