@@ -111,10 +111,28 @@ function AdminPanel(props) {
                   </p>
                 </div>
                 <div className="mb-4">
-                  <p className="text-indigo-800 font-bold">Cena:</p>
-                  <p className="text-indigo-600 font-semibold">
-                    {offerToValidate.price} zł
+                  <p className="text-indigo-800 font-bold">
+                    {offerToValidate.isAuction ? "Cena wywoławcza: " : "Cena: "}
+                    <span className="text-indigo-600 font-semibold">
+                      {offerToValidate?.price} zł
+                    </span>
                   </p>
+                </div>
+                <div>
+                  {offerToValidate.isAuction && (
+                    <p className="text-indigo-800 font-bold">
+                      Koniec aukcji:{" "}
+                      <span className="font-medium text-indigo-600">
+                        {new Date(
+                          offerToValidate.auctionEndTime
+                        ).toLocaleString("pl-PL", {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

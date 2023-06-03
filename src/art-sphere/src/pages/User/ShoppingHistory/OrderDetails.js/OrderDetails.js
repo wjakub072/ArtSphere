@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { TrashOutline } from "heroicons-react";
 import { Link, useParams } from "react-router-dom";
 import useWebsiteTitle from "../../../../hooks/useWebsiteTitle";
 import AuthContext from "../../../../context/AuthContext";
@@ -11,21 +10,21 @@ const OrderDetails = () => {
   const { errorResponseHandler } = useContext(AuthContext);
 
   const { orderId } = useParams();
-  const [offerList, setOfferList] = useState(null);
+  const [offer, setOffer] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getOffers();
+    getOfferData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getOffers = async () => {
+  const getOfferData = async () => {
     try {
-      const getOfferList = await axiosInstace.get("profile/cart", {
+      const getOffer = await axiosInstace.get(`profile/orders/${orderId}`, {
         withCredentials: true,
       });
-      console.log(getOfferList.data);
-      setOfferList(getOfferList.data);
+      console.log(getOffer.data);
+      setOffer(getOffer.data);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -43,7 +42,7 @@ const OrderDetails = () => {
           <Loading />
         </div>
       ) : (
-        offerList.map((item) => (
+        offer.elements.map((item) => (
           <div
             className="md:flex bg-white p-6 rounded-lg mb-5 shadow-lg"
             key={item.offerId}
@@ -51,7 +50,7 @@ const OrderDetails = () => {
             <div className="md:w-1/4 h-28 mx-auto mb-3 md:mb-0 md:mx-0">
               <img
                 className="w-full max-w-full max-h-full h-full object-contain object-center block"
-                src={item.picture}
+                src={item.photo}
                 alt={item.title}
               />
             </div>
@@ -72,7 +71,7 @@ const OrderDetails = () => {
                     to={`/artysci/${item.artistId}`}
                     className="underline hover:text-indigo-800 focus:outline-none focus:text-indigo-800 border-2 rounded-md p-1 border-transparent focus:border-indigo-800"
                   >
-                    {item.author}
+                    {item.artistName}
                   </Link>
                 </div>
               </div>
@@ -85,6 +84,11 @@ const OrderDetails = () => {
           </div>
         ))
       )}
+      <div className="flex justify-end ">
+        <p className="w-full md:w-auto text-right bg-white p-6 rounded-lg mb-5 shadow-lg font-bold text-indigo-600">
+          Suma: {offer.amount} PLN
+        </p>
+      </div>
     </div>
   );
 };
