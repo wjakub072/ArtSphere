@@ -40,7 +40,7 @@ public class AccountController : ControllerBase
         }
 
         await _userManager.DeleteAsync(user);
-        return Ok();
+        return Ok(new { success = true, message = "Konto użytkownika zostało usunięte."});
     }
 
     [Authorize]
