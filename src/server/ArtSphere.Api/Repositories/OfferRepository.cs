@@ -232,8 +232,17 @@ public class OffersRepository
         offer.Category = offerPayload.Category;
         offer.Technic = offerPayload.Technic;
         offer.Title = offerPayload.Title;
-        offer.Topic = offerPayload.Topic;
-        offer.Description = offerPayload.Description;
+        if(string.IsNullOrEmpty(offerPayload.Title) == false && offer.Title != offerPayload.Title)
+        {
+            offer.Topic = offerPayload.Topic;
+            offer.Approved = false; 
+            offer.Validated = false;
+        }       
+        if(string.IsNullOrEmpty(offerPayload.Description) == false && offer.Description != offerPayload.Description){
+            offer.Description = offerPayload.Description;
+            offer.Approved = false;
+            offer.Validated = false;
+        }
         offer.Price = offerPayload.Price;
         offer.DimensionsX = offerPayload.DimensionsX;
         offer.DimensionsY = offerPayload.DimensionsY;
@@ -248,6 +257,8 @@ public class OffersRepository
                 offer.Picture = offerPayload.Picture;
                 var compressedPicture = _compressionService.CompressBase64ImageWithDataTag(offerPayload.Picture);
                 offer.CompressedPicture = compressedPicture;
+                offer.Approved = false; 
+                offer.Validated = false;
             }
         }
 
