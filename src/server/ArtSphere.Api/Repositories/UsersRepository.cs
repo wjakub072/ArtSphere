@@ -55,7 +55,9 @@ public class UsersRepository
                 INNER JOIN AUTH.IdentityUsers io on AccountId = u.Id
                 INNER JOIN auth.UserRoles on io.Id = UserId
                 INNER JOIN auth.IdentityRoles ir on RoleId = ir.Id
-                WHERE NormalizedName = 'ARTYSTA'")
+                WHERE NormalizedName = 'ARTYSTA'
+                AND LEN(CONCAT(u.[FirstName], U.[LastName])) > 0 
+                AND LEN(u.[ProfilePicture]) > 0")
                 .ToListAsync();
     }
 
