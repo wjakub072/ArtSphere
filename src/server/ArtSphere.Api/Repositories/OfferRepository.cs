@@ -33,13 +33,13 @@ public class OffersRepository
             offers = offers.Where(c => c.Technic == filtersPayload.Technic);
 
         if(!string.IsNullOrEmpty(filtersPayload.Title))
-            offers = offers.Where(c => c.Title == filtersPayload.Title);
+            offers = offers.Where(c => c.Title.ToLower().Contains(filtersPayload.Title.ToLower()));
 
         if(!string.IsNullOrEmpty(filtersPayload.Topic))
             offers = offers.Where(c => c.Topic == filtersPayload.Topic);
         
         if(!string.IsNullOrEmpty(filtersPayload.Artist))
-            offers = offers.Where(c => string.Concat(c.Artist.FirstName, " ", c.Artist.LastName) == filtersPayload.Artist);
+            offers = offers.Where(c => string.Concat(c.Artist.FirstName, " ", c.Artist.LastName).ToLower().Contains(filtersPayload.Artist.ToLower()));
 
         if(filtersPayload.PriceBottom > decimal.Zero)
             offers = offers.Where(c => c.Price > filtersPayload.PriceBottom);
