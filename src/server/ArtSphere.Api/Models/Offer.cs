@@ -17,6 +17,7 @@ public class Offer
     public bool Archived { get; set; }
     public bool Validated { get; set; }
     public bool Approved { get; set; }
+    public bool Sold { get; set; }
     public DateTime CreationTime { get; set; }
     public DateTime? AuctionEndTime { get; set; }
     public string? Picture { get; set; }

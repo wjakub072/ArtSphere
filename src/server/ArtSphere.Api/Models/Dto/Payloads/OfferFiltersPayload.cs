@@ -13,6 +13,9 @@ public class OfferFiltersPayload
     public decimal? DimensionsXTop { get; set; }
     public decimal? DimensionsYBottom { get; set; }
     public decimal? DimensionsYTop { get; set; }
+ 
+    public bool IncludeSold { get; set; }
+    public bool IncludeArchived { get; set; }
     public int PageSize { get; set; }
     public int Page { get; set; }
     public string[]? Tags { get; set; }

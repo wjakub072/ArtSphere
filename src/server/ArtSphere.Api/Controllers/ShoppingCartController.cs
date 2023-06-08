@@ -240,7 +240,7 @@ public class ShoppingCartController : ControllerBase
 
             foreach (var cartElement in usersShoppingCartElements)
             {
-                await _offerRepository.ArchiveOffer(cartElement.OfferId);
+                await _offerRepository.SoldOffer(cartElement.OfferId);
             }
             return Ok(new OrderResponse(true, "Zamówienie zostało oddane do realizacji.", balance));
         }

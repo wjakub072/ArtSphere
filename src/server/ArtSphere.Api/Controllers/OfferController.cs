@@ -108,6 +108,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.Sold,
                     o.IsAuction,
                     o.CompressedPicture))
                     .ToArray();
@@ -139,6 +140,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.Sold,
                     o.IsAuction,
                     o.CompressedPicture))
                     .ToArray();
@@ -195,6 +197,8 @@ public class OfferController : ControllerBase
         decimal? DimensionsXTop,
         decimal? DimensionsYBottom,
         decimal? DimensionsYTop,
+        bool? includeSold,
+        bool? includeArchived,
         string[]? Tags,
         int PageSize,
         int Page)
@@ -211,6 +215,8 @@ public class OfferController : ControllerBase
             DimensionsXTop = DimensionsXTop,
             DimensionsYBottom = DimensionsYBottom,
             DimensionsYTop = DimensionsYTop,
+            IncludeSold = includeSold == null ? false : (bool)includeSold, 
+            IncludeArchived = includeArchived == null ? false : (bool)includeArchived, 
             Tags = Tags, 
             PageSize = PageSize, 
             Page = Page
@@ -244,6 +250,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.Sold,
                     o.IsAuction,
                     o.CompressedPicture,
                     userFavorites.Contains(o.Id)))
@@ -282,6 +289,7 @@ public class OfferController : ControllerBase
                     o.Title, 
                     o.Price, 
                     o.Archived,
+                    o.Sold,
                     o.IsAuction,
                     "Not included - we value your scrolling time :-)",
                     userFavorites.Contains(o.Id)))

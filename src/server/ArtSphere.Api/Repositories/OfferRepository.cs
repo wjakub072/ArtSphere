@@ -20,6 +20,12 @@ public class OffersRepository
     {
         IQueryable<Offer> offers = _db.Offers.Include(c => c.Artist).Where(o => o.Approved);
 
+        if(filtersPayload.IncludeSold == false)
+            offers = offers.Where(c => c.Sold == false);
+        
+        if(filtersPayload.IncludeArchived == false)
+            offers = offers.Where(c => c.Archived == false);
+
         if(!string.IsNullOrEmpty(filtersPayload.Category))
             offers = offers.Where(c => c.Category == filtersPayload.Category);
 
@@ -291,6 +297,17 @@ public class OffersRepository
         if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
 
         offer.Archived = true;
+        
+        await _db.SaveChangesAsync();
+        return offer;
+    }
+
+    public async Task<Offer> SoldOffer(int id)
+    {
+        var offer = await _db.Offers.FirstOrDefaultAsync(c => c.Id == id);
+        if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
+
+        offer.Sold = true;
         
         await _db.SaveChangesAsync();
         return offer;
