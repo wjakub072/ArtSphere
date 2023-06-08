@@ -59,6 +59,9 @@ public class OffersRepository
         if(filtersPayload.DimensionsYTop > decimal.Zero)
             offers = offers.Where(c => c.DimensionsY < filtersPayload.DimensionsYTop);
 
+        if(filtersPayload.Tags != null && filtersPayload.Tags.Length > 0)
+            offers.Include(c => c.Tags).Where(c => filtersPayload.Tags.ToList().Contains(c.Tags.SelectMany(t => t.Name)));        
+
         return await offers
                         .OrderByDescending(c => c.Id)
                         .Skip((filtersPayload.Page - 1) * filtersPayload.PageSize)

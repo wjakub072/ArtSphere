@@ -69,9 +69,16 @@ public class OfferController : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var artists = await _usersRepository.GetArtistAsync(User.Identity.Name);
+        var offer = await _offersRepository.GetOfferAsync(deleteOfferPayload.OfferId);
+        
+        if(offer.Sold)
+            return BadRequest(new DeleteOfferResponse(false, "Nie można dokonać rządzania, oferta została już sprzedana."));
 
         if(deleteOfferPayload.Archive)
         {
+            if(offer.Archived)
+                return BadRequest(new DeleteOfferResponse(false, "Oferta jest już archiwalna."));
+            
             var archived = await _offersRepository.ArchiveOffer(deleteOfferPayload.OfferId);
             return new DeleteOfferResponse(true, "Pomyślnie zarchiwizowano ofertę.", archived.Title);
         }
@@ -321,6 +328,7 @@ public class OfferController : ControllerBase
             offer.Price,
             offer.IsAuction,
             offer.Archived,
+            offer.Sold,
             offer.AuctionEndTime,
             offer.Picture,
             offer.Tags?.Select(o => o.Name).ToArray()

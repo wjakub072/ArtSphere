@@ -16,6 +16,7 @@ public record OfferDetailsResponse
     decimal Price,
     bool IsAuction,
     bool Archived,
+    bool Sold,
     DateTime? AuctionEndTime,
     string? Photo,
     string[]? Tags
