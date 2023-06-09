@@ -206,7 +206,7 @@ public class OfferController : ControllerBase
         decimal? DimensionsYTop,
         bool? includeSold,
         bool? includeArchived,
-        string[]? Tags,
+        [FromQuery] string[]? Tags,
         int PageSize,
         int Page)
     {
