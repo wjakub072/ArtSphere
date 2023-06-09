@@ -26,11 +26,14 @@ import EditArt from "./components/EditArt/EditArt";
 import Carts from "./pages/Carts/Carts";
 import Payment from "./pages/Carts/Payment/Payment";
 import OrderDetails from "./pages/User/ShoppingHistory/OrderDetails.js/OrderDetails";
+import { ToastContainer, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const content = (
     <>
       <Menu />
+      <ToastContainer position="bottom-right" theme="dark" transition={Zoom} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/galeria" element={<Gallery />} />

@@ -28,6 +28,9 @@ function Gallery(props) {
     dimensionsXTop: 0, // 0 equal to "Not include in filtering"
     dimensionsYBottom: 0,
     dimensionsYTop: 0, // 0 equal to "Not include in filtering"
+    includeSold: true,
+    includeArchived: true,
+    //tags: ["Obraz Leośa"],
     pageSize: 25,
     page: 1,
   });

@@ -7,6 +7,8 @@ import ArtistSearchBox from "../Inputs/ArtistSearchbox";
 import TitleSearchbox from "../Inputs/TitleSearchbox";
 import SearchButton from "./SearchButton";
 import ClearButton from "./ClearButton";
+import TagSearchbox from "../Inputs/TagSearchbox";
+import FiltersCheckbox from "../Inputs/FiltersCheckbox";
 
 function Filters(props) {
   return (
@@ -42,7 +44,7 @@ function Filters(props) {
             }}
           />
         </div>
-        <div className="lg:col-span-2">
+        <div className="sm:col-span-2 lg:col-span-1">
           <TitleSearchbox
             value={props.filters.title}
             onChange={(val) => {
@@ -55,6 +57,14 @@ function Filters(props) {
             value={props.filters.artist}
             onChange={(val) => {
               props.getFilters({ ...props.filters, artist: val });
+            }}
+          />
+        </div>
+        <div>
+          <TagSearchbox
+            value={props.filters.title}
+            onChange={(val) => {
+              props.getFilters({ ...props.filters, title: val });
             }}
           />
         </div>
@@ -141,7 +151,18 @@ function Filters(props) {
             </div>
           </div>
         </div>
-        <div className="hidden lg:block"></div>
+        <div className="sm:col-span-2 lg:col-span-1">
+          <FiltersCheckbox
+            value={props.filters.includeSold}
+            onChange={(val) => {
+              props.getFilters({
+                ...props.filters,
+                includeSold: val,
+                includeArchived: val,
+              });
+            }}
+          />
+        </div>
         <div>
           <SearchButton onClick={props.search} title="Filtruj" />
         </div>

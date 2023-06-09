@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import validator from "validator";
 
 const TagInput = ({ prevTags, actualTags }) => {
   const [inputText, setInputText] = useState("");
@@ -9,6 +10,10 @@ const TagInput = ({ prevTags, actualTags }) => {
   };
 
   const handleAddTag = () => {
+    if (validator.isEmpty(inputText, { ignore_whitespace: true })) {
+      setInputText("");
+      return;
+    }
     actualTags([...new Set([...tags, inputText])]);
     setTags([...new Set([...tags, inputText])]);
     setInputText("");

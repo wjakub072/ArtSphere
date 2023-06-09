@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import classNames from "classnames";
-import { SearchIcon, UserIcon } from "@heroicons/react/solid";
+import { SearchIcon } from "@heroicons/react/solid";
 
-function ArtistSearchBox({ value, onChange }) {
+function TagSearchbox(props) {
   const [focused, setFocused] = useState(false);
 
   const handleFocus = () => {
@@ -14,24 +14,24 @@ function ArtistSearchBox({ value, onChange }) {
   };
 
   const handleChange = (event) => {
-    onChange(event.target.value);
+    props.onChange(event.target.value);
   };
 
   return (
     <div className="relative">
       <label
-        htmlFor="artist"
+        htmlFor="tags"
         className="block text-sm font-medium leading-6 text-indigo-600"
       >
-        Wyszukaj artystę
+        Wyszukaj po tagach
       </label>
       <div className="mt-2 relative rounded-xl shadow-sm">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <SearchIcon className="h-5 w-5 text-gray-400" />
         </div>
         <input
-          id="artist"
-          name="artist"
+          id="tags"
+          name="tags"
           type="text"
           className={classNames(
             "form-input rounded-xl border-2 border-transparent focus:outline-none focus:border-indigo-600 block w-full py-2 pl-10 pr-3 sm:text-sm sm:leading-5",
@@ -42,18 +42,15 @@ function ArtistSearchBox({ value, onChange }) {
                 focused,
             }
           )}
-          placeholder="Szukaj"
-          value={value}
+          placeholder="tag1, tag2, ..."
+          value={props.value}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <div className="absolute inset-y-0 right-0 pr-14 flex items-center pointer-events-none">
-          <UserIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-        </div>
       </div>
     </div>
   );
 }
 
-export default ArtistSearchBox;
+export default TagSearchbox;

@@ -1729,6 +1729,7 @@ function Payment() {
                 <button
                   className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-2 border-transparent focus:outline-none focus:border-indigo-400 transition-colors"
                   type="submit"
+                  tabIndex={walletTabIndex}
                   onClick={depositFundsHandler}
                 >
                   Doładuj środki

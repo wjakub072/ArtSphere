@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstace from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const AuthContext = React.createContext();
 
@@ -175,6 +176,7 @@ export const AuthContextProvider = ({ children }) => {
       localStorage.clear();
       setUser(null);
       setUserData(null);
+      toast.success(response.data.message);
       navigate("/");
     } catch (err) {
       setLoadingButton(false);
