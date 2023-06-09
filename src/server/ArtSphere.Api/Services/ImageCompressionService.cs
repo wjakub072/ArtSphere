@@ -20,10 +20,11 @@ public class ImageCompressionService
     }
 
     public string CompressBase64ImageWithDataTag(string base64withDataTag){
-        if(!base64withDataTag.Contains("data:image/jpeg;base64,")) throw new Exception("Przekazano błędy format ciągu znaków Base64 podczas próby kompresji zdjęcia.");
+        if(!base64withDataTag.Contains("data:image/")) throw new Exception("Przekazano błędy format ciągu znaków Base64 podczas próby kompresji zdjęcia.");
+        string base64prefix = base64withDataTag.Substring(0, base64withDataTag.IndexOf(",") + 1);
         string imageData = base64withDataTag.Substring(base64withDataTag.IndexOf(",") + 1);
         imageData = CompressBase64Image(imageData);
-        return string.Concat("data:image/jpeg;base64,", imageData);
+        return string.Concat(base64prefix, imageData);
     }
 
 }
