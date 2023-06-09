@@ -42,7 +42,7 @@ function TagSearchbox(props) {
                 focused,
             }
           )}
-          placeholder="tag1, tag2, ..."
+          placeholder="tag1, tag2, tag3, ..."
           value={props.value}
           onChange={handleChange}
           onFocus={handleFocus}

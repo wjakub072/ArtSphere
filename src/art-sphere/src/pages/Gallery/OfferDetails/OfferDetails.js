@@ -307,7 +307,7 @@ function OfferDetails() {
 
           {(offer.archived || offer.sold) && (
             <button
-              className="py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 focus:outline-indigo-400 transition-colors opacity-70"
+              className="py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm transition-colors opacity-70"
               disabled
             >
               Produkt niedostępny
@@ -316,7 +316,7 @@ function OfferDetails() {
           {loadingBtn && !offer.archived && !offer.isAuction && !offer.sold && (
             <button
               disabled
-              className="py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-transparent border-2 focus:outline-none focus:border-indigo-400 transition-colors"
+              className="py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm  border-transparent border-2 transition-colors"
             >
               <svg
                 aria-hidden="true"
@@ -421,7 +421,7 @@ function OfferDetails() {
                 <div>
                   <button
                     disabled
-                    className="w-full py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-800 focus:bg-indigo-800 border-transparent border-2 focus:outline-none focus:border-indigo-400 transition-colors opacity-75"
+                    className="w-full py-2 px-6 font-medium text-white bg-indigo-600 rounded-md shadow-sm border-transparent border-2 transition-colors opacity-85"
                   >
                     <svg
                       aria-hidden="true"

@@ -30,7 +30,7 @@ function Gallery(props) {
     dimensionsYTop: 0, // 0 equal to "Not include in filtering"
     includeSold: true,
     includeArchived: true,
-    Tags: ["tag1", "tag2", "tag3"],
+    tags: "",
     pageSize: 25,
     page: 1,
   });
@@ -47,7 +47,14 @@ function Gallery(props) {
   };
 
   const getOffers = async () => {
-    const data = { ...filters, page: 1 };
+    const data = {
+      ...filters,
+      tags: filters.tags[0]
+        ? filters.tags.split(",").map((tag) => tag.trim())
+        : [],
+      page: 1,
+    };
+    console.log(data);
     setFilters({ ...filters, page: 1 });
     if (data.category === "-") {
       data.category = "";
@@ -62,6 +69,9 @@ function Gallery(props) {
     try {
       const pageCountResponse = await axiosInstace.get("offers/count", {
         params: data,
+        paramsSerializer: {
+          indexes: null,
+        },
       });
       console.log(pageCountResponse.data);
       setPageCount(pageCountResponse.data.pageCount);
@@ -73,6 +83,9 @@ function Gallery(props) {
       if (!user) {
         const getOfferList = await axiosInstace.get("offers", {
           params: data,
+          paramsSerializer: {
+            indexes: null,
+          },
         });
         console.log(getOfferList.data);
         setOfferList(getOfferList.data);
@@ -80,6 +93,9 @@ function Gallery(props) {
       } else {
         const getOfferList = await axiosInstace.get("offers", {
           params: data,
+          paramsSerializer: {
+            indexes: null,
+          },
           withCredentials: true,
         });
         console.log(getOfferList.data);
@@ -112,6 +128,9 @@ function Gallery(props) {
       dimensionsXTop: 0, // 0 equal to "Not include in filtering"
       dimensionsYBottom: 0,
       dimensionsYTop: 0, // 0 equal to "Not include in filtering"
+      includeSold: true,
+      includeArchived: true,
+      tags: "",
       pageSize: 25,
       page: 1,
     });
@@ -128,6 +147,9 @@ function Gallery(props) {
       dimensionsXTop: 0, // 0 equal to "Not include in filtering"
       dimensionsYBottom: 0,
       dimensionsYTop: 0, // 0 equal to "Not include in filtering"
+      includeSold: true,
+      includeArchived: true,
+      tags: [],
       pageSize: 25,
       page: 1,
     };
@@ -145,6 +167,9 @@ function Gallery(props) {
       if (!user) {
         const getOfferList = await axiosInstace.get("offers", {
           params: data,
+          paramsSerializer: {
+            indexes: null,
+          },
         });
         console.log(getOfferList.data);
         setOfferList(getOfferList.data);
@@ -152,6 +177,9 @@ function Gallery(props) {
       } else {
         const getOfferList = await axiosInstace.get("offers", {
           params: data,
+          paramsSerializer: {
+            indexes: null,
+          },
           withCredentials: true,
         });
         console.log(getOfferList.data);
@@ -166,8 +194,20 @@ function Gallery(props) {
   const nextPage = async () => {
     setLoading(true);
     if (filters.page < pageCount) {
-      const data = { ...filters, page: filters.page + 1 };
-      setFilters({ ...filters, page: filters.page + 1 });
+      const data = {
+        ...filters,
+        tags: filters.tags[0]
+          ? filters.tags.split(",").map((tag) => tag.trim())
+          : [],
+        page: filters.page + 1,
+      };
+      setFilters({
+        ...filters,
+        tags: filters.tags[0]
+          ? filters.tags.split(",").map((tag) => tag.trim())
+          : [],
+        page: filters.page + 1,
+      });
       if (data.category === "-") {
         data.category = "";
       }
@@ -181,6 +221,9 @@ function Gallery(props) {
       try {
         const pageCountResponse = await axiosInstace.get("offers/count", {
           params: data,
+          paramsSerializer: {
+            indexes: null,
+          },
         });
         console.log(pageCountResponse.data);
         setPageCount(pageCountResponse.data.pageCount);
@@ -192,6 +235,9 @@ function Gallery(props) {
         if (!user) {
           const getOfferList = await axiosInstace.get("offers", {
             params: data,
+            paramsSerializer: {
+              indexes: null,
+            },
           });
           console.log(getOfferList.data);
           await setOfferList(getOfferList.data);
@@ -199,6 +245,9 @@ function Gallery(props) {
         } else {
           const getOfferList = await axiosInstace.get("offers", {
             params: data,
+            paramsSerializer: {
+              indexes: null,
+            },
             withCredentials: true,
           });
           console.log(getOfferList.data);
@@ -214,8 +263,20 @@ function Gallery(props) {
   const prevPage = async () => {
     setLoading(true);
     if (filters.page <= pageCount && filters.page > 1) {
-      const data = { ...filters, page: filters.page - 1 };
-      setFilters({ ...filters, page: filters.page - 1 });
+      const data = {
+        ...filters,
+        tags: filters.tags[0]
+          ? filters.tags.split(",").map((tag) => tag.trim())
+          : [],
+        page: filters.page - 1,
+      };
+      setFilters({
+        ...filters,
+        tags: filters.tags[0]
+          ? filters.tags.split(",").map((tag) => tag.trim())
+          : [],
+        page: filters.page - 1,
+      });
       if (data.category === "-") {
         data.category = "";
       }
@@ -229,6 +290,9 @@ function Gallery(props) {
       try {
         const pageCountResponse = await axiosInstace.get("offers/count", {
           params: data,
+          paramsSerializer: {
+            indexes: null,
+          },
         });
         console.log(pageCountResponse.data);
         setPageCount(pageCountResponse.data.pageCount);
@@ -240,6 +304,9 @@ function Gallery(props) {
         if (!user) {
           const getOfferList = await axiosInstace.get("offers", {
             params: data,
+            paramsSerializer: {
+              indexes: null,
+            },
           });
           console.log(getOfferList.data);
           await setOfferList(getOfferList.data);
@@ -247,6 +314,9 @@ function Gallery(props) {
         } else {
           const getOfferList = await axiosInstace.get("offers", {
             params: data,
+            paramsSerializer: {
+              indexes: null,
+            },
             withCredentials: true,
           });
           console.log(getOfferList.data);

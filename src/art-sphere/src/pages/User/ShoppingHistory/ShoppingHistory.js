@@ -5,6 +5,7 @@ import axiosInstace from "../../../api/axiosInstance";
 import AuthContext from "../../../context/AuthContext";
 import Loading from "../../../components/Loading/Loading";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ShoppingHistory = () => {
   useWebsiteTitle("Moje zakupy");
@@ -45,6 +46,7 @@ const ShoppingHistory = () => {
       setOfferList(getOrderList.data);
       console.log(deleteOrder.data);
     } catch (err) {
+      toast.error(err?.response?.data?.message);
       console.log(err);
       errorResponseHandler(err);
     }

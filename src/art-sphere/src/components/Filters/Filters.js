@@ -62,9 +62,9 @@ function Filters(props) {
         </div>
         <div>
           <TagSearchbox
-            value={props.filters.title}
+            value={props.filters.tags}
             onChange={(val) => {
-              props.getFilters({ ...props.filters, title: val });
+              props.getFilters({ ...props.filters, tags: val });
             }}
           />
         </div>
