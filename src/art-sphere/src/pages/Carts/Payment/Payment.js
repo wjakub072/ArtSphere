@@ -121,6 +121,11 @@ function Payment() {
         ...deliveryAddressErrors,
         phone: "Pole nie może być puste",
       });
+    } else if (!Number.isInteger(Number(deliveryAddress.phone))) {
+      setDeliveryAddressErrors({
+        ...deliveryAddressErrors,
+        phone: "Niepoprawny numer telefonu",
+      });
     } else {
       setDeliveryAddressErrors({ ...deliveryAddressErrors, phone: "" });
     }

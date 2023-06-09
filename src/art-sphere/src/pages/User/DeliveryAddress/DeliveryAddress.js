@@ -78,6 +78,8 @@ const DeliveryAddress = () => {
   useEffect(() => {
     if (phone.length < 1) {
       setPhoneErrors("Pole nie może być puste");
+    } else if (!Number.isInteger(Number(phone))) {
+      setPhoneErrors("Niepoprawny numer telefonu");
     } else {
       setPhoneErrors("");
     }
