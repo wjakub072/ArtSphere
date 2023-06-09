@@ -212,12 +212,14 @@ public class OffersRepository
 
         if(offerPayload.Tags != null){
             offer.Tags = new List<Tag>();
-            foreach (var tag in offerPayload.Tags)
+            foreach (var tag in offerPayload.Tags.Select(c => c.Trim().ToLower()).Where(c => string.IsNullOrEmpty(c) == false))
             {
-                offer.Tags.Add(new Tag(){
+                var newTag = new Tag(){
                     DefinedByUser = true,
                     Name = tag
-                });
+                };
+                
+                offer.Tags.Add(newTag);
             }
         }
         _db.Offers.Add(offer);
@@ -229,6 +231,8 @@ public class OffersRepository
     {
         var offer = await _db.Offers.Include(o => o.Tags).FirstOrDefaultAsync(c => c.Id == id);
         if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
+
+        if(offer.Archived || offer.Sold) throw new Exception("Status oferty nie pozwala na jej edycję!");
 
         offer.Category = offerPayload.Category;
         offer.Technic = offerPayload.Technic;
