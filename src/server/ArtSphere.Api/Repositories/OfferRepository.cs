@@ -212,12 +212,14 @@ public class OffersRepository
 
         if(offerPayload.Tags != null){
             offer.Tags = new List<Tag>();
-            foreach (var tag in offerPayload.Tags)
+            foreach (var tag in offerPayload.Tags.Select(c => c.Trim().ToLower()).Where(c => string.IsNullOrEmpty(c) == false))
             {
-                offer.Tags.Add(new Tag(){
+                var newTag = new Tag(){
                     DefinedByUser = true,
                     Name = tag
-                });
+                };
+                
+                offer.Tags.Add(newTag);
             }
         }
         _db.Offers.Add(offer);
