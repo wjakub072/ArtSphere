@@ -61,7 +61,7 @@ public class OffersRepository
 
         if(filtersPayload.Tags != null && filtersPayload.Tags.Length > 0)
             offers = offers.Include(c => c.Tags)
-                    .Where(c => c.Tags.Any(t => filtersPayload.Tags.Contains(t.Name)));        
+                    .Where(c => c.Tags.Any(t => filtersPayload.Tags.Where(c => string.IsNullOrEmpty(c.Trim()) == false).Contains(t.Name)));        
 
         return await offers
                         .OrderByDescending(c => c.Id)
