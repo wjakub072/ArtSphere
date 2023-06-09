@@ -46,4 +46,29 @@ public class OrdersRepository
         order.Status = OrderStatus.Canceled;
         await _db.SaveChangesAsync();
     }
+
+    public async Task ChangeOrderStatusAsync(int orderId, int userId, OrderStatus desiredStatus){
+        var order = await _db.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+        if(order == null) throw new Exception("Nie odnaleziono zamówienia!");
+
+        switch (desiredStatus)
+        {
+            case OrderStatus.Created:
+                order.ExecutionDate = DateTime.Now;
+                break;
+            case OrderStatus.InRealization:
+                order.ExecutionDate = DateTime.Now.AddHours(-5);
+                break;
+            case OrderStatus.Shipped:
+                order.ExecutionDate = DateTime.Now.AddDays(-2).AddHours(-1);
+                break;
+            case OrderStatus.Received:
+                order.ExecutionDate = DateTime.Now.AddDays(-4).AddHours(-1);
+                break;
+            default:
+                break;
+        }
+        order.Status = desiredStatus;
+        await _db.SaveChangesAsync();
+    }
 }

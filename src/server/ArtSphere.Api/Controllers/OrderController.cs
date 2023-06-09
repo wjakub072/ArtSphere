@@ -170,4 +170,31 @@ public class OrderController : ControllerBase
 
         return BadRequest("Do użytkownika nie został przypisany żaden profil.");
     }
+
+    [Authorize]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> ChangeOrderStatusAsync(int id, string status)
+    {
+        ApplicationUser? user = await _userManager.FindByNameAsync(User!.Identity!.Name!);
+
+        if (user == null) throw new InvalidOperationException("Nie odnaleziono użytkownika.");
+        
+        if(user?.AccountId != null)
+        {
+            var order = await _ordersRepository.GetOrderAsync(id);
+
+            if(order == null)
+                return BadRequest(new { success = false, message = "Określone zamówienie nie zostało odnalezione."});
+
+            if(order.UserId != user.AccountId) 
+                return BadRequest(new { success = false, message = "Użytkownik nie dokonał tego zamówienia."});
+            
+            var desiredState = (OrderStatus)Enum.Parse(typeof(OrderStatus), status, ignoreCase: true);
+            await _ordersRepository.ChangeOrderStatusAsync(order.Id, user.AccountId, desiredState);
+
+            return Ok(new { success = true, message = "Status został zmieniony." } );
+        }
+
+        return BadRequest("Do użytkownika nie został przypisany żaden profil.");
+    }
 }
