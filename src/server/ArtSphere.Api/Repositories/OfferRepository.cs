@@ -230,6 +230,8 @@ public class OffersRepository
         var offer = await _db.Offers.Include(o => o.Tags).FirstOrDefaultAsync(c => c.Id == id);
         if(offer == null) throw new Exception("Nie odnaleziono oferty o podanym id.");
 
+        if(offer.Archived || offer.Sold) throw new Exception("Status oferty nie pozwala na jej edycję!");
+
         offer.Category = offerPayload.Category;
         offer.Technic = offerPayload.Technic;
         offer.Title = offerPayload.Title;
