@@ -203,9 +203,6 @@ function Gallery(props) {
       };
       setFilters({
         ...filters,
-        tags: filters.tags[0]
-          ? filters.tags.split(",").map((tag) => tag.trim())
-          : [],
         page: filters.page + 1,
       });
       if (data.category === "-") {
@@ -272,9 +269,6 @@ function Gallery(props) {
       };
       setFilters({
         ...filters,
-        tags: filters.tags[0]
-          ? filters.tags.split(",").map((tag) => tag.trim())
-          : [],
         page: filters.page - 1,
       });
       if (data.category === "-") {
