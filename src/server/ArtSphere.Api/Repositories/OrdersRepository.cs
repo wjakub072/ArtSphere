@@ -40,8 +40,12 @@ public class OrdersRepository
     }
 
     public async Task CancelOrderAsync(int orderId, int userId){
-        var order = await _db.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+        var order = await _db.Orders.Include(o => o.Elements).ThenInclude(c => c.Offer).FirstOrDefaultAsync(o => o.Id == orderId);
         if(order == null) throw new Exception("Nie odnaleziono zamówienia!");
+        
+        foreach(var element in order.Elements){
+            element.Offer.Sold = false; 
+        }
 
         order.Status = OrderStatus.Canceled;
         await _db.SaveChangesAsync();

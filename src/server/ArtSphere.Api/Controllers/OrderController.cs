@@ -121,7 +121,7 @@ public class OrderController : ControllerBase
                     order.Elements.Select(o => 
                         new OrderElementResponse
                         (
-                            o.Id, 
+                            o.OfferId, 
                             o.Offer.ArtistId,
                             string.Concat(o.Offer.Artist?.FirstName ?? string.Empty, " ", o.Offer.Artist?.LastName ?? string.Empty),
                             o.Offer.Title, 
