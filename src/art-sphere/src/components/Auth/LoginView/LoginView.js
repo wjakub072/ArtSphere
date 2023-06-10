@@ -132,7 +132,7 @@ function LoginView() {
         <div>
           {loadingButton ? (
             <button
-              className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-70"
+              className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-85"
               disabled
             >
               <svg

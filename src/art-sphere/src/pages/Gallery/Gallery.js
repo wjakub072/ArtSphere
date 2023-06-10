@@ -30,7 +30,7 @@ function Gallery(props) {
     dimensionsYTop: 0, // 0 equal to "Not include in filtering"
     includeSold: true,
     includeArchived: true,
-    tags: "",
+    tags: [],
     pageSize: 25,
     page: 1,
   });
@@ -130,7 +130,7 @@ function Gallery(props) {
       dimensionsYTop: 0, // 0 equal to "Not include in filtering"
       includeSold: true,
       includeArchived: true,
-      tags: "",
+      tags: [],
       pageSize: 25,
       page: 1,
     });
@@ -411,24 +411,26 @@ function Gallery(props) {
             ))}
           </div>
           <>
-            <div className="py-4 px-7 flex justify-center items-center bg-gray-100 lg:px-20 border-t-2  border-indigo-600 text-indigo-600">
-              <div className="flex flex-1 justify-around text-indigo-600">
-                <button
-                  className="rounded-lg border-2 border-transparent shadow-md bg-white px-4 py-2 text-sm font-medium hover:bg-indigo-600 hover:text-white hover:border-indigo-400 transition-colors focus:outline-none focus:border-indigo-400 focus:bg-indigo-600 focus:text-white disabled:opacity-70"
-                  onClick={prevPage}
-                  disabled={filters.page === 1 ? true : false}
-                >
-                  Poprzednia
-                </button>
-                <button
-                  className="rounded-lg border-2 border-transparent shadow-md bg-white px-4 py-2 text-sm font-medium hover:bg-indigo-600 hover:text-white hover:border-indigo-400 transition-colors focus:outline-none focus:border-indigo-400 focus:bg-indigo-600 focus:text-white disabled:opacity-70"
-                  onClick={nextPage}
-                  disabled={pageCount === filters.page ? true : false}
-                >
-                  Następna
-                </button>
+            {pageCount > 1 && (
+              <div className="py-4 px-7 flex justify-center items-center bg-gray-100 lg:px-20 border-t-2  border-indigo-600 text-indigo-600">
+                <div className="flex flex-1 justify-around text-indigo-600">
+                  <button
+                    className="rounded-lg border-2 border-transparent shadow-md bg-white px-4 py-2 text-sm font-medium hover:bg-indigo-600 hover:text-white hover:border-indigo-400 transition-colors focus:outline-none focus:border-indigo-400 focus:bg-indigo-600 focus:text-white disabled:opacity-70"
+                    onClick={prevPage}
+                    disabled={filters.page === 1 ? true : false}
+                  >
+                    Poprzednia
+                  </button>
+                  <button
+                    className="rounded-lg border-2 border-transparent shadow-md bg-white px-4 py-2 text-sm font-medium hover:bg-indigo-600 hover:text-white hover:border-indigo-400 transition-colors focus:outline-none focus:border-indigo-400 focus:bg-indigo-600 focus:text-white disabled:opacity-70"
+                    onClick={nextPage}
+                    disabled={pageCount === filters.page ? true : false}
+                  >
+                    Następna
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
           </>
         </>
       )}

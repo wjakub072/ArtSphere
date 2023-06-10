@@ -14,6 +14,7 @@ import axiosInstace from "../../api/axiosInstance";
 import useWebsiteTitle from "../../hooks/useWebsiteTitle";
 import EditArtButton from "../Inputs/EditArtButton";
 import Loading from "../Loading/Loading";
+import { toast } from "react-toastify";
 
 function EditArt() {
   useWebsiteTitle("Edycja Dzieła");
@@ -123,9 +124,12 @@ function EditArt() {
         });
         console.log("respons usuwania oferty");
         console.log(response);
+        toast.success(response?.data?.message);
         navigate("/profil/");
         // navigate("/profil/twojeDziela");
       } catch (err) {
+        toast.error(err?.response?.data?.message);
+        navigate("/profil/twojeDziela");
         errorResponseHandler(err);
       }
     }

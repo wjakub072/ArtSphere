@@ -92,7 +92,7 @@ const UserViewNav = (props) => {
             Ustawienia konta
           </NavLink>
         </li>
-        {(user === "artysta" || user === "administrator") && (
+        {user === "artysta" && (
           <li className="md:py-2 md:px-3">
             <NavLink
               to={`${url}/twojeDziela`}

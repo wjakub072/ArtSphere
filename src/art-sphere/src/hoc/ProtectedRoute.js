@@ -21,8 +21,9 @@ const ProtectedRoute = ({ children, accesBy, role }) => {
         }
       } else if (role === "artysta") {
         if (
-          (user === "artysta" || user === "administrator") &&
-          user !== "klient"
+          user === "artysta" &&
+          user !== "klient" &&
+          user !== "administrator"
         ) {
           return children;
         }

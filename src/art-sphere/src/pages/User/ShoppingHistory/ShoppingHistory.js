@@ -45,6 +45,7 @@ const ShoppingHistory = () => {
       console.log(getOrderList.data);
       setOfferList(getOrderList.data);
       console.log(deleteOrder.data);
+      toast.success(deleteOrder?.data?.message);
     } catch (err) {
       toast.error(err?.response?.data?.message);
       console.log(err);
@@ -67,12 +68,13 @@ const ShoppingHistory = () => {
             className="md:flex bg-white p-6 rounded-lg mb-5 shadow-lg"
             key={item.orderId}
           >
-            <div className="w-2/12 text-indigo-600 font-bold justify-center md:flex items-center">
+            <div className="md:w-2/12 text-indigo-600 font-bold justify-center md:flex items-center">
               <Link
                 to={`${item.orderId}`}
-                className="flex underline border-2 border-transparent rounded-md focus:border-indigo-800 hover:text-indigo-800 focus:outline-none focus:text-indigo-800 p-0.5"
+                className="flex md:flex-col gap-4 md:gap-2 items-center underline border-2 border-transparent rounded-md focus:border-indigo-800 hover:text-indigo-800 focus:outline-none focus:text-indigo-800 p-0.5"
               >
-                ID: <p>{item.orderId}</p>
+                <p>ID: {item.orderId}</p>
+                <p className="text-center">Szczegóły zamówienia</p>
               </Link>
             </div>
             <div className="relative xl:flex justify-between items-center w-full md:pl-10 md:pr-16">

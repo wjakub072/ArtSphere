@@ -274,7 +274,7 @@ const AccountSettings = () => {
         {loadingButtonPass ? (
           <button
             type="submit"
-            className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-70"
+            className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-80"
             disabled
           >
             <svg
@@ -367,7 +367,7 @@ const AccountSettings = () => {
         {loadingButtonEmail ? (
           <button
             type="submit"
-            className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-70"
+            className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-80"
             disabled
           >
             <svg
@@ -406,7 +406,7 @@ const AccountSettings = () => {
       {loadingButton ? (
         <button
           type="submit"
-          className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-70"
+          className="w-full py-2 mb-4 font-medium text-white bg-indigo-600 rounded-md shadow-sm opacity-80"
           disabled
         >
           <svg
