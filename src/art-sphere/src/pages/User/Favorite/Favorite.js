@@ -5,7 +5,6 @@ import Loading from "../../../components/Loading/Loading";
 import useWebsiteTitle from "../../../hooks/useWebsiteTitle";
 import AuthContext from "../../../context/AuthContext";
 import axiosInstace from "../../../api/axiosInstance";
-import { toast } from "react-toastify";
 
 const Favorite = () => {
   useWebsiteTitle("Ulubione");
@@ -48,11 +47,8 @@ const Favorite = () => {
     }
   };
 
-  const notify = () => toast.success("Wow so easy !");
-
   return (
     <div className="w-full text-center mx-auto">
-      <button onClick={notify}>Notify !</button>
       <h2 className="mb-3 text-4xl text-indigo-600 font-semibold tracking-wider">
         Ulubione
       </h2>
