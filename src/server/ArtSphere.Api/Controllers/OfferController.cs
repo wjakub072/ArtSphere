@@ -166,7 +166,9 @@ public class OfferController : ControllerBase
         decimal? DimensionsXTop,
         decimal? DimensionsYBottom,
         decimal? DimensionsYTop,
-        string[]? Tags,
+        bool? includeSold,
+        bool? includeArchived,
+        [FromQuery] string[]? Tags,
         int PageSize,
         int Page)
     {
@@ -182,6 +184,8 @@ public class OfferController : ControllerBase
             DimensionsXTop = DimensionsXTop,
             DimensionsYBottom = DimensionsYBottom,
             DimensionsYTop = DimensionsYTop,
+            IncludeSold = includeSold == null ? false : (bool)includeSold, 
+            IncludeArchived = includeArchived == null ? false : (bool)includeArchived, 
             Tags = Tags, 
             PageSize = PageSize, 
             Page = Page

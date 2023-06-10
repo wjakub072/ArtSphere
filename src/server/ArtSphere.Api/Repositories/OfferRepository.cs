@@ -42,22 +42,22 @@ public class OffersRepository
             offers = offers.Where(c => string.Concat(c.Artist.FirstName, " ", c.Artist.LastName).ToLower().Contains(filtersPayload.Artist.ToLower()));
 
         if(filtersPayload.PriceBottom > decimal.Zero)
-            offers = offers.Where(c => c.Price > filtersPayload.PriceBottom);
+            offers = offers.Where(c => c.Price >= filtersPayload.PriceBottom);
 
         if(filtersPayload.PriceTop > decimal.Zero)
-            offers = offers.Where(c => c.Price < filtersPayload.PriceTop);
+            offers = offers.Where(c => c.Price <= filtersPayload.PriceTop);
         
         if(filtersPayload.DimensionsXBottom > decimal.Zero)
-            offers = offers.Where(c => c.DimensionsX > filtersPayload.DimensionsXBottom);
+            offers = offers.Where(c => c.DimensionsX >= filtersPayload.DimensionsXBottom);
 
         if(filtersPayload.DimensionsXTop > decimal.Zero)
-            offers = offers.Where(c => c.DimensionsX < filtersPayload.DimensionsXTop);
+            offers = offers.Where(c => c.DimensionsX <= filtersPayload.DimensionsXTop);
 
         if(filtersPayload.DimensionsYBottom > decimal.Zero)
-            offers = offers.Where(c => c.DimensionsY > filtersPayload.DimensionsYBottom);
+            offers = offers.Where(c => c.DimensionsY >= filtersPayload.DimensionsYBottom);
 
         if(filtersPayload.DimensionsYTop > decimal.Zero)
-            offers = offers.Where(c => c.DimensionsY < filtersPayload.DimensionsYTop);
+            offers = offers.Where(c => c.DimensionsY <= filtersPayload.DimensionsYTop);
 
         if(filtersPayload.Tags != null && filtersPayload.Tags.Length > 0)
         {
@@ -78,6 +78,12 @@ public class OffersRepository
     {
         IQueryable<Offer> offers = _db.Offers.Include(c => c.Artist).Where(o => o.Approved);
 
+        if(filtersPayload.IncludeSold == false)
+            offers = offers.Where(c => c.Sold == false);
+        
+        if(filtersPayload.IncludeArchived == false)
+            offers = offers.Where(c => c.Archived == false);
+
         if(!string.IsNullOrEmpty(filtersPayload.Category))
             offers = offers.Where(c => c.Category == filtersPayload.Category);
 
@@ -85,31 +91,38 @@ public class OffersRepository
             offers = offers.Where(c => c.Technic == filtersPayload.Technic);
 
         if(!string.IsNullOrEmpty(filtersPayload.Title))
-            offers = offers.Where(c => c.Title == filtersPayload.Title);
+            offers = offers.Where(c => c.Title.ToLower().Contains(filtersPayload.Title.ToLower()));
 
         if(!string.IsNullOrEmpty(filtersPayload.Topic))
             offers = offers.Where(c => c.Topic == filtersPayload.Topic);
         
         if(!string.IsNullOrEmpty(filtersPayload.Artist))
-            offers = offers.Where(c => string.Concat(c.Artist.FirstName, " ", c.Artist.LastName) == filtersPayload.Artist);
+            offers = offers.Where(c => string.Concat(c.Artist.FirstName, " ", c.Artist.LastName).ToLower().Contains(filtersPayload.Artist.ToLower()));
 
         if(filtersPayload.PriceBottom > decimal.Zero)
-            offers = offers.Where(c => c.Price > filtersPayload.PriceBottom);
+            offers = offers.Where(c => c.Price >= filtersPayload.PriceBottom);
 
         if(filtersPayload.PriceTop > decimal.Zero)
-            offers = offers.Where(c => c.Price < filtersPayload.PriceTop);
+            offers = offers.Where(c => c.Price <= filtersPayload.PriceTop);
         
         if(filtersPayload.DimensionsXBottom > decimal.Zero)
-            offers = offers.Where(c => c.DimensionsX > filtersPayload.DimensionsXBottom);
+            offers = offers.Where(c => c.DimensionsX >= filtersPayload.DimensionsXBottom);
 
         if(filtersPayload.DimensionsXTop > decimal.Zero)
-            offers = offers.Where(c => c.DimensionsX < filtersPayload.DimensionsXTop);
+            offers = offers.Where(c => c.DimensionsX <= filtersPayload.DimensionsXTop);
 
         if(filtersPayload.DimensionsYBottom > decimal.Zero)
-            offers = offers.Where(c => c.DimensionsY > filtersPayload.DimensionsYBottom);
+            offers = offers.Where(c => c.DimensionsY >= filtersPayload.DimensionsYBottom);
 
         if(filtersPayload.DimensionsYTop > decimal.Zero)
-            offers = offers.Where(c => c.DimensionsY < filtersPayload.DimensionsYTop);
+            offers = offers.Where(c => c.DimensionsY <= filtersPayload.DimensionsYTop);
+
+        if(filtersPayload.Tags != null && filtersPayload.Tags.Length > 0)
+        {
+            var tags = filtersPayload.Tags.Select(t => t.ToLower().Trim()).Where(c => string.IsNullOrEmpty(c) == false).ToList();
+            offers = offers.Include(c => c.Tags)
+                    .Where(c => c.Tags.Any(t => tags.Contains(t.Name)));        
+        }
 
         return await offers.CountAsync();
     }
