@@ -60,8 +60,11 @@ public class OffersRepository
             offers = offers.Where(c => c.DimensionsY < filtersPayload.DimensionsYTop);
 
         if(filtersPayload.Tags != null && filtersPayload.Tags.Length > 0)
+        {
+            var tags = filtersPayload.Tags.Select(t => t.ToLower().Trim()).Where(c => string.IsNullOrEmpty(c) == false).ToList();
             offers = offers.Include(c => c.Tags)
-                    .Where(c => c.Tags.Any(t => filtersPayload.Tags.Where(c => string.IsNullOrEmpty(c.Trim()) == false).Contains(t.Name)));        
+                    .Where(c => c.Tags.Any(t => tags.Contains(t.Name)));        
+        }
 
         return await offers
                         .OrderByDescending(c => c.Id)
