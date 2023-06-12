@@ -256,10 +256,10 @@ public class OffersRepository
 
         offer.Category = offerPayload.Category;
         offer.Technic = offerPayload.Technic;
-        offer.Title = offerPayload.Title;
+        offer.Topic = offerPayload.Topic;
         if(string.IsNullOrEmpty(offerPayload.Title) == false && offer.Title != offerPayload.Title)
         {
-            offer.Topic = offerPayload.Topic;
+            offer.Title = offerPayload.Title;
             offer.Approved = false; 
             offer.Validated = false;
         }       
